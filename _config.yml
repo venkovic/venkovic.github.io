@@ -2,5 +2,6 @@ name: "Nicolas Venkovic"
 theme: jekyll-theme-hacker
 title: "Nicolas Venkovic"
 subtitle: "Scientific Staff Member"
+show_downloads: false
 github:
   is_project_page: false
