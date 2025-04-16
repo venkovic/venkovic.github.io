@@ -18,7 +18,7 @@ Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en
 
 ### *Education*
 
-<!--**HDR** Applied Mathematics @ [Université de Quelque Part]() (XX/XXXX)<br />-->**PhD** Applied Mathematics & Scientific Computing @ [Université de Bordeaux](https://www.u-bordeaux.fr/en) (09/2023)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/) (05/2018)<br />**MSE** Mechanical Engineering @ [Johns Hopkins University](https://www.jhu.edu/) (12/2016)<br /><!--**BEng, MSc** Civil Engineering @ [Université Laval](https://www.ulaval.ca/en/) (2011, 2013)<br />-->
+<!--**HDR** Applied Mathematics @ [Université de Quelque Part]() (XX/XXXX)<br />-->**PhD** Applied Mathematics & Scientific Computing @ [Université de Bordeaux](https://www.u-bordeaux.fr/en) (09/2023)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/) (05/2018)<br /><!--**MSE** Mechanical Engineering @ [Johns Hopkins University](https://www.jhu.edu/) (12/2016)<br />--><!--**BEng, MSc** Civil Engineering @ [Université Laval](https://www.ulaval.ca/en/) (2011, 2013)<br />-->
 
 ### *Positions held*
 
