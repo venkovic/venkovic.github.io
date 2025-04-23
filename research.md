@@ -78,6 +78,11 @@ Journal Papers (J): 2, Preprints (P): 3, Conference Paper (C): 1, Reports (R): 2
 
 ### *Poster presentations*
 
+
+<ins>K. Tuteja</ins>, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (June 10, 2025) __pyGinkgo: A Sparse Linear Algebra Operator Framework for Python__. ISC High Performance 2025, Hamburg, Germany. 
+
+<ins>K. Tuteja</ins>, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (June 17, 2025) __pyGinkgo: Python Bindings for Ginkgo__. PASC25 conference, Brugg, Switzerland.
+
 <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (October 8, 2020) __Deflated iterative solver for stochastic elliptic PDEs__. JDD 2020, Cerfacs, Toulouse, France.
 
 <ins>N. Venkovic</ins> and L. Graham-Brady (April 4, 2018) __A piecewise polynomial approximation scheme based on the Hashin-Shtrikman variational principle of polycrystals__. MACH 2018, Annapolis, MD, USA.
