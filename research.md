@@ -36,7 +36,7 @@ Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, High Perfor
 
 ### *Publications*
 
-Journal Papers (J): 2, Preprints (P): 3, Conference Paper (C): 1, Reports (R): 2.
+Journal Papers (J): 2, Preprints (P): 1, Conference Paper (C): 1, Reports (R): 2.
 
 <!--[P4] N. Venkovic, A. Bourassa and H. Anzt (2024) __Domain decomposition for the computation of proper orthogonal decompositions by Galerkin projection__.-->
 
