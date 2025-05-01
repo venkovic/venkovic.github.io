@@ -48,10 +48,10 @@ notebook [<a href="NLA-for-CS-and-IE/PracticeSession05.ipynb">ipynb</a>, <a href
 slides [<a href="">tex</a>, <a href="">pdf</a>]</p>
 
 <p>07. 
-<strong>Orthogonalization and least squares problems</strong><br />
+<strong>Orthogonalization and least-squares problems</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>], 
-notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+slides [<a href="">tex</a>, <a href="">pdf</a>], 
+notebook [<a href="">ipynb</a>, <a href="">pdf</a>]</p>
 
 <p>08. 
 <strong>Basic iterative methods for linear systems</strong><br />
