@@ -7,7 +7,7 @@
 
 
 
-The course is organized into 17 lectures. All lectures consist of a theoretical presentation followed by homework problems [[PDF]()]. Most lectures are also followed by Julia coding assignments.
+The course is organized into 18 lectures. All lectures consist of a theoretical presentation followed by homework problems [[PDF](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Problems.pdf)]. Most lectures are also followed by Julia coding assignments.
 
 <p>00. 
 <strong>Introduction</strong><br />
@@ -111,4 +111,10 @@ notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 slides [<a href="">tex</a>, <a href="">PDF</a>], 
 notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-Extra notes [[tex](), [PDF]()].
+<p>18. 
+<strong>Matrix function evaluation</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+
+Extra notes [[tex](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.tex), [PDF](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.pdf)].
