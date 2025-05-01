@@ -10,7 +10,7 @@
 
 ### *Course taught*
 
-<!--__Advanced Iterative Eigensolvers__ (\*) @ [Technical University of Munich](https://www.tum.de/en/)--> <!--(2026)--><!--<br />--><!--__Randomized Numerical Linear Algebra__ (\*) @ [Technical University of Munich](https://www.tum.de/en/)--> <!--(2026)--><!--<br />-->__Numerical Linear Algebra for Computational Science and Information Engineering__\* @ [Technical University of Munich](https://www.tum.de/en/)<!--(2024)--><!--<br />--><!--__Calculus__ @ [Technical University of Munich](https://www.tum.de/en/)--> <!--(2025)-->
+[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.gthub.io/NLA-for-CS-and-IE.html)\* @ [Technical University of Munich](https://www.tum.de/en/)
 
 \*: developed and taught.
 
