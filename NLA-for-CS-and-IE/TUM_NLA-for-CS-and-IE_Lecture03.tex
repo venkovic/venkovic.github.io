@@ -1,0 +1,628 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\title[NLA for CS and IE -- Lecture 03]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 03\\Floating-Point Arithmetic and Error Analysis}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture03}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+\myoutlineframe
+	
+\section{Number representation and arithmetic on digital computers\\{\small Section 3.2 in Darve \& Wootters (2021)}}
+
+
+% Slide 01
+\begin{frame}{Number representation on computers} 
+\begin{itemize} 
+\item Computers store numbers with \textbf{finite memory}, leading to limitations:
+\begin{itemize}
+\item[-] \textbf{Representation errors}: Most real numbers cannot be exactly represented.\vspace{.1cm}
+\item[-] \textbf{Rounding errors}: Arithmetic operations result in quantities which cannot be\\
+\hspace{2.8cm}exactly represented either.\vspace{.1cm}
+\item[-] \textbf{Overflow/Underflow}: Numbers may exceed their representable range.\vspace{.1cm}
+\end{itemize}
+\item These limitations introduce challenges in numerical computations, such as maintaining
+\begin{itemize}
+\item[-] \textbf{Accuracy}: How close is the computed result to the true value?\\
+\hspace{1.7cm}Affected by accumulation of representation and rounding errors,\\
+\hspace{1.7cm}and by algorithmic choices.
+\item[-] \textbf{Stability}: Does the method prevent error growth for small input changes?\\
+\hspace{1.58cm}Specific to both the problem and the algorithm together.
+\end{itemize}
+\item \textbf{Error analysis} helps understand these challenges by focusing on
+\begin{itemize} 
+\item[-] \textbf{Perturbation}: effect of small input changes on the true solution of a problem.
+\item[-] \textbf{Propagation}: cumulative effects of rounding errors through calculations.
+\end{itemize}
+\item Understanding these concepts is essential to prevent unwanted behaviors when using numerical methods.
+\end{itemize} 
+\end{frame}
+
+% Slide 02
+\begin{frame}{Bit representation of integers} 
+\begin{itemize} 
+\item Digital computers represent integers using a fixed number $b$ of bits, e.g., 8, 16, 32, or 64 bits.\\
+\item For every \textbf{unsigned integers} $x$ ranging from 0 to $2^b-1$,\vspace{-.2cm}
+\begin{align*}
+\exists\,!\;(d_0,\dots,d_{b-1})\in\{0,1\}^b\;\text{s.t.}\;x=\sum_{i=0}^{b-1}d_i2^i.
+\end{align*}
+\vspace*{-.55cm}\\
+We say that $x$ is represented as $d_{b-1}\dots d_0$.\vspace{.05cm}\\
+Attempting to represent integers out of the range from 0 to $2^b-1$, leads to \textbf{underflow} or \textbf{overflow}.\vspace{.05cm}\\
+\textbf{Example}: integers from 0 to 7 can be represented as follows using 3 bits:\vspace{.02cm}\\
+{\scriptsize
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+integer & binary representation & decomposition\\
+\hline
+0& 000 & $0\times 1+0\times 2+0\times 4^{{\vphantom{I}}}$\\ 
+1& 001 & $1\times 1+0\times 2+0\times 4$\\ 
+2& 010 & $0\times 1+1\times 2+0\times 4$\\
+3& 011 & $1\times 1+1\times 2+0\times 4$\\
+4& 100 & $0\times 1+0\times 2+1\times 4$\\
+5& 101 & $1\times 1+0\times 2+1\times 4$\\
+6& 110 & $0\times 1+1\times 2+1\times 4$\\
+7& 111 & $1\times 1+1\times 2+1\times 4$\\
+\hline
+\end{tabular}
+\end{center}
+}
+\end{itemize} 
+\end{frame}
+
+% Slide 03
+\begin{frame}{Bit representation of integers, cont'd} 
+\begin{itemize} 
+\item Different systems exist in order to encode \textbf{signed integers} with bits.\\
+In particular, we consider the \textbf{two's complement representation}:\vspace{.1cm}\\
+For every integer $x$ ranging from $-2^{b-1}$ to $2^{b-1}$,\vspace{-.2cm}
+\begin{align*}
+\exists\,!\;({\color{blue}d_{0}},\dots,{\color{red}d_{b-1}})\in\{0,1\}^b\;\text{s.t.}\;x=-{\color{red}d_{b-1}}2^{b-1}+\sum_{i=0}^{b-2}{\color{blue}d_{i}}2^i.
+\end{align*}
+\vspace*{-.2cm}\\
+\textbf{Example}: integers from -4 to 3 can be represented as follows using 3 bits:\vspace{.15cm}\\
+{\scriptsize
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+integer & binary representation & decomposition\\
+\hline
+0& ${\color{red}0}{\color{blue}00}$ & $-0\times 4+0\times 1+0\times 2^{{\vphantom{I}}}$\\ 
+1& ${\color{red}0}{\color{blue}01}$ & $-0\times 4+1\times 1+0\times 2$\\ 
+2& ${\color{red}0}{\color{blue}10}$ & $-0\times 4+0\times 1+1\times 2$\\ 
+3& ${\color{red}0}{\color{blue}11}$ & $-0\times 4+1\times 1+1\times 2$\\ 
+{\color{red}-}4& ${\color{red}1}{\color{blue}00}$ & $-1\times 4+0\times 1+0\times 2$\\ 
+{\color{red}-}3& ${\color{red}1}{\color{blue}01}$ & $-1\times 4+1\times 1+0\times 2$\\ 
+{\color{red}-}2& ${\color{red}1}{\color{blue}10}$ & $-1\times 4+0\times 1+1\times 2$\\ 
+{\color{red}-}1& ${\color{red}1}{\color{blue}11}$ & $-1\times 4+1\times 1+1\times 2$\\ 
+\hline
+\end{tabular}
+\end{center}
+}
+$\hphantom{t}$\vspace{0cm}\\
+Clearly, the most significant bit ${\color{red}d_{b-1}}$ represents the sign (0 for +, 1 for -).\vspace{.1cm}\\
+Arithmetic operations on two’s complement numbers follow the same rules as unsigned arithmetic.
+\end{itemize} 
+\end{frame}
+
+% Slide 04
+\begin{frame}{Bit representation of floating-point numbers}
+\begin{itemize}
+\item \textbf{Floating-point numbers} are used to represent a wide range of \textbf{real numbers}, including fractions and very large or small numbers.\vspace{.07cm}
+\item A \textbf{floating-point number} $x$ is given by $x = (-1)^{\color{red}s}\times {\color{olive}m}\times2^{{\color{blue}e}-2^{b-p-1}}$ where\vspace{.05cm}
+\begin{itemize}
+\item[-] ${\color{red}s}$ is the \textbf{sign bit} (0 for +, 1 for -).\vspace{.05cm}
+\item[-] ${\color{olive}m}=1+\sum_{i=1}^{p-1}{\color{olive}q_i}2^{-{\color{olive}i}}\in[1,2)$ is the \textbf{significand} (or \textbf{mantissa}), encoded by $p-1$ \textbf{fraction bits}, where $p$ is the \textbf{precision} of the numerical system.\vspace{.05cm}
+\item[-] ${\color{blue}e}-2^{b-p-1}$ is the \textbf{exponent} represented by $b-p$ bits with ${\color{blue}e}=\sum_{i=0}^{b-p-1}{\color{blue}d_{i}}2^i.\hspace{-1cm}$\vspace{.12cm}
+\end{itemize}
+The associated bits are stored in the form
+$\color{red}\boxed{\vphantom{I^{I^o}_{p}}s}
+\color{blue}\boxed{\vphantom{I^{I^o}_{p}}d_{b-p-1}\dots d_0}
+\color{olive}\boxed{\vphantom{I^{I^o}_{p}}q_1\dots q_{p-1}}\,$.\vspace{.12cm}
+\item Example: Half precision (1 sign bit, 5 exponent bits, 10 fraction bits)\vspace{.07cm}
+\begin{itemize}
+\item[-] Then, the floating-point number $\text{fl}(\pi)$, which best approximates $\pi=3.1416...$, is represented as
+${\color{red}0}
+{\color{blue}10000}
+{\color{olive}1001001000}$ so that\vspace*{-.35cm}\\
+\hspace{-1cm}\begin{minipage}{0.2\textwidth}
+\begin{align*}
+{\color{red}s}={\color{red}0}
+\end{align*}
+\end{minipage}
+\hspace{-.6cm}\begin{minipage}{0.35\textwidth}
+\begin{align*}
+{\color{blue}e}
+=&\, {\color{blue}1}\times 2^{4}\\
+=&\,{\color{blue}16}
+\end{align*}
+\end{minipage}
+\hspace{.2cm}\begin{minipage}{0.32\textwidth}
+\begin{align*}
+{\color{olive}m}=&\,1+
+{\color{olive}1}\!\times\!2^{-1}\!+
+{\color{olive}1}\!\times\!2^{-4}\!+
+{\color{olive}1}\!\times\!2^{-7}\\
+=&\,1+0.5+0.0625+0.0078125\\
+=&\,{\color{olive}1.5703125}
+\end{align*}
+\end{minipage}\vspace{.2cm}\\
+and $\text{fl}(\pi)=(-1)^{\color{red}0}\times {\color{olive}1.5703125}\times 2^{{\color{blue}16}-2^{4-1}}={\color{olive}1.5703125}\times 2
+=3.140625$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 05
+\begin{frame}{Bit repsentation of floating-point numbers, cont'd}
+\begin{itemize}
+\item Most real numbers cannot be exactly represented due to the finite number of bits used for the mantissa.
+$\!$The \textbf{machine epsilon} and the \textbf{unit roundoff}$\hspace{-1cm}$\\
+are often used to characterize the rounding error of a numerical system.\vspace{-.1cm}
+\begin{definition}[Machine epsilon \& unit roundoff]
+\begin{itemize}
+\item[-] The (interval) \textbf{machine epsilon}, often denoted by $\epsilon_{mach}$, is the distance between 1 and the next floating-point number.\vspace{-.1cm}
+\item[-] The \textbf{unit roundoff} $u$ is half the machine precision, i.e., $u=\epsilon_{mach}/2$.
+\end{itemize}
+\end{definition}
+\item Common floating-point formats:
+\begin{itemize}
+\item[-] \textbf{Half precision} (16 bits): 1 sign bit, 5 exponent bits, 10 significand bits\\
+\hspace{3.85cm}and unit roundoff $u=2^{-11}\approx 4.88\times 10^{-4}$.\vspace{.09cm}
+\item[-] \textbf{Single precision} (32 bits): 1 sign bit, 8 exponent bits, 23 significand bits\\
+\hspace{4.15cm}and unit roundoff $u=2^{-24}\approx 5.96\times 10^{-8}$.\vspace{.09cm}
+\item[-] \textbf{Double precision} (64 bits): 1 sign bit, 11 exponent bits, 52 significand bits\\
+\hspace{4.31cm}and unit roundoff $u=2^{-53}\approx 1.11\times 10^{-16}$.
+\end{itemize}
+\item The \textbf{distribution} of floating-point numbers is \textbf{not uniform} within the range of a numerical system.
+%\item Standard representation of special values:
+%\begin{itemize}
+%\item[-] \textbf{Infinity}: sign bit is 0, all exponent bits are 1, all significand bits are 0.
+%\item[-] \textbf{NaN}: sign bit is 0, all exponent bits are 1, most significant significand bit is 1, others are 0.
+%\end{itemize}
+\end{itemize} 
+\end{frame}
+
+% Slide 06
+\begin{frame}{Floating-point conversion and arithmetic}
+\begin{itemize}
+\item For every number $x$ within the range of a floating-point number system, it can be shown that the associated rounding $\text{fl}(x)$ is such that 
+\begin{align*}
+\text{fl}(x)=(1+\delta)x\text{ for some }\delta\text{ s.t. }|\delta|\leq u.
+\end{align*}
+\item $\!$When performing arithmetic operations between floating-point numbers, $\!$i.e.,$\hspace{-1cm}$\\ $\text{fl}(x)\circ\text{fl}(y)$ with $\circ\in\{+,-,\times,\div\}$,
+the result is not necessarily a floating-point number,
+so that further rounding applies.\vspace{.07cm}\\
+Floating-point number systems follow the \textbf{standard model of arithmetic}, which states they must satisfy
+\begin{align*}
+\text{fl}(\text{fl}(x)\circ \text{fl}(y))=(1+\delta)(\text{fl}(x)\circ \text{fl}(y))\text{ for some }\delta\text{ s.t. }|\delta|\leq u.
+\end{align*}
+\item Properties of floating-point arithmetic:
+\begin{itemize}
+\item[-] \textbf{Not associative}, e.g.,
+$\text{fl}(\text{fl}(x)+\text{fl}(y))+\text{fl}(z)\neq\text{fl}(x)+\text{fl}(\text{fl}(y)+\text{fl}(z))$.\vspace{.07cm}
+\item[-] \textbf{Not distributive}, e.g.,\vspace{.07cm}\\
+\hspace{1cm}$\text{fl}(x)\times\text{fl}(\text{fl}(y)+\text{fl}(z))\neq\text{fl}(\text{fl}(x)\times\text{fl}(y))+\text{fl}(\text{fl}(x)\times\text{fl}(z))$.\vspace{.07cm}
+\item[-] Subtraction of nearly equal numbers can lead to \textbf{catastrophic cancellation}.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Principles of error analysis\\{\small Section 3.3 in Darve \& Wootters (2021)}}
+
+% Slide 07
+\begin{frame}{Forward error}
+\begin{itemize}
+\item \textbf{Error analysis} is crucial for understanding the accuracy and stability of numerical algorithms.
+\item Let $f$ be a function and $\tilde{f}$ be its computed approximation for an input $x$.
+\item The \textbf{forward error} $\|f(x) - \tilde{f}(x)\|$ measures the \textbf{distance between} the \textbf{true value} $f(x)$ and the \textbf{computed approximation} $\tilde{f}(x)$.
+\begin{figure}
+\includegraphics[height=3.5cm]{images/forward-error.jpg}
+\end{figure}
+\tiny{Darve, E., \& Wootters, M. (2021). Numerical linear algebra with Julia. Society for Industrial and Applied Mathematics.}\\
+\normalsize
+\item The \textbf{relative forward error} is given by $\|f(x) - \tilde{f}(x)\|/\|f(x)\|$.
+\item In practice, we often do not know $f(x)$, which makes the forward error \textbf{difficult to evaluate}.
+\end{itemize}
+\vfill
+\end{frame}
+
+% Slide 08
+\begin{frame}{Backward error}
+\begin{itemize}
+\item For an approximation $y:=\tilde{f}(x)$ of a true quantity $f(x)$ for some input $x$, the \textbf{backward error} $\eta(x,y)$ is the \textbf{smallest perturbation to the input} whose exact map equates the approximation, i.e.,
+\begin{align*}
+\eta(x,y)=\underset{\tilde{x}}{\min}\{\|x-\tilde{x}\|\text{ s.t. }f(\tilde{x})=y\}.
+\end{align*}
+This can be represented as
+\begin{figure}
+\includegraphics[height=3.5cm]{images/backward-error.jpg}
+\end{figure}
+\tiny{Darve, E., \& Wootters, M. (2021). Numerical linear algebra with Julia. Society for Industrial and Applied Mathematics.}\\
+\normalsize
+\item The \textbf{relative backward error} is given by $\eta(x,y)/\|x\|$.
+\end{itemize}
+\end{frame}
+
+% Slide 09
+\begin{frame}{Sensitivity of a problem}
+\begin{itemize}
+\vspace{-.1cm}
+\item \textbf{Sensitivity} measures how much the output of a function changes relative to small changes in the input:\vspace{-.15cm}
+\begin{align*}
+\text{sensitivity}=\frac{\text{forward error}}{\text{backward error}}=\frac{\|f(x)-f(\tilde{x})\|}{\|x-\tilde{x}\|}.
+\end{align*}
+$\hphantom{-}$\vspace{-.3cm}\\
+%This is represented as\vspace{-.3cm}
+\begin{figure}
+\includegraphics[height=4.7cm]{images/sensitivity.jpg}
+\end{figure}
+\tiny{Darve, E., \& Wootters, M. (2021). Numerical linear algebra with Julia. Society for Industrial and Applied Mathematics.}\\
+\normalsize
+\item The \textbf{relative sensitivity} is given by $\displaystyle \frac{\|f(x)-f(\tilde{x})\|/\|f(x)\|}{\|x-\tilde{x}\|/\|x\|}.\hspace{-1cm}$
+%\item The forward error of a problem can be bounded by (i) bounding the backward error, and then (ii) bounding the sensitivity of the problem.
+\end{itemize}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Conditioning of a problem}
+\begin{itemize}
+\item The (relative) \textbf{condition number} $\kappa(x)$ of a problem $x\mapsto f(x)$ bounds the \textbf{relative sensitivity for small perturbations in the input data}:%\vspace{-.2cm}
+\begin{align*}
+\kappa(x)=\lim_{\varepsilon\rightarrow 0}\sup_{\|\delta x\| \leq \varepsilon} \frac{\|f(x+\delta x) - f(x)\|/\|f(x)\|}{\|\delta x\|/\|x\|}.
+\end{align*}
+\item A fundamental result of numerical analysis states
+\begin{align*}
+\underset{\text{\normalsize forward error}}{{\text{\normalsize relative}}}
+\;\;\lesssim\;\;
+\underset{\text{\normalsize number}}{{\text{\normalsize condition}}} 
+\;\;\times\;\;
+\underset{\text{\normalsize backward error}}{{\text{\normalsize relative}}} 
+\end{align*}
+$\!$also written as $\displaystyle \frac{\|f(x)-y\|}{\|f(x)\|}\lesssim\kappa(x)\;\frac{\eta(x,y)}{\|x\|}$ for any approximation $y$ of $f(x).\hspace{-1cm}$\vspace{.15cm}
+\item A problem $x\mapsto f(x)$ with a large condition number $\kappa(x)\!$ is \textbf{ill-conditioned}.$\hspace{-1cm}$
+\item The \textbf{approximation} $\tilde{f}(x)$ of an \textbf{ill-conditioned problem} \textbf{can have a large forward error}, even if $\tilde{f}(x)$ has a small backward error.
+\item The condition number is \textbf{problem-dependent}, i.e., it is specifically defined for linear system solving, least-squares solving, eigenvalue solving, ...
+\item The condition number \textbf{does not depend on the algorithm}.
+\end{itemize}
+\end{frame}
+
+% Slide 11
+\begin{frame}{Backward stability of an algorithm}
+\begin{itemize}
+\item In practice, we develop algorithms of the form $x\mapsto\tilde{f}(x)$ to approximate the solution of the problem $x\mapsto f(x)$, and that minimize the associated backward error $\eta(x,\tilde{f}(x))$.
+%often seek to achieve convergence by minimizing the back.
+%\item An algorithm is \textbf{forward stable} if the computed solution $\tilde{f}(x)$ satisfies
+%\begin{align*}
+%\frac{\|\tilde{f}(x) - f(x)\|}{\|f(x)\|} =\mathcal{O}(\kappa(x) \cdot u)
+%\end{align*}
+%irrespective of $x$, where $u$ is the unit roundoff and $\kappa(x)$ is the condition number of the problem $x\mapsto f(x)$.
+\item In particular, an algorithm is \textbf{backward stable} if the associated backward error remains small, i.e.,
+\begin{align*}
+\frac{\eta(x,\tilde{f}(x))}{\|x\|} =\mathcal{O}(u)
+\end{align*}
+irrespective of $x$, where $u$ is, typically, the unit roundoff of the floating-point number system.
+\item For \textbf{well-conditioned problems}, a \textbf{backward stable algorithm} ensures \textbf{small forward errors}.
+\item But, for \textbf{ill-conditioned problems}, \textbf{even backward stable algorithms} may produce \textbf{large forward errors}.
+\end{itemize}
+\end{frame}
+
+\section{Analysis of linear systems\\{\small Section 3.3 in Darve \& Wootters (2021)}}
+
+% Slide 12
+\begin{frame}{Perturbation of linear systems}
+\begin{itemize}
+\item Consider the problem of solving for $x$ such that $Ax=b$ for some invertible matrix $A$ and non-zero vector $b$.
+\item Let us assume $\tilde{x}:=x+\delta x$ is the true solution of a non-singular perturbed problem $(A+\delta A)\tilde{x}=b+\delta b$. 
+Then, the following remainder is obtained\vspace{-.1cm}
+\begin{equation*}
+\begin{split}
+(A+\delta A)(x+\delta x)=&\,b+\delta b\\
+-\hspace{2.5cm}Ax=&\,b\\
+\hline
+A\delta x+\delta Ax+\delta A\delta x=&\,\delta b\vphantom{A^{A^I}}
+\end{split}
+\end{equation*}
+Multiplying the remainder by $A^{-1}$, we get
+\begin{align*}
+\delta x+A^{-1}\delta Ax+A^{-1}\delta A\delta x=A^{-1}\delta b.
+\end{align*}
+%which can be rearranged as $\delta x=A^{-1}(-\delta A\tilde{x}+\delta b)$.\\
+Then, assuming the matrix norm is consistent with the vector norm:
+\begin{align*}
+\|\delta x\|\leq 
+\|A^{-1}\|\cdot\|\delta A\|\cdot\|x\|
++\|A^{-1}\|\cdot\|\delta A\|\cdot\|\delta x\|
++\|A^{-1}\|\cdot\|\delta b\|.
+\end{align*}
+Dividing by $\|x\|$, and neglecting the 2nd order term $\|\delta A\|\cdot\|\delta x\|$, we get
+\begin{align*}
+\frac{\|\delta x\|}{\|x\|}\lesssim
+\|A^{-1}\|\cdot\|\delta A\|
++\frac{\|A^{-1}\|\cdot\|\delta b\|}{\|x\|}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 13
+\begin{frame}{Perturbation of linear systems, cont'd}
+\begin{itemize}
+\item[]
+We can then factor by $\|A^{-1}\|\cdot\|A\|$, which leads to
+\begin{align*}
+\frac{\|\delta x\|}{\|x\|}\lesssim
+\|A^{-1}\|\cdot\|A\|\cdot
+\left(\frac{\|\delta A\|}{\|A\|}
++\frac{\|\delta b\|}{\|A\|\cdot\|x\|}\right).
+\end{align*}
+But since $Ax=b$ implies $\|b\|\leq\|A\|\cdot\|x\|$, we obtain
+\begin{align*}
+\frac{\|\delta x\|}{\|x\|}\lesssim
+\|A^{-1}\|\cdot\|A\|\cdot
+\left(\frac{\|\delta A\|}{\|A\|}
++\frac{\|\delta b\|}{\|b\|}\right).
+\end{align*}
+where the relative forward error $\|\delta x\|/\|x\|$ is measured by $\|A^{-1}\|\cdot\|A\|$ as a multiple of the relative input perturbations $\|\delta A\|/\|A\|$ and $\|\delta b\|/\|b\|$.
+\item Therefore, the \textbf{condition number} of the linear system solving problem $A\mapsto x:=A^{-1}b$ 
+is given by $\kappa(A)=\|A^{-1}\|\cdot\|A\|$.
+\item When using the 2-norm, we have $\kappa(A)=\sigma_{max}(A)/\sigma_{min}(A)$, in which $\sigma_{max}(A)$ and $\sigma_{min}(A)$ are the maximal and minimal singular values of $A$, respectively.
+\end{itemize}
+\end{frame}
+
+% Slide 14
+\begin{frame}{Backward errors of linear systems}
+\begin{itemize}
+\item Let $\tilde{x}$ be an approximation of the solution $x$ of the linear system $Ax=b$, and define the associate residual $r:=b-A\tilde{x}$.
+\item Then, we are interested in the backward error $\eta_{A,b}(x)$ defined as
+\begin{align*}
+\eta_{A,b}(\tilde{x})=\min
+\{\varepsilon\text{ s.t. }
+(A+\delta A)\tilde{x}=b+\delta b,\;
+\|\delta A\|\leq\varepsilon\|A\|,\;
+\|\delta b\|\leq\varepsilon\|b\|\}.
+\end{align*}
+\item To find $\eta_{A,b}(x)$, we first rearrange the perturbed system as follows:
+\begin{align*}
+(A+\delta A)\tilde{x}=&\,b+\delta b\\
+\delta A\tilde{x}=&\,b-A\tilde{x}+\delta b\\
+\delta A\tilde{x}=&\,r+\delta b.
+\end{align*}
+Then, considering a matrix norm consistent with the vector norm, we have
+\begin{align*}
+\|\delta A\|\cdot\|\tilde{x}\|\geq &\,\|r+\delta b\|\geq \|r\|-\|\delta b\|.
+\end{align*}
+Applying the prescribed bounds $\|\delta A\|\leq\varepsilon\|A\|$ and $\|\delta b\|\leq\varepsilon\|b\|$, we get 
+\begin{align*}
+\varepsilon\|A\|\cdot\|\tilde{x}\|\geq \|r\|-\varepsilon\|b\|
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 15
+\begin{frame}{Backward errors of linear systems, cont'd\textsubscript{1}}
+\begin{itemize}
+\item[]which we re-order as
+\begin{align*}
+\varepsilon\geq\frac{\|r\|}{\|A\|\cdot\|\tilde{x}\|+\|b\|}
+\end{align*}
+and whose minimum, i.e., the backward error $\eta_{A,b}(\tilde{x})$, is
+\begin{align*}
+\eta_{A,b}(\tilde{x})=\frac{\|r\|}{\|A\|\cdot\|\tilde{x}\|+\|b\|}.
+\end{align*}
+When using 2-norms, the bound is attained for
+\begin{align*}
+\delta A=\frac{\|A\|_2}{\|\tilde{x}\|_2\cdot(\|A\|_2\cdot\|\tilde{x}\|_2+\|b\|_2)}\;r\tilde{x}^T
+\;\text{ and }\;
+\delta b=-\frac{\|b\|_2}{\|A\|_2\cdot\|\tilde{x}\|_2+\|b\|_2}\; r.
+\end{align*}
+\item Note that $r\tilde{x}^T$ is a matrix of rank 1, so that the approximate solution $\tilde{x}$ to the linear system $Ax=b$ is the exact solution to a linear system whose matrix is a rank-1 perturbation of $A$.
+\item $\eta_{A,b}(\tilde{x})$ is sometimes referred to as the \textbf{normwise relative backward error}, so as to be distinguished from other definitions of backward error.
+\end{itemize}
+\end{frame}
+
+% Slide 16
+\begin{frame}{Backward errors of linear systems, cont'd\textsubscript{2}}
+\begin{itemize}
+\item In practice, evaluating $\eta_{A,b}(\tilde{x})$ can be challenging
+due to the need of $\|A\|$.
+\item Then, the backward error $\eta_b(\tilde{x})$ is considered, where only $b$ is perturbed:\vspace{-.05cm}
+\begin{align*}
+\eta_{b}(\tilde{x})=\min
+\{\varepsilon\text{ s.t. }
+A\tilde{x}=b+\delta b,\;
+\|\delta b\|\leq\varepsilon\|b\|\}.
+\end{align*}
+Since we then have $\|\delta b\|=\|A\tilde{x}-b\|=\|r\|$, the backward error is\
+\begin{align*}
+\eta_{b}(\tilde{x})=\frac{\|r\|}{\|b\|}.
+\end{align*}
+\item Note that $\eta_{b}(\tilde{x})\geq \eta_{A,b}(\tilde{x})$ for all $A,b$ and $\tilde{x}$, so that the design of a stopping criteria on the basis of $\eta_{b}(\tilde{x})$ is \textbf{conservative}, and \textbf{good practice}.
+\item Some implementations of iterative linear solvers monitor the convergence of iterates $x_0,\dots,x_k$ through $\|r_k\|/\|r_0\|$.
+But, if $x_0\neq 0$ and $\|r_0\|\gg\|b\|$, we have\vspace{-.35cm}
+\begin{align*}
+\eta_b(x_k)=\frac{\|r_k\|}{\|b\|}=\frac{\|r_k\|}{\|r_0\|}\frac{\|r_0\|}{\|b\|}
+\end{align*}
+so that, even if $\|r_k\|/\|r_0\|\leq \varepsilon$, we actually have $\eta_b(x_k)\gg\varepsilon$.\vspace{.05cm}\\
+Thus, this practice is \textbf{not recommended}, especially for ill-conditioned systems with poor non-zero initial guess.
+\end{itemize}
+\end{frame}
+
+
+\section{Analysis of eigenvalue problems}
+
+% Slide 17
+\begin{frame}{Backward error of an eigenpair}
+\begin{itemize}
+\item Let $(\tilde{\lambda},\tilde{u})$ be an approximation of the eigenpair $(\lambda,u)$ such that $Au=\lambda u$.
+\item Then, the associated normwise backward error $\eta_{A}(\tilde{\lambda},\tilde{u})$ is given as
+\begin{align*}
+\eta_{A}(\tilde{\lambda},\tilde{u})=\min
+\{\varepsilon\text{ s.t. }(A+\delta A)\tilde{u}=\tilde{\lambda}\tilde{u},\;
+\|\delta A\|\leq\varepsilon\|A\|\}.
+\end{align*}
+To find $\eta_{A}(\tilde{\lambda},\tilde{u})$, we reorder the perturbed eigenvalue problem as
+\begin{align*}
+(A+\delta A)\tilde{u}=&\,\tilde{\lambda}\tilde{u}\\
+\delta A\tilde{u}=&\,\tilde{\lambda}\tilde{u}-A\tilde{u}.
+\end{align*}
+Assuming consistent matrix and vector norms, we obtain
+\begin{align*}
+\varepsilon\| A\|\|\tilde{u}\|\geq\|\delta A\|\|\tilde{u}\|\geq&\,\|\tilde{\lambda}\tilde{u}-A\tilde{u}\|
+\end{align*}
+so that $\displaystyle \eta_{A}(\tilde{\lambda},\tilde{u})=\frac{\|r\|}{\| A\|\cdot\|\tilde{u}\|}$,
+where
+$\displaystyle r=A\tilde{u}-\tilde{\lambda}\tilde{u}$
+is the eigen-residual.
+\end{itemize}
+\end{frame}
+
+% Slide 18
+\begin{frame}{Backward error of an eigenpair, cont'd}
+\begin{itemize}
+\item When using 2-norms, the minimal norm perturbation is achieved with
+\begin{align*}
+\delta A=-\frac{r\tilde{u}^H}{\|A\|_2\cdot\|\tilde{u}\|_2^2}
+\end{align*}
+which, again, is a rank-1 perturbation.
+\item So, computing an approximation $(\tilde{\lambda},\tilde{u})$ of the eigenpair $(\lambda,u)$ such that
+\begin{align*}
+\frac{\|r\|}{\|A\|\cdot\|\tilde{u}\|}\leq \varepsilon
+\end{align*}
+for a small value of $\varepsilon$ should ensure the good quality approximation, \textbf{if the problem is well-conditioned}.\vspace{.1cm}\\
+But, \textbf{what is the conditioning of solving for an eigenpair} $(\lambda,u)$ of $A$?
+\item In practice, convergence is often monitored with the criterion
+\begin{align*}
+\frac{\|r\|}{|\tilde{\lambda}|\cdot\|\tilde{u}\|}\leq \varepsilon
+\end{align*}
+which, for larger eigenvalues of the spectrum, is generally not an issue.
+\end{itemize}
+\end{frame}
+
+% Slide 19
+\begin{frame}{Perturbation of the eigenvalue problem}
+\begin{itemize}
+\item Let $\lambda$ be a simple eigenvalue of $A$ with normalized right-eigenvector $u$, and left-eigenvector $v$, i.e.,
+\begin{align*}
+Au=\lambda u
+\;,\;\;
+A^Hv=\overline{\lambda}v
+\;\text{ and }\;
+\|u\|_2=\|v\|_2=1.
+\end{align*}
+\item We wish to characterize the following perturbed eigenvalue problem:
+\begin{align*}
+(A+\delta A)(u+\delta u)=(u+\delta u)(\lambda+\delta \lambda).
+\end{align*}
+By developing, we get
+\begin{align*}
+\hbox{\sout{$Au$}}+A\delta u+\delta Au+\delta A\delta u=&\;
+\hbox{\sout{$u\lambda$}}+u\delta \lambda+\delta u\lambda+\delta u\delta \lambda.
+\end{align*}
+Then, getting rid of second-order perturbations, and multiplying by $v^H$:\vspace{-.6cm}\\
+\begin{minipage}[t]{0.25\textwidth}
+\vspace{.97cm}
+\begin{align*}
+\hspace{-1.2cm}\color{gray}{\scriptstyle(v^HA\,=\,v^H\lambda)}
+\end{align*}
+\end{minipage}
+\hspace{-1.25cm}\begin{minipage}[t]{0.65\textwidth}
+\begin{align*}
+A\delta u+\delta Au+\hbox{\sout{$\delta A\delta u$}}=&\;
+u\delta \lambda+\delta u\lambda+\hbox{\sout{$\delta u\delta \lambda$}}\\
+v^HA\delta u+v^H\delta Au\approx&\;v^Hu\delta \lambda+v^H\delta u\lambda\\
+v^H\delta u\lambda+v^H\delta Au\approx&\;v^Hu\delta \lambda+v^H\delta u\lambda\\
+v^H\delta Au\approx&\;v^Hu\delta \lambda.
+\end{align*}
+\end{minipage}
+\end{itemize}
+\end{frame}
+
+% Slide 20
+\begin{frame}{Perturbation of the eigenvalue problem, cont'd}
+\begin{itemize}
+\item Eventually, we can write\vspace{-.3cm}\\
+\begin{minipage}{0.4\textwidth}
+\begin{align*}
+\hspace{3.5cm}|\delta\lambda|\lesssim \frac{\|\delta A\|_2}{|v^Hu|}
+\end{align*}
+\end{minipage}
+\begin{minipage}{0.42\textwidth}
+\begin{align*}
+&\hspace{.3cm}\color{gray}{\scriptstyle(\text{Cauchy-Schwartz}:}\;\,
+\color{gray}{\scriptstyle|v^H\delta Au|\,\leq\,\|v\|_2\,\cdot\,\|\delta Au\|_2)}\hspace{-1cm}\\
+&\hspace{.3cm}\color{gray}{\scriptstyle(\text{Consistent norms}:}\;\;\,
+\color{gray}{\scriptstyle\|\delta Au\|_2\,\leq\,\|\delta A\|_2\,\cdot\,\|u\|_2)}\hspace{-1cm}
+\end{align*}
+\end{minipage}
+$\vspace{.15cm}$\\
+where the forward error $|\delta\lambda|$ is measured by the perturbation $\|\delta A\|_2$, and weighted by $1/|v^Hu|$.
+\item This means that solving for the simple eigenvalue $\lambda$ of $A$ has conditioning $\kappa(A,\lambda)=1/|v^Hu|$ such that 
+\begin{align*}
+|\delta\lambda|\lesssim\kappa(A,\lambda)\;\|\delta A\|_2
+\end{align*}
+where $u$ and $v$ are the associated normalized right- and left-eigenvector.
+\item \textbf{Normal} (and thus \textbf{symmetric}) \textbf{matrices} have aligned right- and left-eigenvectors, which implies $\kappa(\lambda,A)=1$, i.e., \textbf{solving for a simple eigenvalue of a normal matrix is a well-conditioned problem}.
+\item For general matrices, if $u$ and $v$ are nearly orthogonal, we have $\kappa(\lambda,A)\!\gg\!1,\hspace{-1cm}$\\
+and \textbf{solving for the eigenvalue} $\lambda$ \textbf{is an ill-conditioned problem}.
+\end{itemize}
+\end{frame}
+
+
+\section{Homework problems}
+% Slide 21
+\begin{frame}{Homework problems}
+Turn in \textbf{your own} solution to \textbf{Pb.$\,$9}:\vspace{.08cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$7}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Show that the unit roundoff of a (binary) floating-point number system which uses $p-1$ fraction bits, i.e., where $p$ denotes the precision of the numerical system, is given by $u=2^{-p}.$
+\end{minipage}\vspace{.08cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$8}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Let $x,y,z$ be floating-point numbers such that $x+y+z\neq 0$, and consider the functions given by $f:(x,y,z)\mapsto x+y+z$ and $\tilde{f}:(x,y,z)\mapsto\text{fl}(\text{fl}(x+y)+z)$. 
+Show that\vspace{-.25cm}
+\begin{align*}
+\tilde{f}(x,y,z)=(1+\delta)f(x,y,z)
+\;\text{ where }\;
+|\delta|\lesssim
+\left(1+\left|\frac{x+y}{x+y+z}\right|\right)u
+\end{align*}
+$\vspace{-.55cm}$\\
+in which $u$ is the unit roundoff of the system.
+\end{minipage}\vspace{.08cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$9}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Show that the perturbations\vspace{-.25cm}
+\begin{align*}
+\delta A=\frac{\|A\|_2\;r\tilde{x}^T}{\|\tilde{x}\|_2\cdot(\|A\|_2\cdot\|\tilde{x}\|_2+\|b\|_2)}
+\;\text{ and }\;
+\delta b=-\frac{\|b\|_2\;r}{\|A\|_2\cdot\|\tilde{x}\|_2+\|b\|_2}
+\end{align*}
+$\vspace{-.45cm}$\\
+are such that $(A+\delta A)\tilde{x}=b+\delta b$
+is exactly solved by the approximation $\tilde{x}$ of $A^{-1}b$, with residual $r=b-A\tilde{x}$.
+Show also that they attain the minimal 2-norms achievable by such perturbations.\\
+%\textit{Hint}: Remember that $\|xy^T\|_2=\|x\|_2\|y\|_2\,\forall\,x,y\in\mathbb{R}^n$.
+\end{minipage}
+\end{frame}
+
+\end{document}

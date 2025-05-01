@@ -17,18 +17,18 @@ slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture00.tex">tex</a>,
 <p>01. 
 <strong>Essentials of linear algebra</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture01.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture01.pdf">PDF</a>]</p>
 
 <p>02. 
 <strong>Essentials of the Julia language</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture02.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture02.pdf">PDF</a>]</p>
 
 <p>03. 
 <strong>Floating-point arithmetic and error analysis</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>], 
-notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture03.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture03.pdf">PDF</a>], 
+notebook [<a href="NLA-for-CS-and-IE/PracticeSession03.ipynb.">ipynb</a>, <a href="">PDF</a>]</p>
 
 <p>04. 
 <strong>Direct methods for dense linear systems</strong><br />
