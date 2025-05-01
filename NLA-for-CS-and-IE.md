@@ -28,19 +28,19 @@ slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture02.tex">tex</a>,
 <strong>Floating-point arithmetic and error analysis</strong><br />
 &nbsp;&nbsp;&nbsp;
 slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture03.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture03.pdf">PDF</a>], 
-notebook [<a href="NLA-for-CS-and-IE/PracticeSession03.ipynb">ipynb</a>, <a href="">PDF</a>]</p>
+notebook [<a href="NLA-for-CS-and-IE/PracticeSession03.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession03.pdf">PDF</a>]</p>
 
 <p>04. 
 <strong>Direct methods for dense linear systems</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>], 
-notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture04.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture04.pdf">PDF</a>], 
+notebook [<a href="NLA-for-CS-and-IE/PracticeSession04.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession04.pdf">PDF</a>]</p>
 
 <p>05. 
 <strong>Sparse data structures and basic linear algebra subprograms</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>], 
-notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture05.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture05.pdf">PDF</a>], 
+notebook [<a href="NLA-for-CS-and-IE/PracticeSession05.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession05.pdf">PDF</a>]</p>
 
 <p>06. 
 <strong>Introduction to direct methods for sparse linear systems</strong><br />
@@ -62,8 +62,7 @@ notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 <p>09. 
 <strong>Basic iterative methods for eigenvalue problems</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>], 
-notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
 <p>10. 
 <strong>Locally optimal block preconditioned conjugate gradient</strong><br />
@@ -86,8 +85,7 @@ notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 <p>13. 
 <strong>Multigrid methods</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>], 
-notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
+slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
 <p>14. 
 <strong>Preconditioned iterative methods for linear systems</strong><br />
