@@ -10,7 +10,7 @@
 
 ### *Course taught*
 
-[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.gthub.io/NLA-for-CS-and-IE.html)\* @ [Technical University of Munich](https://www.tum.de/en/)
+[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE.html)\* @ [Technical University of Munich](https://www.tum.de/en/)
 
 \*: developed and taught.
 
