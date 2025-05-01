@@ -9,10 +9,15 @@
 
 The course is organized into 17 lectures. All lectures consist of a theoretical presentation followed by homework problems [[PDF]()]. Most lectures are also followed by Julia coding assignments.
 
+<p>00. 
+<strong>Introduction</strong><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
-<p><strong>00.</strong> __Introduction__<br />slides [[tex](), [PDF]()]
-
-<p><strong>01.</strong> __Essentials of linear algebra__<br />slides [[tex](), [PDF]()]
+<p>01. 
+<strong>Essentials of linear algebra</strong><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
 02. __Essentials of the Julia language__<br />slides [[tex](), [PDF]()]
 
