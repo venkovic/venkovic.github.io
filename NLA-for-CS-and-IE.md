@@ -28,7 +28,7 @@ slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture02.tex">tex</a>,
 <strong>Floating-point arithmetic and error analysis</strong><br />
 &nbsp;&nbsp;&nbsp;
 slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture03.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture03.pdf">PDF</a>], 
-notebook [<a href="NLA-for-CS-and-IE/PracticeSession03.ipynb.">ipynb</a>, <a href="">PDF</a>]</p>
+notebook [<a href="NLA-for-CS-and-IE/PracticeSession03.ipynb">ipynb</a>, <a href="">PDF</a>]</p>
 
 <p>04. 
 <strong>Direct methods for dense linear systems</strong><br />
