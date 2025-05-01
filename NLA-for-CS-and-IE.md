@@ -12,7 +12,7 @@ The course is organized into 17 lectures. All lectures consist of a theoretical 
 <p>00. 
 <strong>Introduction</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture00.tex">tex</a>, <a href="TUM_NLA-for-CS-and-IE_Lecture00.pdf">PDF</a>]</p>
 
 <p>01. 
 <strong>Essentials of linear algebra</strong><br />
