@@ -10,7 +10,8 @@
 The course is organized into 17 lectures. All lectures consist of a theoretical presentation of concepts, followed by homework problems [[PDF]()]. Most lectures are also followed by Julia coding assignments.
 
 
-00. __Introduction__<br />slides [[tex](), [PDF]()]
+0. __Introduction__<br />slides [[tex](), [PDF]()]
+
 1. __Essentials of linear algebra__<br />slides [[tex](), [PDF]()]
 2. __Essentials of the Julia language__<br />slides [[tex](), [PDF]()]
 3. __Floating-point arithmetic and error analysis__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
