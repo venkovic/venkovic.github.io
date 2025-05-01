@@ -36,13 +36,16 @@ Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, High Perfor
 
 ### *Publications*
 
-Journal Papers (J): 2, Preprints (P): 1, Conference Paper (C): 1, Reports (R): 2.
+Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 2, Reports (R): 2.
 
 <!--[P4] N. Venkovic, A. Bourassa and H. Anzt (2024) __Domain decomposition for the computation of proper orthogonal decompositions by Galerkin projection__.-->
 
 <!--[P3] N. Venkovic and K. Gullapalli (2024) __Bitmapped formats for multithreaded sparse matrix-vector and sparse matrix-matrix products__.-->
 
 <!--[P2] N. Venkovic and L. Graham-Brady (2024) __A bottom-up dynamic algorithm for the evaluation of high order derivatives of 2D anisotropic elastic Green's functions__.-->
+
+
+[C2] K. Tuteja, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (2025) __pyGinkgo: A Sparse Linear Algebra Operator Framework for Python__. 4th International Conference on Parallel Processing (ICPP 2025).
 
 [P1] N. Venkovic, P. Mycek, O.P. Le Maître and L. Giraud (2024) __Preconditioners based on Voronoi quantizers of random variable coefficients of stochastic elliptic partial differential equations__. arXiv preprint, arXiv:2403.07824.
 
