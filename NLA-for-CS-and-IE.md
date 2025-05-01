@@ -7,28 +7,28 @@
 
 
 
-The course is organized into 17 lectures. All lectures consist of a theoretical presentation of concepts, followed by homework problems [[PDF]()]. Most lectures are also followed by Julia coding assignments.
+The course is organized into 17 lectures. All lectures consist of a theoretical presentation followed by homework problems [[PDF]()]. Most lectures are also followed by Julia coding assignments.
 
 
 00. __Introduction__<br />slides [[tex](), [PDF]()]
 
-1. __Essentials of linear algebra__<br />slides [[tex](), [PDF]()]
+01. __Essentials of linear algebra__<br />slides [[tex](), [PDF]()]
 
-2. __Essentials of the Julia language__<br />slides [[tex](), [PDF]()]
+02. __Essentials of the Julia language__<br />slides [[tex](), [PDF]()]
 
-3. __Floating-point arithmetic and error analysis__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+03. __Floating-point arithmetic and error analysis__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
-4. __Direct methods for dense linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+04. __Direct methods for dense linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
-5. __Sparse data structures and basic linear algebra subprograms__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+05. __Sparse data structures and basic linear algebra subprograms__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
-6. __Introduction to direct methods for sparse linear systems__<br />slides [[tex](), [PDF]()]
+06. __Introduction to direct methods for sparse linear systems__<br />slides [[tex](), [PDF]()]
 
-7. __Orthogonalization and least squares problems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+07. __Orthogonalization and least squares problems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
-8. __Basic iterative methods for linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+08. __Basic iterative methods for linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
-9. __Basic iterative methods for eigenvalue problems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+09. __Basic iterative methods for eigenvalue problems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
 10. __Locally optimal block preconditioned conjugate gradient__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
 
