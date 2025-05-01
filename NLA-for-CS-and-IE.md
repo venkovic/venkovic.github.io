@@ -11,7 +11,7 @@ The course is organized into 17 lectures. All lectures consist of a theoretical 
 
 <p>00. 
 <strong>Introduction</strong><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
 slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
 <p>01. 
