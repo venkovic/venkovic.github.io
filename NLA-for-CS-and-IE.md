@@ -16,39 +16,101 @@ slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
 <p>01. 
 <strong>Essentials of linear algebra</strong><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
 slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
-02. __Essentials of the Julia language__<br />slides [[tex](), [PDF]()]
+<p>02. 
+<strong>Essentials of the Julia language</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
-03. __Floating-point arithmetic and error analysis__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>03. 
+<strong>Floating-point arithmetic and error analysis</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-04. __Direct methods for dense linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>04. 
+<strong>Direct methods for dense linear systems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-05. __Sparse data structures and basic linear algebra subprograms__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>05. 
+<strong>Sparse data structures and basic linear algebra subprograms</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-06. __Introduction to direct methods for sparse linear systems__<br />slides [[tex](), [PDF]()]
+<p>06. 
+<strong>Introduction to direct methods for sparse linear systems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>]</p>
 
-07. __Orthogonalization and least squares problems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>07. 
+<strong>Orthogonalization and least squares problems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-08. __Basic iterative methods for linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>08. 
+<strong>Basic iterative methods for linear systems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-09. __Basic iterative methods for eigenvalue problems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>09. 
+<strong>Basic iterative methods for eigenvalue problems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-10. __Locally optimal block preconditioned conjugate gradient__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>10. 
+<strong>Locally optimal block preconditioned conjugate gradient</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-11. __Arnoldi and Lanczos procedures__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>11. 
+<strong>Arnoldi and Lanczos procedures</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-12. __Krylov subspace methods for linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>12. 
+<strong>Krylov subspace methods for linear systems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-13. __Multigrid methods__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>13. 
+<strong>Multigrid methods</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-14. __Preconditioned iterative methods for linear systems__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>14. 
+<strong>Preconditioned iterative methods for linear systems</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-15. __Restarted Krylov subspace methods__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>15. 
+<strong>Restarted Krylov subspace methods</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-16. __Elements of randomized numerical linear algebra__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>16. 
+<strong>Elements of randomized numerical linear algebra</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
-17. __Introduction to communication-avoiding algorithms__<br />slides [[tex](), [PDF]()], notebook [[ipynb](), [PDF]()]
+<p>17. 
+<strong>Introduction to communication-avoiding algorithms</strong><br />
+&nbsp;&nbsp;&nbsp;
+slides [<a href="">tex</a>, <a href="">PDF</a>], 
+notebook [<a href="">ipynb</a>, <a href="">PDF</a>]</p>
 
 Extra notes [[tex](), [PDF]()].
