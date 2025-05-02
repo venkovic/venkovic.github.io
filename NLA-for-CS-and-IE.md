@@ -1,3 +1,7 @@
+
+---
+layout: default
+---
 <p>&nbsp;</p>
 
 ## Numerical Linear Algebra for Computational Science and Information Engineering (CITHN2006)
