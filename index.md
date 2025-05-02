@@ -1,3 +1,6 @@
+---
+layout: default
+---
 <p>&nbsp;</p>
 
 ## Nicolas Venkovic<br />
@@ -14,6 +17,7 @@ Follow me on [GitHub](https://github.com/venkovic/), [Google Scholar](https://sc
 
 ### *Current position*
 
+<!--Senior Researcher @ [Huawei Zurich Research Center](https://careers.huaweirc.ch/) (since 10/2025)<br />-->
 Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en/) (since 07/2024)<br />
 
 ### *Education*
