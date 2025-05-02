@@ -1,6 +1,3 @@
----
-layout: default
----
 <p>&nbsp;</p>
 
 ## Nicolas Venkovic<br />
