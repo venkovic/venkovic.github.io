@@ -1,0 +1,298 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\title[NLA for CS and IE -- Lecture 17]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 17\\Introduction to Communication-Avoiding Algorithms}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture17}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+\myoutlineframe
+
+\section{Introduction\\
+         {\small CS294/Math270 -- Demmel and Grigori (2016)}\\
+         {\small MIT 6.172 -- Shun (2018)}}
+	
+\begin{frame}{Cost of algorithm deployment}
+\begin{itemize}
+\item Deploying an algorithm has \textbf{two costs} measured in \textbf{time} (or \textbf{energy}):
+\begin{itemize}\normalsize
+\item[-] \textbf{Arithmetic} (floating-point operations, FLOPs)\vspace{.1cm}\\
+$\hspace{-.5cm}$\fbox{\# of \textbf{FLOPs} $\div$ (\# of \textbf{FLOPs per cycle} $\times$ \# \textbf{cycles per unit of time})}\vspace{.1cm}
+\item[-] \textbf{Communication} due to data movement between
+\end{itemize}
+\end{itemize}
+\begin{minipage}[t]{0.75\textwidth}
+\begin{itemize}
+\item[]
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[]$\vspace{-2.2cm}$
+\item[-] \textbf{levels of a memory hierarchy}:\vspace{.1cm}\\
+\textbf{sequential} part of a program\vspace{.1cm}\\
+DRAM, L3 cache, L2 cache, L1 cache, registers\vspace{.1cm}\\
+cache hit, cache miss
+\item[]$\vspace{.2cm}$
+\item[-] \textbf{processors over a network}:\vspace{.1cm}\\
+\textbf{parallel} part of a program
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.2\textwidth}
+\includegraphics[height=2.2cm]{images/memory-hierarchy.png}\\
+$\vspace*{.1cm}$\\
+$\hspace*{.15cm}$\includegraphics[height=2.2cm]{images/distributed-memory.png}
+\end{minipage}
+\begin{itemize}
+\item[]
+\begin{itemize}
+\item[]
+\fbox{\# of \textbf{messages} $\times$ \textbf{latency}
+$+$
+\# of \textbf{words} $\div$ \textbf{bandwidth}}
+$\hspace{.45cm}$
+\fbox{\vphantom{\#}\textbf{idle} time}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Roofline model}
+\begin{itemize}
+\item \textbf{Algorithm} on given \textbf{hardware} characterized by \textbf{arithmetic intensity}:\vspace{-.15cm}
+\begin{block}{Arithmetic intensity (AI)}
+Ratio of number of FLOPs over amount of data moved.
+\end{block}
+\item \textbf{Hardware} characterized by \textbf{machine balance}:\vspace{-.15cm}
+\begin{block}{Machine balance (MB)}
+Ratio of peak floating-point performance over peak memory bandwidth.
+\end{block}\vspace{.15cm}
+\begin{center}\includegraphics[height=4cm]{images/roofline.png}\end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Memory wall}
+\begin{itemize}
+\item Cost to move data much greater than cost of arithmetic:
+\begin{align*}
+\textbf{time per FLOP}\;\ll\;\frac{1}{\textbf{bandwidth}}\;\ll\;\textbf{latency}
+\end{align*}
+\item Peak floating-point performance evolves faster than memory bandwidth:\vspace{.1cm}
+\begin{center}\includegraphics[height=5cm]{images/memory-wall.png}\end{center}
+\item Relative cost of algorithms due to communication larger every year
+\end{itemize}
+\smallskip
+\tiny{Gholami, A., Yao, Z., Kim, S., Hooper, C., Mahoney, M.W., Keutzer, K. (2024). AI and Memory Wall. arXiv:2403.14123v1.}
+\end{frame}
+
+\begin{frame}{Ideal cache model}
+\begin{itemize}
+\item An \textbf{ideal cache model} is introduced for the analysis of algorithms:
+\begin{center}\includegraphics[height=4cm]{images/ideal-cache-model.png}\end{center}
+\item Model parameters:
+\begin{itemize}\normalsize
+\item[-] Two-level hierarchy
+\item[-] Cache size of $M$ bytes
+\item[-] Cache line length of $B$ bytes
+\item[-] Fully associative cache (cache lines can be stored anywhere in cache)
+\item[-] Least-recently used (LRU) cache replacement policy
+\item[-] Arbitrary large main memory
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Tall caches}
+\begin{itemize}
+\item An 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Communication lower bounds}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\section{Matrix-matrix multiplication\\
+         {\small MIT 6.172 -- Shun (2018)}}
+
+\begin{frame}{Cache misses analysis}
+\begin{itemize}
+\item Assume a tall ideal cache
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cache misses analysis, cont'd\textsubscript{1}}
+\begin{itemize}
+\item Matrix-matrix multiplication with row major data:
+\begin{align*}
+&\text{for}\;i=1,\dots,n\\
+&\;\;\;\text{for}\;j=1,\dots,n\\
+&\;\;\;\;\;\;C[i*n+j]:=0\\
+&\;\;\;\;\;\;\text{for}\;k=1,\dots,n\\
+&\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
+\end{align*}
+\item Assume a tall ideal cache
+\begin{itemize}\normalsize
+\item[-] Case 1: $n>cM/B$
+\item[-] Case 2: $c^\prime M^{1/2}<n<cM/B$
+\item[-] Case 3: $n<cM^{1/2}$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cache misses analysis, cont'd\textsubscript{2}}
+\begin{itemize}
+\item Assume a tall ideal cache
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Swapping inner loops}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Blocked (tiled) matrix multiplication}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Two-level cache}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Three-level cache}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Recursive matrix multiplication}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Recursive implementation}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Analysis of work}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Analysis of cache misses}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\section{Overview and principles of communication avoidance}
+
+\begin{frame}{Reducing data movement}
+\begin{itemize}
+\item Reformulate algorithms to rely on \textbf{more arithmetically intense kernels}:
+\begin{center}\includegraphics[height=2.7cm]{images/spectrum-arithmetic-intensity.png}\end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sample speedups}
+\begin{itemize}
+\item *
+\end{itemize}
+\end{frame}
+
+\section{Sparse matrix-vector product (SpMV)}
+
+\begin{frame}{Low data locality of SpMV}
+\begin{itemize}
+\item Recall the CSR data structure:\vspace{.05cm}
+\begin{align*}
+A=&\;\left[\begin{matrix}
+a_{11}&a_{12}&a_{13}&0\\
+a_{21}&a_{22}&0     &0     \\
+0     &0     &a_{33}&a_{34}\\
+0     &0     &a_{43}&0
+\end{matrix}\right]\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{13}, a_{21}, a_{22}, a_{33}, a_{34}, a_{43}]\\
+\texttt{col\_idx}=&\;[1, 2, 3, 1, 2, 3, 4, 3]\\
+\texttt{row\_start}=&\;[1, 4, 6, 8, 9]
+\end{align*}
+with the following SpMV kernel:
+\begin{align*}
+&\text{for}\;i=1,\dots,n\\
+&\;\;\;\texttt{sum}:=0\\
+&\;\;\;\text{for}\;\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\;\;\;\texttt{sum} := \texttt{sum} + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]\\
+&\;\;\;\texttt{y}[i]:=\texttt{sum}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Low data locality of SpMV, cont'd}
+\begin{itemize}
+\item SpMV kernel for CSR data structures:\vspace{-.3cm}
+\begin{align*}
+&\texttt{sum}:=0\\
+&\text{for}\;i=1,\dots,n\\
+&\;\;\;\text{for}\;\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\;\;\;\texttt{sum} := \texttt{sum} + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]\\
+&\;\;\;\texttt{y}[i]:=\texttt{sum}
+\end{align*}
+\vspace*{-.7cm}\\
+\item \textbf{Irregular access} to the components of $\texttt{x}$:\vspace{.05cm}
+\begin{itemize}\normalsize
+\item[-] \textbf{No spatial locality}, \textbf{no time locality}.\vspace{.1cm}
+\item[-] \textbf{Every component} of $\texttt{x}$ loaded for a single multiply-and-add is \textbf{trashed immediatly from register}, i.e., no loop unrolling, no SIMD, ...\vspace{.1cm}
+\item[-] \textbf{Sparsity induces lower arithmetic intensity} (AI) than GEMV.\vspace{.1cm}
+\item[-] \textbf{SpMV kernels} are \textbf{memory-bound}, even if $\texttt{x}$ fits in cache.\vspace{.1cm}
+\item[-] \textbf{Performance} of SpMV kernels depends on \textbf{data structure}, \textbf{non-zero structure} and \textbf{hardware}.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Register blocking}
+
+\end{frame}
+
+\begin{frame}{Tuning of register blocks}
+
+\end{frame}
+
+\begin{frame}{MBR}
+\end{frame}
+
+\section{Block Gram-Schmidt procedures}
+
+
+\section{$s$-step iterative solvers}
+
+\section{Matrix power kernels}
+
+\section{Homework problems}
+
+\section{Practice session}
+
+\end{document}
