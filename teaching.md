@@ -2,7 +2,7 @@
 
 ## Teaching
 
-[Home](https://venkovic.github.io/), [Research](https://venkovic.github.io/research.html), [Teaching](https://venkovic.github.io/teaching.html) 
+[Home](https://venkovic.github.io), [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching) 
 
 <!--*Online classes*-->
 
@@ -10,7 +10,7 @@
 
 ### *Course taught*
 
-[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE.html)\* @ [Technical University of Munich](https://www.tum.de/en/)
+[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/)
 
 \*: developed and taught.
 

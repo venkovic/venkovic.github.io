@@ -3,7 +3,7 @@
 ## Numerical Linear Algebra for Computational Science and Information Engineering (CITHN2006)
 
 
-[Home](https://venkovic.github.io/), [Research](https://venkovic.github.io/research.html), [Teaching](https://venkovic.github.io/teaching.html) 
+[Home](https://venkovic.github.io), [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching) 
 
 
 
