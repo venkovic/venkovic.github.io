@@ -499,7 +499,7 @@ This common value is the \textbf{rank} of $\mathbf{A}$, and is denoted by $\math
 \begin{definition}[Full rank]
 \begin{itemize}
 \item[-] A matrix $\mathbf{A}\in\mathbb{F}^{m\times n}$ is \textbf{full-column-rank} if $\dim(\mathrm{range}(\mathbf{A}))=n$.\vspace{-.15cm}
-\item[-] A matrix $\mathbf{A}\in\mathbb{F}^{m\times n}$ is \textbf{row-column-rank} if $\dim(\mathrm{range}(\mathbf{A}^H))=m$.\vspace{-.15cm}
+\item[-] A matrix $\mathbf{A}\in\mathbb{F}^{m\times n}$ is \textbf{full-row-rank} if $\dim(\mathrm{range}(\mathbf{A}^H))=m$.\vspace{-.15cm}
 \item[-] A matrix $\mathbf{A}\in\mathbb{F}^{m\times n}$ is \textbf{full-rank} if $\mathrm{rank}(\mathbf{A})=\min(m,n)$.
 \end{itemize}
 \end{definition}
@@ -565,7 +565,7 @@ $\mathbf{A}$ is a square matrix.
 \end{itemize}
 \item A proper characterization can be made using two notions:
 \begin{enumerate}
-\item[1.] \textbf{Consistency}: A linear system is consistent if $\mathbf{b}\in\mathrm{range}(A)$, which means there exists at least one vector $\mathbf{x}\in\mathbb{F}^n$ such that $\mathbf{A}\mathbf{x}=\mathbf{b}$.\tinyskip\\
+\item[1.] \textbf{Consistency}: A linear system is consistent if $\mathbf{b}\in\mathrm{range}(\mathbf{A})$, which means there exists at least one vector $\mathbf{x}\in\mathbb{F}^n$ such that $\mathbf{A}\mathbf{x}=\mathbf{b}$.\tinyskip\\
 An equivalent statement of consistency is $\mathrm{rank}([\mathbf{A},\mathbf{b}])=\mathrm{rank}(\mathbf{A})$, which implies that $\mathbf{b}$ can be formed by linear combination of the columns of $\mathbf{A}$.\tinyskip
 \item[2.]  \textbf{Full column rank}: A \textbf{consistent} linear system has a \textbf{unique solution} iff the column rank of $\mathbf{A}$ equals the number of unknowns, i.e., $\dim(\mathrm{range}(\mathbf{A}))=n$.\tinyskip\\
 On the other hand, if $\dim(\mathrm{range}(\mathbf{A}))<n$, and the linear system is consistent, then there exist infinitely many vectors $\mathbf{x}\in\mathbb{F}^m$ such that $\mathbf{A}\mathbf{x}=\mathbf{b}$.
