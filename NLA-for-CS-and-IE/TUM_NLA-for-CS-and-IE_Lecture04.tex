@@ -862,12 +862,13 @@ with eigenpairs $\left(4,[1\;1]^T\right)$ and $\left(2, [-1\;1]^T\right)$:
 % Slide 28
 \begin{frame}[fragile]{Practice session}
 \begin{enumerate}
-\item Write a function called \mintinline{julia}{RowMajorForwardSubstitution} that implements the forward substitution as described in slide \#3.
-\item Write a function called \mintinline{julia}{ColumnMajorForwardSubstitution} that implements forward substitution in way that the components of the lower triangular matrix are fetched in a column-wise fashion.
+\item Write a function called \mintinline{julia}{RowMajorForwardSubstitution} that implements forward substitution as described in slide \#3.
+\item Write a function called \mintinline{julia}{ColumnMajorForwardSubstitution} that implements forward substitution fetching components of the lower triangular matrix in a column-wise fashion.
 \item Compare the runtime of \mintinline{julia}{RowMajorForwardSubstitution} and \mintinline{julia}{ColumnMajorForwardSubstitution} for different matrix sizes.
-\item Write a function called \mintinline{julia}{get_LU} that returns the $L$ and $U$ of a matrix $A$ factors obtained by forward elimination without pivoting.
-\item Write a function called \mintinline{julia}{RowMajor_LU_InPlace!} that computes the $L$ and $U$ factors of $A$ in-place by forward elimination without pivoting.
-\item Write a function called \mintinline{julia}{ColumnMajor_LU_InPlace!} that resorts to a column-wise data access pattern for in-place LU factorization without pivoting.
+\item Write a function called \mintinline{julia}{get_LU} that returns the $L$ and $U$ factors of a matrix $A$ obtained by forward elimination without pivoting. Test your code by solving a linear system using the $L$ and $U$ factors.
+\item Write a function called \mintinline{julia}{RowMajor_LU_InPlace!} that computes the $L$ and $U$ factors of $A$, in-place, by forward elimination without pivoting.
+Verify your code.
+\item Write a function called \mintinline{julia}{ColumnMajor_LU_InPlace!} that does in-place LU factorization without pivoting, with a column-wise data access pattern.
 \item Compare the runtime of \mintinline{julia}{RowMajor_LU_InPlace!} and \mintinline{julia}{ColumnMajor_LU_InPlace!} for different matrix sizes.
 \end{enumerate}
 \end{frame}
