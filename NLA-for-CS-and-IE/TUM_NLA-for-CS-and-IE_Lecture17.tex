@@ -25,6 +25,7 @@
          {\small CS294/Math270 -- Demmel and Grigori (2016)}\\
          {\small MIT 6.172 -- Shun (2018)}}
 	
+% Slide 01
 \begin{frame}{Cost of algorithm deployment}
 \begin{itemize}
 \item Deploying an algorithm has \textbf{two costs} measured in \textbf{time} (or \textbf{energy}):
@@ -43,8 +44,9 @@ $\hspace{-.5cm}$\fbox{\# of \textbf{FLOPs} $\div$ (\# of \textbf{FLOPs per cycle
 \item[]$\vspace{-2.2cm}$
 \item[-] \textbf{levels of a memory hierarchy}:\vspace{.1cm}\\
 \textbf{sequential} part of a program\vspace{.1cm}\\
-DRAM, L3 cache, L2 cache, L1 cache, registers\vspace{.1cm}\\
-cache hit, cache miss
+transfers between DRAM, L3 cache, L2 cache,\\ 
+L1 cache and registers\vspace{.1cm}\\
+cache hit, cache miss, ...
 \item[]$\vspace{.2cm}$
 \item[-] \textbf{processors over a network}:\vspace{.1cm}\\
 \textbf{parallel} part of a program
@@ -70,6 +72,7 @@ $\hspace{.45cm}$
 \end{itemize}
 \end{frame}
 
+% Slide 02
 \begin{frame}{Roofline model}
 \begin{itemize}
 \item \textbf{Algorithm} on given \textbf{hardware} characterized by \textbf{arithmetic intensity}:\vspace{-.15cm}
@@ -84,6 +87,7 @@ Ratio of peak floating-point performance over peak memory bandwidth.
 \end{itemize}
 \end{frame}
 
+% Slide 03
 \begin{frame}{Memory wall}
 \begin{itemize}
 \item Cost to move data much greater than cost of arithmetic:
@@ -98,6 +102,7 @@ Ratio of peak floating-point performance over peak memory bandwidth.
 \tiny{Gholami, A., Yao, Z., Kim, S., Hooper, C., Mahoney, M.W., Keutzer, K. (2024). AI and Memory Wall. arXiv:2403.14123v1.}
 \end{frame}
 
+% Slide 04
 \begin{frame}{Ideal cache model}
 \begin{itemize}
 \item An \textbf{ideal cache model} is introduced for the analysis of algorithms:
@@ -114,118 +119,285 @@ Ratio of peak floating-point performance over peak memory bandwidth.
 \end{itemize}
 \end{frame}
 
+% Slide 05
 \begin{frame}{Tall caches}
 \begin{itemize}
-\item An 
+\item Several of the coming cache analyses assume a tall cache:
+\begin{block}{Tall cache assumption}
+A cache of size $M$ bytes with $N/B$ lines of $B$ bytes is \textbf{tall} if $B^2<cM$ for some sufficiently small $c<1$.
+\end{block}
+Problem of \textbf{short cache}: 
+\begin{itemize}\normalsize
+\item[-] a $n\times n$ \textbf{sub}matrix may not fit in cache, even if $n^2<cM$
 \end{itemize}
+\end{itemize}
+\begin{center}\includegraphics[height=3cm]{images/short-cache.png}\end{center}
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[] i.e., cache lines store only contiguous data, and consecutive rows of a row major submatrix are not contiguous in memory.
+\end{itemize}
+\end{itemize}
+
 \end{frame}
 
-
+% Slide 06
 \begin{frame}{Communication lower bounds}
 \begin{itemize}
-\item *
+\item Assuming a fast memory of size $M$, Ballard et al. (2011) derive \textbf{lower bounds} on communication for valid all methods of \textbf{direct linear algebra}, \textbf{dense} or \textbf{sparse}:
+\begin{align*}
+\textbf{bandwidth cost}:&\hspace{.2cm}
+\#\text{ of words moved}
+=
+\Omega\left(\frac{\#\text{ of arithmetic operations}}{\sqrt{M}}\right)\\
+\textbf{latency cost}:&\hspace{.2cm}
+\#\text{ of messages sent}
+=
+\Omega\left(\frac{\#\text{ of arithmetic operations}}{\sqrt{M^3}}\right)
+\end{align*}
+\item These bounds hold for
+\begin{itemize}\normalsize
+\item[-] Matrix-multiply, LU, QR, eigensolving, SVD, tensor contraction, ...
+\item[-] Some whole programs (sequences of these operations, no matter how individual operations are interleaved, e.g. $A^k$)
+\item[-] \textbf{Sequential} and \textbf{parallel} algorithms
+\item[-] Some graph-theoretic algorithms (e.g. Floyd-Warshall)
 \end{itemize}
+\item Significant efforts by the NLA community to rethink algorithms to try and achieve these bounds.
+\end{itemize}
+\smallskip
+\tiny{Ballard, G., Demmel, J., Holtz, O., \& Schwartz, O. (2011). Minimizing communication in numerical linear algebra. SIAM Journal on Matrix Analysis and Applications, 32(3), 866-901.}
 \end{frame}
 
 \section{Matrix-matrix multiplication\\
          {\small MIT 6.172 -- Shun (2018)}}
 
+% Slide 07
 \begin{frame}{Cache misses analysis}
 \begin{itemize}
-\item Assume a tall ideal cache
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Cache misses analysis, cont'd\textsubscript{1}}
-\begin{itemize}
-\item Matrix-matrix multiplication with row major data:
+\item Matrix-matrix multiplication with row major data:\vspace{.1cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
 \begin{align*}
-&\text{for}\;i=1,\dots,n\\
-&\;\;\;\text{for}\;j=1,\dots,n\\
-&\;\;\;\;\;\;C[i*n+j]:=0\\
-&\;\;\;\;\;\;\text{for}\;k=1,\dots,n\\
+&\text{for}\;i=0,\dots,n-1
+\hspace{3.1cm}{\color{gray}{\text{//zero-based indexing}}}\\
+&\;\;\;\text{for}\;j=0,\dots,n-1\\
+&\;\;\;\;\;\;\texttt{C}[i*n+j]:=0\\
+&\;\;\;\;\;\;\text{for}\;k=0,\dots,n-1\\
 &\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
 \end{align*}
-\item Assume a tall ideal cache
+\end{minipage}}\end{center}
+$\vspace*{0cm}$\\
+Cache miss complexity, $Q(n)$, \textbf{dominated by access to} $B$.\vspace{.1cm}\\
+Assume a \textbf{tall} and \textbf{ideal cache}. 
+There are 3 cases:\vspace{.05cm}
 \begin{itemize}\normalsize
-\item[-] Case 1: $n>cM/B$
-\item[-] Case 2: $c^\prime M^{1/2}<n<cM/B$
-\item[-] Case 3: $n<cM^{1/2}$
+\item[-] Case 1: $n>cM/B$\vspace{.05cm}\\ 
+\hspace{1.3cm}$B$ misses on every access $\implies$ $Q(n)=\Theta(n^3)$\vspace{.1cm}
+\item[-] Case 2: $c^\prime M^{1/2}<n<cM/B$\vspace{.05cm}\\ 
+\hspace{1.3cm}$B$ exploits spatial locality $\implies$ $Q(n)=\Theta(n^3/B)$\vspace{.1cm}
+\item[-] Case 3: $n<cM^{1/2}$\vspace{.05cm}\\
+\hspace{1.3cm}$B$ fits in cache $\implies$ $Q(n)=\Theta(n^2/B)$
 \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Cache misses analysis, cont'd\textsubscript{2}}
-\begin{itemize}
-\item Assume a tall ideal cache
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Swapping inner loops}
-\begin{itemize}
-\item *
-\end{itemize}
-\end{frame}
-
+% Slide 08
 \begin{frame}{Blocked (tiled) matrix multiplication}
 \begin{itemize}
-\item *
+\item Introduce a block size $s$:\vspace{.1cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\text{for}\;i_1=0,s,\dots,n-s
+\hspace{3.5cm}{\color{gray}{\text{//zero-based indexing}}}\\
+&\;\;\;\text{for}\;j_1=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\text{for}\;k_1=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\;\;\;\text{for}\;i=i_1,\dots,i_1+s-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j=j_1,\dots,j_1+s-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=0\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k=k_1,\dots,k_1+s-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
+\end{align*}
+\end{minipage}}\end{center}
+$\vspace*{0cm}$\\
+\textbf{Tune} $s$ so that the submatrices fit in cache, i.e., $s=\Theta(M^{1/2})$.\vspace{.1cm}\\
+$\hspace{1.2cm}\implies$ \textbf{cache-aware} algorithm, \textbf{architecture dependent}.\vspace{.1cm}\\
+Then $\Theta(s^2/B)$ misses per submatrix so that
+\begin{align*}
+Q(n)=\Theta((n/s)^3(s^2/B))=\Theta(n^3/(BM^{1/2}))
+\rightarrow\;
+\text{provably \textbf{optimal}}.
+\end{align*}
 \end{itemize}
 \end{frame}
 
+% Slide 09
 \begin{frame}{Two-level cache}
-\begin{itemize}
-\item *
-\end{itemize}
+\begin{center}\hspace*{-1cm}\includegraphics[height=7cm]{images/two-levels-blocks.png}\end{center}
+$\vspace{-6.05cm}$\\
+$\hspace*{2.55cm}$
+\begin{minipage}[t]{0.5\textwidth}
+\fcolorbox{black}{white}{\parbox{0.3\linewidth}{
+$\vspace{-.9cm}$\\
+{\small \begin{align*}
+&\text{for}\;i_2=0,s,\dots,n-s
+\hspace{2.8cm}{\color{gray}{\text{//zero-based indexing}}}\\
+&\;\;\;\text{for}\;j_2=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\text{for}\;k_2=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\;\;\;\text{for}\;i_1=i_2,i_2+t,\dots,i_2+s-t\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j_1=j_2,j_2+t,\dots,j_2+s-t\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k_1=k_2,k_2+t,\dots,k_2+s-t\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;i=i_1,\dots,i_1+t-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j=j_1,\dots,j_1+t-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=0\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k=k_1,\dots,k_1+t-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]\\
+&\hspace{5cm}+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
+\end{align*}$\vspace*{-.75cm}$}
+}}
+\end{minipage}
 \end{frame}
 
+% Slide 10
+\begin{frame}{Two-level cache, cont'd}
+$\vspace*{-1.08cm}$\\
+\begin{center}\hspace{-1cm}\includegraphics[height=7cm]{images/two-levels-blocks.png}\end{center}
+$\vspace{-3.8cm}$\\
+$\hspace*{6cm}$
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}
+\item[-] \textbf{Two architecture-dependent parameters} $s$ and $t$ \textbf{to tune}.
+\item[-] Multidimensional tuning \textbf{cannot}\\
+\textbf{be done with binary search}. 
+\end{itemize}
+\end{minipage}
+\end{frame}
+
+% Slide 11
 \begin{frame}{Three-level cache}
+$\vspace*{-1cm}$\\
+\begin{center}\hspace{-1cm}\includegraphics[height=7cm]{images/three-levels-blocks.png}\end{center}
+$\vspace{-3.7cm}$\\
+$\hspace*{5.8cm}$
+\begin{minipage}[t]{0.5\textwidth}
 \begin{itemize}
-\item *
+\item \textbf{Real cache} memories have 3 levels:\\
+\begin{itemize}\normalsize
+\item[-] 12 nested loops.
+\item[-] 3 \textbf{architecture-dependent} $s$, $t$ and $u$ parameters to tune.
+\item[-] Complicated \textbf{offline} optimization.
 \end{itemize}
+\item Existing implementations:
+\begin{itemize}
+\item[-] OpenBLAS, BLIS, ATLAS.
+\end{itemize}
+\end{itemize}
+\end{minipage}
 \end{frame}
 
+% Slide 12
 \begin{frame}{Recursive matrix multiplication}
 \begin{itemize}
-\item *
+\item Divide-and-conquer on $n\times n$ matrices:\vspace{.15cm}
+\begin{center}\hspace{-1cm}\includegraphics[height=2cm]{images/divide-and-conquer-matrix-multiply-1.png}\end{center}\vspace{.15cm}
+\begin{center}\hspace{2.45cm}\includegraphics[height=2cm]{images/divide-and-conquer-matrix-multiply-2.png}\end{center}
+Recurrence of 8 multiply-and-add of $n/2\times n/2$ matrices.\vspace{.1cm}\\
+There are two cases of memory access:
+\begin{itemize}\normalsize
+\item[-] Case 1: $n<cM^{1/2}$ $\implies$ $Q(n)=\Theta(n^2/B)$\vspace{.1cm}
+\item[-] Case 2: otherwise $\implies$ $Q(n)=8Q(n/2)+\Theta(1)$\vspace{.1cm}\\
+\hspace{.02cm}(Master theorem) $\implies$ $Q(n)=\Theta(n^3/(BM^{1/2}))$
+\end{itemize}
 \end{itemize}
 \end{frame}
 
+% Slide 13
 \begin{frame}{Recursive implementation}
 \begin{itemize}
-\item *
+\item Assuming $n$ is a power of 2:
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\texttt{recursive\_gemm}(A, B, C, n):\hspace{2.55cm}{//\color{gray}{C_{1:n,1:n}=0}}\\\
+&\;\;\;\text{if }(n=1):\\
+&\;\;\;\;\;\;c_{11}:=c_{11}+a_{11}*b_{11}
+\hspace{3.5cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\text{else}:\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},1:\frac{n}{2}}, B_{1:\frac{n}{2},1:\frac{n}{2}}, C_{1:\frac{n}{2},1:\frac{n}{2}},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,1:\frac{n}{2}}, C_{1:\frac{n}{2},\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},1:\frac{n}{2}}, B_{1:\frac{n}{2},\frac{n}{2}+1:n}, C_{1:\frac{n}{2},\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, C_{1:\frac{n}{2},\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,1:\frac{n}{2}}, B_{1:\frac{n}{2},1:\frac{n}{2}}, C_{\frac{n}{2}+1:n,1:\frac{n}{2}},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,1:\frac{n}{2}}, C_{\frac{n}{2}+1:n,1:\frac{n}{2}},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,1:\frac{n}{2}}, B_{1:\frac{n}{2}:n,\frac{n}{2}+1:n}, C_{\frac{n}{2}+1:n,\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, C_{\frac{n}{2}+1:n,\frac{n}{2}+1:n},n/2)
+\end{align*}
+\end{minipage}}\end{center}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Analysis of work}
+% Slide 14
+\begin{frame}{Efficient cache-oblivious algorithms}
 \begin{itemize}
-\item *
+\item \textbf{Cache complexity} of $\texttt{recursive\_gemm}$ \textbf{similar to} that of \textbf{tiled matrix multiply}.
+\item Implementation of $\texttt{recursive\_gemm}$ \textbf{not dependent on memory layout}.
+It is a \textbf{cache-oblivious} algorithm.
+\item The best cache-oblivious algorithm work on arbitrary rectangular matrices and perform binary splitting (instead of 8-way).
+\item Recursive matrix-multiply is \textbf{typically not implemented in BLAS}, \textbf{despite good theoretical cache behavior}, because:
+\begin{itemize}\normalsize
+    \item[-] It incurs overhead from recursion and function calls.
+    \item[-] Difficult to efficiently vectorize and parallelize on modern hardware.
+    \item[-] Hard to outperform hand-optimized, architecture-aware, cache-aware implementations.
 \end{itemize}
-\end{frame}
-
-\begin{frame}{Analysis of cache misses}
-\begin{itemize}
-\item *
+\item Recursive matrix multiply is more used as a pedagogical tool for illustrating cache efficiency and divide-and-conquer design.
+\item Recursion is the basis of other fast matrix multiply algorithms, e.g., Strassen's method.
 \end{itemize}
 \end{frame}
 
 \section{Overview and principles of communication avoidance}
 
+% Slide 15
 \begin{frame}{Reducing data movement}
 \begin{itemize}
-\item Reformulate algorithms to rely on \textbf{more arithmetically intense kernels}:
+\item Principles to reduce communication:
+\begin{itemize}
+\item[-] \textbf{Maximize arithmetic intensity}: Perform more floating-point operations per byte of data moved.
 \begin{center}\includegraphics[height=2.7cm]{images/spectrum-arithmetic-intensity.png}\end{center}
+\item[-] \textbf{Exploit data locality}: Reuse data in fast memory (cache/registers) as much as possible.
+\item[-] \textbf{Aggregate communication}: Communicate in bulk instead of fine-grained messages.
+\end{itemize}
+\item Associated challenges:
+\begin{itemize}
+\item[-] \textbf{Numerical stability}: Communication-avoiding variants may be less stable or harder to analyze.
+\item[-] \textbf{Architecture-specific tuning}: Optimal strategies depend on cache hierarchy, network topology, etc...
+\end{itemize}
 \end{itemize}
 \end{frame}
 
+% Slide 16
 \begin{frame}{Sample speedups}
 \begin{itemize}
-\item *
+\item Demmel and Grigori (2016) documents the following speedups achieved by reformulating NLA and other kernels to reduce communication:\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] Up to \textbf{12X} faster for \textbf{2.5D matrix multiply} on 64K core IBM BG/P\vspace{.1cm}
+\item[-] Up to \textbf{3X} faster for \textbf{tensor contractions} on 2K core Cray XE/6\vspace{.1cm}
+\item[-] Up to \textbf{6.2X} faster for \textbf{All-Pairs-Shortest-Path} on 24K core Cray CE6\vspace{.1cm}
+\item[-] Up to \textbf{2.1X} faster for \textbf{2.5D LU} on 64K core IBM BG/P\vspace{.1cm}
+\item[-] Up to \textbf{11.8X} faster for \textbf{direct N-body} on 32K core IBM BG/P\vspace{.1cm}
+\item[-] Up to \textbf{13X} faster for \textbf{Tall Skinny QR} on Tesla C2050 Fermi NVIDIA GPU\vspace{.1cm}
+\item[-] Up to \textbf{6.7X} faster for \textbf{symeig(band A)} on 10 core Intel Westmere\vspace{.1cm}
+\item[-] Up to \textbf{2X} faster for \textbf{2.5D Strassen} on 38K core Cray XT4\vspace{.1cm}
+\item[-] Up to \textbf{4.2X} faster for MiniGMG benchmark bottom solver, using \textbf{CA-BiCGStab} (\textbf{2.5X} for overall solve)\vspace{.1cm}
+\item[-] Up to \textbf{2.5X} for combustion simulation code
 \end{itemize}
+\end{itemize}
+\smallskip
+\tiny{Demmel J. \& Grigori L. (2016) Introduction to communication-avoiding algorithms. CS294/Math270, UC Berkeley.}
 \end{frame}
 
 \section{Sparse matrix-vector product (SpMV)}
 
+% Slide 17
 \begin{frame}{Low data locality of SpMV}
 \begin{itemize}
 \item Recall the CSR data structure:\vspace{.05cm}
@@ -240,31 +412,38 @@ a_{21}&a_{22}&0     &0     \\
 \texttt{col\_idx}=&\;[1, 2, 3, 1, 2, 3, 4, 3]\\
 \texttt{row\_start}=&\;[1, 4, 6, 8, 9]
 \end{align*}
-with the following SpMV kernel:
+with the following SpMV kernel:\vspace{.1cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
 \begin{align*}
-&\text{for}\;i=1,\dots,n\\
+&\text{for}\;i=1,\dots,n\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
 &\;\;\;\texttt{sum}:=0\\
-&\;\;\;\text{for}\;\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
 &\;\;\;\;\;\;\texttt{sum} := \texttt{sum} + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]\\
 &\;\;\;\texttt{y}[i]:=\texttt{sum}
 \end{align*}
+\end{minipage}}\end{center}
 \end{itemize}
 \end{frame}
 
+% Slide 18
 \begin{frame}{Low data locality of SpMV, cont'd}
 \begin{itemize}
-\item SpMV kernel for CSR data structures:\vspace{-.3cm}
+\item SpMV kernel for CSR data structures:\vspace{0cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
 \begin{align*}
-&\texttt{sum}:=0\\
-&\text{for}\;i=1,\dots,n\\
-&\;\;\;\text{for}\;\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\text{for}\;i=1,\dots,n\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\texttt{sum}:=0\\
+&\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
 &\;\;\;\;\;\;\texttt{sum} := \texttt{sum} + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]\\
 &\;\;\;\texttt{y}[i]:=\texttt{sum}
 \end{align*}
-\vspace*{-.7cm}\\
+\end{minipage}}\end{center}
+%\vspace*{-.7cm}\\
 \item \textbf{Irregular access} to the components of $\texttt{x}$:\vspace{.05cm}
 \begin{itemize}\normalsize
-\item[-] \textbf{No spatial locality}, \textbf{no time locality}.\vspace{.1cm}
+\item[-] \textbf{No spatial locality}, \textbf{no temporal locality}.\vspace{.1cm}
 \item[-] \textbf{Every component} of $\texttt{x}$ loaded for a single multiply-and-add is \textbf{trashed immediatly from register}, i.e., no loop unrolling, no SIMD, ...\vspace{.1cm}
 \item[-] \textbf{Sparsity induces lower arithmetic intensity} (AI) than GEMV.\vspace{.1cm}
 \item[-] \textbf{SpMV kernels} are \textbf{memory-bound}, even if $\texttt{x}$ fits in cache.\vspace{.1cm}
@@ -273,19 +452,132 @@ with the following SpMV kernel:
 \end{itemize}
 \end{frame}
 
+% Slide 19
 \begin{frame}{Register blocking}
-
+\begin{itemize}
+\item Improve data locality by promoting \textbf{register reuse}:
+\begin{itemize}\normalsize
+\item[-] \textbf{Register reuse} is \textbf{achieved} for the source vector \textbf{by blocking}, also known as \textbf{tiling}, i.e., relying on contiguous storage of non-zero blocks in the matrix.\vspace{.05cm}
+\item[-] \textbf{Registers} are small, i.e., only \textbf{store a handfull of data}:\vspace{.05cm}\\
+\begin{center}$\implies$ small $r\times c$ block sizes : $r$ values of destination vector + $c$ values\\
+\hspace{.25cm}of source vector + $rc$ values of a block are stored in register.\vspace{.05cm}\end{center}
+\item[-] Blocking allows for \textbf{compiler optimizations}, e.g., loop unrolling, pipelining, ...\vspace{.05cm}
+\item[-] \textbf{Optimal block size dependent} on \textbf{sparsity strucutre} and \textbf{machine architecture}.\vspace{.05cm}
+\item[-] Considerable \textbf{overhead} in changing data structure for register blocking.\vspace{.05cm}
+\item[-] Applications such as finite element methods (FEM) naturally store small dense blocks in sparse matrices.\vspace{.05cm}
+\item[-] Most matrices do not have uniform block structures:\vspace{.05cm}\\
+$\implies$ \textbf{some zero values} are \textbf{stored} for non-fully dense blocks.
+\end{itemize}
+\end{itemize}
 \end{frame}
 
+% Slide 20
+\begin{frame}{Blocked SpMV}
+\begin{itemize}
+\item Recall the BSR (or BCSR) data structure format:\vspace{-.75cm}\\
+\hspace{-.4cm}\begin{minipage}[t]{0.42\textwidth}\vspace{.25cm}
+\begin{align*}
+A=&\;\left[\begin{matrix}
+a_{11}&a_{12}&a_{13}&0\\
+a_{21}&a_{22}&0     &0     \\
+0     &0     &a_{33}&a_{34}\\
+0     &0     &a_{43}&0
+\end{matrix}\right]
+\end{align*}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\begin{align*}
+\texttt{r}=&\;2,\;\texttt{c}=2\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{21}, a_{22},a_{13}, 0, 0, 0,\\
+             &\;\;a_{33}, a_{34}, a_{43}, 0]\\
+\texttt{col\_idx}=&\;[1, 2, 2],\;
+\texttt{row\_start}=[1, 3, 4]
+\end{align*}
+\end{minipage}\vspace{.15cm}\\
+with the following SpMV kernel:\vspace{-.35cm}\\
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{for}\;i=1,\dots,n/r\hspace{5.9cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\;\;\;\text{for}\;ii=1,\dots,r\\
+&\;\;\;\;\;\;\;\;\;\texttt{sum}:=0\\
+&\;\;\;\;\;\;\;\;\;\text{for}\;jj=1,\dots,c\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\texttt{sum} := \texttt{sum}\,+\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{val}[(j-1)*rc+(ii-1)*c+jj]*\texttt{x}[(\texttt{col\_idx}[j]-1)*rc+jj]\\
+&\;\;\;\;\;\;\;\;\;\texttt{y}[(i-1)*r+ii]:=\texttt{sum}
+\end{align*}
+\vspace{-.8cm}
+\end{minipage}}\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 21
 \begin{frame}{Tuning of register blocks}
-
+\begin{itemize}
+\item Optimal block size for register reuse depends on \textbf{sparsity} and \textbf{machine architecture}:
+\begin{itemize}\normalsize
+\item[-] Automated tuning interface by Vuduc et al. (2005): OSKI
+\end{itemize}
+\begin{center}\includegraphics[height=6.2cm]{images/OSKI.png}\end{center}
+\end{itemize}
+\smallskip
+\tiny{Vuduc, R., Demmel, J. W., \& Yelick, K. A. (2005). OSKI: A library of automatically tuned sparse matrix kernels. In Journal of Physics: Conference Series (Vol. 16, No. 1, p. 521). IOP Publishing.}
 \end{frame}
 
-\begin{frame}{MBR}
+% Slide 22
+\begin{frame}{Encoding block sparsity}
+\begin{itemize}
+\item \textbf{Zeros stored} in non-fully dense blocks \textbf{result in} extra floating-point operations, and more importantly, \textbf{extra data movement}.
+\item Only non-zero values need be stored and fetched when \textbf{local block sparsity} is \textbf{encoded}:\vspace{-.95cm}\\
+\hspace*{-.6cm}\begin{minipage}[t]{0.4\textwidth}\vspace{.35cm}
+\begin{align*}
+A=&\;\left[\begin{matrix}
+a_{11}&a_{12}&a_{13}&0\\
+a_{21}&a_{22}&0     &0     \\
+0     &0     &{\color{red}{a_{33}}}&{\color{red}{a_{34}}}\\
+0     &0     &{\color{red}{a_{43}}}&{\color{red}{0}}
+\end{matrix}\right]
+\end{align*}
+\end{minipage}
+\begin{minipage}[t]{0.47\textwidth}
+\begin{align*}
+\texttt{r}=&\;2,\texttt{c}=2\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{21}, a_{22},a_{13}, a_{33}, a_{34}, a_{43}]\\
+\texttt{col\_idx}=&\;[1, 2, 2],\;
+\texttt{row\_start}=[1, 3, 4]\\
+\texttt{b\_map}=&\;[15, 1, {\color{red}{7}}]
+\end{align*}
+\end{minipage}\vspace{.15cm}
+E.g., 
+$\begin{bmatrix}
+{\color{red}{a_{33}}}&{\color{red}{a_{34}}}\\
+{\color{red}{a_{43}}}&{\color{red}{0}}
+\end{bmatrix}\implies$
+sparsity pattern
+$\begin{bmatrix}
+{\color{red}{1}}&{\color{red}{1}}\\
+{\color{red}{1}}&{\color{red}{0}}
+\end{bmatrix}\implies$ unrolled to {\color{red}{1110}}\\
+\hspace{2.75cm}$\implies {\color{red}{1}}\times 2^0+{\color{red}{1}}\times 2^1+{\color{red}{1}}\times 2^2+{\color{red}{0}}\times 2^3={\color{red}{7}}$.\vspace{.1cm}
+\item \textbf{if statements} in SpMV's loop \textbf{decreases efficiency}.
+Two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kannan, 2013).\\
+\medskip
+\tiny{Buluç, A., Williams, S., Oliker, L., \& Demmel, J. (2011). Reduced-bandwidth multithreaded algorithms for sparse matrix-vector multiplication. In 2011 IEEE International Parallel \& Distributed Processing Symposium (pp. 721-733)$\hspace{-1cm}$}\smallskip\\
+\tiny{Kannan, R. (2013). Efficient sparse matrix multiple-vector multiplication using a bitmapped format. In 20th Annual International Conference on High Performance Computing (pp. 286-294).}
+\end{itemize}
 \end{frame}
+
+
+
+
+
+
+
+
+
 
 \section{Block Gram-Schmidt procedures}
-
 
 \section{$s$-step iterative solvers}
 
