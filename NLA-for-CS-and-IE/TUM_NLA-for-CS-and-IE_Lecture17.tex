@@ -543,7 +543,7 @@ a_{21}&a_{22}&0     &0     \\
 \begin{minipage}[t]{0.47\textwidth}
 \begin{align*}
 \texttt{r}=&\;2,\texttt{c}=2\\
-\texttt{val}=&\;[a_{11}, a_{12}, a_{21}, a_{22},a_{13}, a_{33}, a_{34}, a_{43}]\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{21}, a_{22},a_{13}, {\color{red}{a_{33}}}, {\color{red}{a_{34}}}, {\color{red}{a_{43}}}]\\
 \texttt{col\_idx}=&\;[1, 2, 2],\;
 \texttt{row\_start}=[1, 3, 4]\\
 \texttt{b\_map}=&\;[15, 1, {\color{red}{7}}]
@@ -559,8 +559,9 @@ $\begin{bmatrix}
 {\color{red}{1}}&{\color{red}{1}}\\
 {\color{red}{1}}&{\color{red}{0}}
 \end{bmatrix}\implies$ unrolled to {\color{red}{1110}}\\
-\hspace{2.75cm}$\implies {\color{red}{1}}\times 2^0+{\color{red}{1}}\times 2^1+{\color{red}{1}}\times 2^2+{\color{red}{0}}\times 2^3={\color{red}{7}}$.\vspace{.1cm}
-\item \textbf{if statements} in SpMV's loop \textbf{decreases efficiency}.
+\hspace{2.77
+cm}$\implies {\color{red}{1}}\times 2^0+{\color{red}{1}}\times 2^1+{\color{red}{1}}\times 2^2+{\color{red}{0}}\times 2^3={\color{red}{7}}$.\vspace{.1cm}
+\item \textbf{if statements} in SpMV's loop \textbf{decrease efficiency}.
 Two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kannan, 2013).\\
 \medskip
 \tiny{Buluç, A., Williams, S., Oliker, L., \& Demmel, J. (2011). Reduced-bandwidth multithreaded algorithms for sparse matrix-vector multiplication. In 2011 IEEE International Parallel \& Distributed Processing Symposium (pp. 721-733)$\hspace{-1cm}$}\smallskip\\
@@ -568,16 +569,237 @@ Two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kan
 \end{itemize}
 \end{frame}
 
-
-
-
-
-
-
-
-
-
 \section{Block Gram-Schmidt procedures}
+
+% Slide 23
+\begin{frame}{Block Gram-Schmidt procedures}
+\begin{itemize}
+\item \textbf{Gram-Schmidt} (\textbf{GS}) procedure:
+\begin{itemize}\normalsize
+\item[-] Returns the QR factorization of an $m\times n$ matrix $X$ by \textbf{orthogonalizing vectors}, \textbf{one-at-a-time}, against previously orthnogonalized vectors.
+\end{itemize}
+\end{itemize}\vspace{-.3cm}
+\begin{minipage}[t]{.65\textwidth}
+\begin{itemize}
+\item \textbf{Block Gram-Schmidt} (\textbf{BGS}) procedure:
+\begin{itemize}\normalsize
+\item[-] Works on \textbf{blocks of $s$ vectors} at a time.
+\item[-] Procedure fully specified upon definition of\\
+a \textbf{projector $\Pi^{(i)}$ onto} $\text{range}(Q_{:,1:is})^\perp$ and an \textbf{IntraOrtho} orthogonalization procedure:
+\end{itemize}
+\vspace{-.45cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})\\
+&\text{for}\;i=2,\dots,p\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;Q_{:,(i-1)s+1:is}:=\Pi^{(i-1)}X_{:,(i-1)s+1:is}\\
+&\;\;\;\text{IntraOrtho}(Q_{:,(i-1)s+1:is})\mapsto\\
+&\hspace{2.07cm}(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is})
+\end{align*}
+\vspace{-.8cm}
+\end{minipage}}
+\end{center}
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{.3\textwidth}\vspace{.2cm}
+\begin{center}\hspace*{.4cm}\includegraphics[height=6cm]{images/blocked-X.png}\end{center}
+\end{minipage}\vspace{-.6cm}
+\begin{itemize}
+\item[] 
+\begin{itemize}\normalsize
+\item[-] Applying $\Pi^{(i)}$ to blocks of $s$ vectors at a time \textbf{increases}\\ 
+\textbf{arithmetic intensity}, and \textbf{decreases synchronizations}.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 24
+\begin{frame}{Block classical Gram-Schmidt (BCGS)}
+\begin{itemize}
+\item BCGS is formed with $\Pi^{(i)}:=I_n-Q_{:,1:is}Q_{:,1:is}^T$ which leads to
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})
+\hspace{2.7cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;R_{1:(i-1)s,(i-1)s+1:is}:=Q_{:,1:(i-1)s}^TX_{:,(i-1)s+1:is}
+\hspace{2.74cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;W:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R_{1:(i-1)s,(i-1)s+1:is}
+\hspace{1.85cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is})
+\end{align*}
+\end{minipage}}
+\end{center}
+\vspace{.1cm}
+\textbf{All $s$ vectors} of the block treated by IntraOrtho are \textbf{simultaneaously available}.\vspace{.1cm}\\
+Therefore, \textbf{IntraOrtho needs not} necessarily \textbf{be Gram-Schmidt}.\vspace{.1cm}\\
+The QR factorization can be computed by Cholesky QR (CholQR), tall and skinny QR (TSQR), Householder QR (HouseQR), ...:
+\begin{align*}
+\text{IntraOrtho}\in\{\text{CGS},\text{CGS2},\text{MGS},\text{CholQR},\text{CholQR2},\text{TSQR},\text{HouseQR},\dots\}
+\end{align*}
+Each so-specified variant is referred to as $\text{BCSG}\circ\text{IntraOrtho}$.
+\end{itemize}
+\end{frame}
+
+% Slide 25
+\begin{frame}{Block classical Gram-Schmidt reorthogonalized (BCGS2)}
+\begin{itemize}
+\item BCGS is stabilized by reorthogonalizing either by running BCSG twice, or by repeating each inner loop (BCGS2):\vspace{-.3cm}
+\begin{center}$\hspace*{-.5cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.4cm}
+{\footnotesize\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})
+\hspace{4.25cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;R^{(1)}_{1:(i-1)s,(i-1)s+1:is}:=Q_{:,1:(i-1)s}^TX_{:,(i-1)s+1:is}
+\hspace{4.2cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;W:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R^{(1)}_{1:(i-1)s,(i-1)s+1:is}
+\hspace{3.45cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(\widehat{Q},R^{(1)}_{(i-1)s+1:is,(i-1)s+1:is})\\
+&\;\;\;R^{(2)}_{1:(i-1)s,(i-1)s+1:is}:=Q_{:,1:(i-1)s}^T\widehat{Q}
+\hspace{5.75cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;W:=\widehat{Q}-Q_{:,1:(i-1)s}R^{(2)}_{1:(i-1)s,(i-1)s+1:is}
+\hspace{5cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(Q_{:,(i-1)s+1:is},R^{(2)}_{(i-1)s+1:is,(i-1)s+1:is})\\
+&\;\;\;R_{1:(i-1)s,(i-1)s+1:is}:=R^{(1)}_{1:(i-1)s,(i-1)s+1:is}+R^{(2)}_{1:(i-1)s,(i-1)s+1:is}R^{(1)}_{(i-1)s+1:is,(i-1)s+1:is}\\
+&\;\;\;R_{(i-1)s+1:is,(i-1)s+1:is}=R^{(2)}_{(i-1)s+1:is,(i-1)s+1:is}R^{(1)}_{(i-1)s+1:is,(i-1)s+1:is}
+\end{align*}}
+\end{minipage}}
+\end{center}\vspace{.15cm}
+We refer to associated variants as $\text{BCGS2}\circ\text{IntraOrtho}$ where\vspace{-.15cm}
+\begin{align*}
+\text{IntraOrtho}\in\{\text{CGS},\text{CGS2},\text{MGS},\text{CholQR},\text{CholQR2},\text{TSQR},\text{HouseQR},\dots\}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 26
+\begin{frame}{Block modified Gram-Schmidt (BMGS)}
+\begin{itemize}
+\item BMGS is formed with\vspace{-.2cm}
+\begin{align*}
+\Pi^{(i)}:=
+(I_n-Q_{:,(i-1)s+1:is}Q_{:,(i-1)s+1:is}^T)
+\dots
+(I_n-Q_{:,1:s}Q_{:,1:s}^T)
+\end{align*}
+$\vspace*{-.8cm}$\\
+which leads to\vspace{.1cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})
+\hspace{2.7cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;W:=X_{:,(i-1)s+1:is}\\
+&\;\;\;\text{for}\;j=1,\dots,i-1\\
+&\;\;\;\;\;\;R_{(j-1)s+1:js,(i-1)s+1:is}:=Q_{:,(j-1)s+1:js}^TW
+\hspace{3.05cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\;\;\;W:=W-Q_{:,(j-1)s+1:js}R_{(j-1)s+1:js,(i-1)s+1:is}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is})
+\end{align*}
+\end{minipage}}
+\end{center}\vspace{.1cm}
+We refer to associated variants as $\text{BMGS}\circ\text{IntraOrtho}$ where
+\begin{align*}
+\text{IntraOrtho}\in\{\text{CGS},\text{CGS2},\text{MGS},\text{CholQR},\text{CholQR2},\text{TSQR},\text{HouseQR},\dots\}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 27
+\begin{frame}{Block randomized Gram-Schmidt (BRGS)}
+\begin{itemize}
+\item BRGS is formed by with $\Pi^{(i)}:=I_n-Q_{:,1:is}(\Theta Q_{:,1:is})^\dagger\Theta$ which leads to\vspace{0cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{Compute }Q_{:,1:s}\text{ and }R_{1:s,1:s}
+\hspace{4.28cm}{\color{gray}{\text{//RGS or RCholQR}}}\\
+&\text{s.t.}\,\Theta Q_{:,1:s}R_{1:s,1:s}=\Theta X_{:,1:s}\\
+&\text{and }(\Theta Q_{:,1:s})^T\Theta Q_{:,1:s}=I_s\\
+&S_{:,1:s}:=\Theta Q_{:,1:s}
+\hspace{5.85cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;P:=\Theta X_{:,(i-1)s+1:is}\\
+&\;\;\;R_{1:(i-1)s,(i-1)s+1:is}:=\arg\underset{Y\in\mathbb{R}^{(i-1)s\times s}}{\min}\|S_{:,1:(i-1)s}Y-P\|_F\\
+&\;\;\;Q_{:,(i-1)s+1:is}:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R_{1:(i-1)s,(i-1)s+1:is}\\
+&\;\;\;\text{Compute }Q_{:,(i-1)s+1:is}\text{ and }R_{(i-1)s+1:is,(i-1)s+1:is}
+\hspace{.4cm}{\color{gray}{\text{//RGS or RCholQR}}}\\
+&\;\;\;\text{s.t. }\Theta Q_{:,(i-1)s+1:is}R_{(i-1)s+1:is,(i-1)s+1:is}=\Theta X_{:,(i-1)s+1:is}\\
+&\;\;\;\text{and }(\Theta Q_{:,(i-1)s+1:is})^T\Theta Q_{:,(i-1)s+1:is}=I_s\\
+&\;\;\;S_{:,(i-1)s+1:is}:=\Theta Q_{:,(i-1)s+1:is}
+\end{align*}
+\end{minipage}}
+\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 28
+\begin{frame}{Stability aspects}
+\begin{itemize}
+\item The loss of orthogonality $\|I_n-Q^TQ\|_2$ achieved in finite precision by BGS algorithms depends on $\Pi^{(i)}$ as well as on IntraOrtho.\vspace{.1cm}\\
+If IntraOrtho is unconditionally stable, i.e., if $\text{IntraOrtho}(X)\mapsto(Q,R)$ is such that
+$\|I_n-Q^TQ\|_2=\mathcal{O}(\varepsilon)$ irrespective of $\kappa(X)$, then:\vspace{-.25cm}
+\begin{center}{\small\hspace*{-.65cm}
+\begin{tabular}{|c|c|c|c|}
+\hline
+BGS   & $\|I_n-Q^TQ\|_2$ & Assumption on $\kappa(X)$ & Reference(s)\\
+\hline
+BCGS  & $\mathcal{O}(\varepsilon)\kappa^{n-1}(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & conjecture\\ 
+BCGS2 & $\mathcal{O}(\varepsilon)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & $\!\!$Barlow and Smoktunowicz (2013)$\!\!\!$\\ 
+BMGS  & $\mathcal{O}(\varepsilon)\kappa(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Jalby and Philippe (1991)\\ 
+\hline
+\end{tabular}}
+\end{center}\vspace{.1cm}
+\item Most orthogonalization procedures are not unconditionally stable:\vspace{-.3cm}
+\begin{center}\hspace*{-.55cm}{\small
+\begin{tabular}{|c|c|c|c|}
+\hline
+IntraOrtho & $\|I_n-Q^TQ\|_2$ & Assumption on $\kappa(X)$ & Reference(s)\\
+\hline
+CGS      & $\mathcal{O}(\varepsilon)\kappa^{n-1}(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Kiełbasiński (1974)\\ 
+CGS2     & $\mathcal{O}(\varepsilon)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Giraud et al. (2005)\\ 
+MGS      & $\mathcal{O}(\varepsilon)\kappa(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Björck (1967)\\ 
+CholQR   & $\mathcal{O}(\varepsilon)\kappa^2(X)$ & $\mathcal{O}(\varepsilon)\kappa^2(X)<1$ & Yamamoto et al. (2015)\\ 
+CholQR2  & $\mathcal{O}(\varepsilon)$ & $\mathcal{O}(\varepsilon)\kappa^2(X)<1$ & Yamamoto et al. (2015)\\ 
+HouseQR  & $\mathcal{O}(\varepsilon)$ & none & Section 10 in Higham (2002)$\!\!$\\ 
+TSQR     & $\mathcal{O}(\varepsilon)$ & none & Mori et al. (2012)\\
+\hline
+\end{tabular}}
+\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 29
+\begin{frame}{Stability aspects, cont'd}
+\begin{itemize}
+\item Other results available:
+\item[] Jalby and Philippe (1991):
+\begin{itemize}\normalsize
+\item[-] $\text{BMGS}\circ\text{MGS}$ behaves like CGS.\vspace{.1cm}
+\item[-] $\text{BMGS}\circ\text{MGS2}$ is as stable as MGS.
+\end{itemize}
+\item[] Carson et al. (2022):
+\begin{itemize}
+\item[-] $\text{BMGS}\circ\text{any IntraOrtho with }\|I_n-Q^TQ\|\leq\mathcal{O}(\varepsilon)$ is as stable MGS.
+\end{itemize}
+%\item See Carson et al. (2022) for an overview of stability properties of BGS algorithms.
+\end{itemize}
+\smallskip
+\tiny{Balabanov, O., \& Grigori, L. (2025). Randomized block Gram–Schmidt process for the solution of linear systems and eigenvalue problems. SIAM Journal on Scientific Computing, 47(1), A553-A585.}\tinyskip\\
+\tiny{Barlow, J. L., \& Smoktunowicz, A. (2013). Reorthogonalized block classical Gram–Schmidt. Numerische Mathematik, 123(3), 395-423.}\tinyskip\\
+\tiny{Björck, Å. (1967). Solving linear least squares problems by Gram-Schmidt orthogonalization. BIT Numerical Mathematics, 7(1), 1-21.}\tinyskip\\
+\tiny{Carson, E., Lund, K., Rozložník, M., \& Thomas, S. (2022). Block Gram-Schmidt algorithms and their stability properties. Linear Algebra and its Applications, 638, 150-195.}\tinyskip\\
+\tiny{Giraud, L., Langou, J., Rozložník, M., \& Eshof, J. V. D. (2005). Rounding error analysis of the classical Gram-Schmidt orthogonalization process. Numerische Mathematik, 101(1), 87-100.}\tinyskip\\
+\tiny{Higham, N. J. (2002). Accuracy and stability of numerical algorithms. Society for industrial and applied mathematics.}\tinyskip\\
+\tiny{Jalby, W., \& Philippe, B. (1991). Stability analysis and improvement of the block Gram–Schmidt algorithm. SIAM journal on scientific and statistical computing, 12(5), 1058-1073.}\tinyskip\\
+\tiny{Kiełbasiński, A. (1974). Analiza numeryczna algorytmu ortogonalizacji Grama-Schmidta. Mathematica Applicanda, 2(2).}\tinyskip\\
+\tiny{Mori, D., Yamamoto, Y., \& Zhang, S. L. (2012). Backward error analysis of the AllReduce algorithm for Householder QR decomposition. Japan journal of industrial and applied mathematics, 29, 111-130.}\tinyskip\\
+\tiny{Yamamoto, Y., Nakatsukasa, Y., Yanagisawa, Y., \& Fukaya, T. (2015). Roundoff error analysis of the CholeskyQR2 algorithm. Electron. Trans. Numer. Anal, 44(01), 306-326.}
+\end{frame}
 
 \section{$s$-step iterative solvers}
 
