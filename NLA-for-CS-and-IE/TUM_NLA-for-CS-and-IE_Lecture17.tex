@@ -576,7 +576,7 @@ Two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kan
 \begin{itemize}
 \item \textbf{Gram-Schmidt} (\textbf{GS}) procedure:
 \begin{itemize}\normalsize
-\item[-] Returns the QR factorization of an $m\times n$ matrix $X$ by \textbf{orthogonalizing vectors}, \textbf{one-at-a-time}, against previously orthnogonalized vectors.
+\item[-] Returns the QR factorization of an $m\times n$ matrix $X$ by \textbf{orthogonalizing vectors}, \textbf{one-at-a-time}, against previously orthogonalized vectors.
 \end{itemize}
 \end{itemize}\vspace{-.3cm}
 \begin{minipage}[t]{.65\textwidth}
@@ -633,7 +633,7 @@ a \textbf{projector $\Pi^{(i)}$ onto} $\text{range}(Q_{:,1:is})^\perp$ and an \t
 \end{minipage}}
 \end{center}
 \vspace{.1cm}
-\textbf{All $s$ vectors} of the block treated by IntraOrtho are \textbf{simultaneaously available}.\vspace{.1cm}\\
+\textbf{All $s$ vectors} of the block treated by IntraOrtho are \textbf{simultaneously available}.\vspace{.1cm}\\
 Therefore, \textbf{IntraOrtho needs not} necessarily \textbf{be Gram-Schmidt}.\vspace{.1cm}\\
 The QR factorization can be computed by Cholesky QR (CholQR), tall and skinny QR (TSQR), Householder QR (HouseQR), ...:
 \begin{align*}
@@ -796,17 +796,153 @@ TSQR     & $\mathcal{O}(\varepsilon)$ & none & Mori et al. (2012)\\
 \tiny{Giraud, L., Langou, J., Rozložník, M., \& Eshof, J. V. D. (2005). Rounding error analysis of the classical Gram-Schmidt orthogonalization process. Numerische Mathematik, 101(1), 87-100.}\tinyskip\\
 \tiny{Higham, N. J. (2002). Accuracy and stability of numerical algorithms. Society for industrial and applied mathematics.}\tinyskip\\
 \tiny{Jalby, W., \& Philippe, B. (1991). Stability analysis and improvement of the block Gram–Schmidt algorithm. SIAM journal on scientific and statistical computing, 12(5), 1058-1073.}\tinyskip\\
-\tiny{Kiełbasiński, A. (1974). Analiza numeryczna algorytmu ortogonalizacji Grama-Schmidta. Mathematica Applicanda, 2(2).}\tinyskip\\
+\tiny{Kiełbasiński, A. (1974). Analiza numeryczna algorytmu ortogonalizacji Grama-Schmidta. Mathematica Applicanda, 2(2).$\!\!$}\tinyskip\\
 \tiny{Mori, D., Yamamoto, Y., \& Zhang, S. L. (2012). Backward error analysis of the AllReduce algorithm for Householder QR decomposition. Japan journal of industrial and applied mathematics, 29, 111-130.}\tinyskip\\
 \tiny{Yamamoto, Y., Nakatsukasa, Y., Yanagisawa, Y., \& Fukaya, T. (2015). Roundoff error analysis of the CholeskyQR2 algorithm. Electron. Trans. Numer. Anal, 44(01), 306-326.}
 \end{frame}
 
 \section{$s$-step iterative solvers}
 
+% Slide 30
+\begin{frame}{Introduction to $s$-step Krylov subspace methods}
+\begin{itemize}
+\item Krylov subspace methods seek for iterates in some Krylov subspace $\mathcal{K}_m$ with residual orthogonal to some subspace $\mathcal{L}_m$.\vspace{.05cm}\\ 
+At each iteration, the following steps are executed:
+\begin{enumerate}\normalsize
+\item Increase the dimension of $\mathcal{K}_m$:\\
+Sparse matrix-vector (\textbf{SpMV}) product (\textbf{communication-bound})\vspace{.05cm}
+\item Orthogonalize against $\mathcal{L}_m$:\\
+\textbf{Gram-Schmidt} procedure (\textbf{communication-bound})\vspace{.05cm}
+\end{enumerate}
+$\hspace{-.2cm}\implies$ \textbf{Performance} of Krylov subspace methods \textbf{limited by comunication}.$\hspace{-1cm}$\vspace{.05cm}
+\item $s$-step Krylov subspace methods \textbf{compute blocks of $s$ iterations} at once:\\
+\begin{itemize}\normalsize
+\item[-] Iteration loop split into an \textbf{outer loop} and an \textbf{inner loop}.\vspace{.05cm}\\
+\hspace{1.38cm}SpMV ($Av$) $\rightarrow$ \textbf{Matrix power kernel} $(Av,\dots,A^{s}v)$\vspace{.05cm}\\
+\hspace{1cm}Gram-Schmidt $\rightarrow$ \textbf{Block Gram-Schmidt}\vspace{.05cm}
+\item[-] Mathematically equivalent to standard methods (in perfect arithmetic).\vspace{.05cm}
+%\item[-] Increases arithmetic intensity (sequential implementation) and reduces number of synchronization (parallel implementation).\vspace{.05cm}
+\end{itemize}
+$\hspace{-.2cm}\implies$ \textbf{Increases arithmetic intensity} (sequential implementation),\\
+$\hspace{.78cm}$\textbf{Reduces number of synchronizations} (parallel implementation).
+%\item[] $\hspace{-.2cm}\implies$ \textbf{Reduces communication} cost \textbf{by} $\mathcal{O}(s)$.
+\end{itemize}
+\end{frame}
+
+% Slide 31
+\begin{frame}{s-step Arnoldi}
+\begin{itemize}
+\item An $s$-step Arnoldi procedure computes a basis $\mathfrak{Q}_j:=[Q_1,\dots,Q_j]$ of the Krylov subspace $\text{range}([V_1,\dots,V_j])=\mathcal{K}_{js}(A,v)$ using a projector $\Pi^{(j)}$ onto $\text{range}(\mathfrak{Q}_j)^{\perp}$ and an IntraOrtho procedure:\vspace{.1cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&V_1:=[v,Av,\dots,A^{s-1}v]\\
+&\text{IntraOrtho}(V_1)\mapsto(Q_1,R_1)\\
+&\text{for}\;j=2,\dots,p\\
+&\;\;\;v:=V_{j-1}[:,s]
+\hspace{1.5cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;V_j:=[Av,\dots,A^{s}v]
+\hspace{.43cm}{\color{gray}{\text{//matrix power kernel}}}\\
+&\;\;\;Q_j:=\Pi^{(j-1)}V_j\\
+&\;\;\;\text{IntraOrtho}(Q_j)\mapsto(Q_j,R_j)
+\end{align*}
+\vspace{-.75cm}
+\end{minipage}}
+\end{center}
+\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] Hoemmen (2010) uses $\Pi^{(j)}:=I_n-\mathfrak{Q}_j\mathfrak{Q}_j^T$ (BCGS), IntraOrtho$\,=$TSQR.$\hspace{-1cm}$\vspace{.05cm}
+\item[-] In parallel, $s$-step Arnoldi requires $s$X less messages than regular Arnoldi.\vspace{.05cm}
+\item[-] Loss of orthogonality increases rapidly with $s$, delaying convergence $\implies$ optimal $s$ depends on $A$ and architecture.
+\end{itemize}
+\end{itemize}
+\smallskip
+\tiny{$\!\!$Hoemmen, M. (2010). Communication-avoiding Krylov subspace methods. PhD thesis. University of California, Berkeley.$\hspace{-1cm}$}
+\end{frame}
+
+% Slide 32
+\begin{frame}{s-step Arnoldi, cont'd}
+\begin{itemize}
+\item In practice, the ill-conditioning grows so quick that $s$ values need to be kept small, i.e., typically no more than 5.\vspace{.1cm}\\
+Two ways to improve stability:
+\begin{itemize}\normalsize
+\item[-] Use a more stable BGS kernel than BCGS, e.g., BMGS or BCGS2.\vspace{.1cm}
+\item[-] Use Chebyshev or Newton matrix polynomials instead of monomials.
+\end{itemize}
+Arbitrary matrix polynomials are used as follows:\vspace{.1cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&V_1:=[p_0(A)v,p_1(A)v,\dots,p_{s-1}(A)v]\\
+&\text{IntraOrtho}(V_1)\mapsto(Q_1,R_1)\\
+&\text{for}\;j=2,\dots,p\\
+&\;\;\;v:=V_{j-1}[:,s]
+\hspace{2.65cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;V_j:=[p_1(A)v,\dots,p_s(A)v]
+\hspace{.43cm}{\color{gray}{\text{//matrix power kernel}}}\\
+&\;\;\;Q_j:=\Pi^{(j-1)}V_j\\
+&\;\;\;\text{IntraOrtho}(Q_j)\mapsto(Q_j,R_j)
+\end{align*}
+\vspace{-.75cm}
+\end{minipage}} 
+\end{center}
+\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] $s$-step Arnoldi forms the basis for $s$-tep GMRES.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
 \section{Matrix power kernels}
+
+% Slide 33
+\begin{frame}{Matrix power kernels}
+\begin{itemize}
+\item An essential part of $s$-step methods is the \textbf{computation} of $s$ \textbf{matrix powers}
+\begin{align*}
+p_{1}(A)v,\dots,p_s(A)v
+\end{align*}
+which relies on \textbf{memory-bound SpMV} calls.\vspace{.05cm}\\
+In a \textbf{sequential} computation, $s$ SpMV invocations require \textbf{reading the entire matrix $s$ times from
+slow memory}.\vspace{.05cm}\\
+In \textbf{parallel}, they require $\Omega(s)$ \textbf{messages} (if the matrix is not block diagonal).
+\item Demmel et al. (2007, 2008, 2009) develop \textbf{communication-avoiding matrix power kernels}:
+\begin{itemize}\normalsize
+\item[-] Requires $1+o(1)$ read of the sparse matrix $A$ for \textbf{sequential} implementations.\vspace{.05cm}
+\item[-] Requires only $\mathcal{O}(1)$ messages in \textbf{parallel}. 
+\end{itemize}
+\end{itemize}
+\smallskip
+\tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2007). Avoiding communication in computing Krylov subspaces. Tech. Rep. UCB/EECS-2007-123, University of California, Berkeley.}\tinyskip\\
+\tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2008). Avoiding communication in sparse matrix computations. IEEE International Parallel and Distributed Processing Symposium.}\tinyskip\\
+\tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2009). Minimizing communication in sparse matrix solvers. Proceedings of the 2009 ACM/IEEE Conference on Supercomputing (New York, NY, USA).}
+\end{frame}
+
+
+
 
 \section{Homework problems}
 
+% Slide 32
+\begin{frame}{Homework problems}
+\end{frame}
+
 \section{Practice session}
+
+% Slide 33
+\begin{frame}[fragile]{Practice session}
+\begin{enumerate}
+\item Code a function \mintinline{julia}{BCGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR as IntraOrtho. 
+\item Code a function \mintinline{julia}{BCGS2} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR as IntraOrtho. 
+\item Code a function \mintinline{julia}{BMGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR as IntraOrtho. 
+\item Code a function \mintinline{julia}{BRGS} with the option to use either of RGS and RCholQR as IntraOrtho. 
+\end{enumerate}
+\end{frame}
+
+
+
+
+
+
 
 \end{document}
