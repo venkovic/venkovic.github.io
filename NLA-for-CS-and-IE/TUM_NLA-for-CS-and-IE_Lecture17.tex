@@ -181,7 +181,6 @@ Problem of \textbf{short cache}:
 &\text{for}\;i=0,\dots,n-1
 \hspace{3.1cm}{\color{gray}{\text{//zero-based indexing}}}\\
 &\;\;\;\text{for}\;j=0,\dots,n-1\\
-&\;\;\;\;\;\;\texttt{C}[i*n+j]:=0\\
 &\;\;\;\;\;\;\text{for}\;k=0,\dots,n-1\\
 &\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
 \end{align*}
@@ -214,7 +213,6 @@ There are 3 cases:\vspace{.05cm}
 &\;\;\;\;\;\;\text{for}\;k_1=0,s,\dots,n-s\\
 &\;\;\;\;\;\;\;\;\;\text{for}\;i=i_1,\dots,i_1+s-1\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j=j_1,\dots,j_1+s-1\\
-&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=0\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k=k_1,\dots,k_1+s-1\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
 \end{align*}
@@ -249,7 +247,6 @@ $\vspace{-.9cm}$\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k_1=k_2,k_2+t,\dots,k_2+s-t\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;i=i_1,\dots,i_1+t-1\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j=j_1,\dots,j_1+t-1\\
-&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=0\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k=k_1,\dots,k_1+t-1\\
 &\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]\\
 &\hspace{5cm}+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
@@ -412,15 +409,13 @@ a_{21}&a_{22}&0     &0     \\
 \texttt{col\_idx}=&\;[1, 2, 3, 1, 2, 3, 4, 3]\\
 \texttt{row\_start}=&\;[1, 4, 6, 8, 9]
 \end{align*}
-with the following SpMV kernel:\vspace{.1cm}
+with the following SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$):\vspace{.1cm}
 \begin{center}\fbox{\begin{minipage}{6cm}
 \vspace{-.5cm}
 \begin{align*}
 &\text{for}\;i=1,\dots,n\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
-&\;\;\;\texttt{sum}:=0\\
 &\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
-&\;\;\;\;\;\;\texttt{sum} := \texttt{sum} + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]\\
-&\;\;\;\texttt{y}[i]:=\texttt{sum}
+&\;\;\;\;\;\;\texttt{y}[i] := \texttt{y}[i] + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]
 \end{align*}
 \end{minipage}}\end{center}
 \end{itemize}
