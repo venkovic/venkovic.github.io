@@ -429,15 +429,13 @@ with the following SpMV kernel:\vspace{.1cm}
 % Slide 18
 \begin{frame}{Low data locality of SpMV, cont'd}
 \begin{itemize}
-\item SpMV kernel for CSR data structures:\vspace{0cm}
+\item SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$) for CSR data structures:\vspace{0cm}
 \begin{center}\fbox{\begin{minipage}{6cm}
 \vspace{-.5cm}
 \begin{align*}
 &\text{for}\;i=1,\dots,n\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
-&\;\;\;\texttt{sum}:=0\\
 &\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
-&\;\;\;\;\;\;\texttt{sum} := \texttt{sum} + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]\\
-&\;\;\;\texttt{y}[i]:=\texttt{sum}
+&\;\;\;\;\;\;\texttt{y}[i] := \texttt{y}[i] + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]
 \end{align*}
 \end{minipage}}\end{center}
 %\vspace*{-.7cm}\\
@@ -494,18 +492,16 @@ a_{21}&a_{22}&0     &0     \\
 \texttt{row\_start}=[1, 3, 4]
 \end{align*}
 \end{minipage}\vspace{.15cm}\\
-with the following SpMV kernel:\vspace{-.35cm}\\
+with the following SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$):\vspace{-.35cm}\\
 \begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
 \vspace{-.6cm}
 \begin{align*}
 &\text{for}\;i=1,\dots,n/r\hspace{5.9cm}{\color{gray}{\text{//one-based indexing}}}\\
 &\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
 &\;\;\;\;\;\;\text{for}\;ii=1,\dots,r\\
-&\;\;\;\;\;\;\;\;\;\texttt{sum}:=0\\
 &\;\;\;\;\;\;\;\;\;\text{for}\;jj=1,\dots,c\\
-&\;\;\;\;\;\;\;\;\;\;\;\;\texttt{sum} := \texttt{sum}\,+\\
-&\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{val}[(j-1)*rc+(ii-1)*c+jj]*\texttt{x}[(\texttt{col\_idx}[j]-1)*rc+jj]\\
-&\;\;\;\;\;\;\;\;\;\texttt{y}[(i-1)*r+ii]:=\texttt{sum}
+&\;\;\;\;\;\;\;\;\;\;\;\;\texttt{y}[(i-1)*r+ii]:=\texttt{y}[(i-1)*r+ii]\,+\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{val}[(j-1)*rc+(ii-1)*c+jj]*\texttt{x}[(\texttt{col\_idx}[j]-1)*rc+jj]
 \end{align*}
 \vspace{-.8cm}
 \end{minipage}}\end{center}
@@ -937,7 +933,8 @@ Analyze the worst case memory access pattern in terms of number of read and writ
 Consider a sparse matrix $A$ of size $10^6\times 10^6$ with $5\cdot 10^6$ non-zero values spread in dense $4\times 4$ blocks.
 Let the matrix be stored in BCSR format with a block size of $r\times c=4\times 4$.
 You may further assume that all stored blocks of the BCSR data structure are perfectly aligned with the non-zero pattern of the matrix.
-Assuming, for within a block, a perfect reuse of data from the source and destination vectors in registers, analyze the worst case memory access pattern in terms of number of read and write accesses, and find the corresponding arithmetic intensity of the BCSR-based SpMV kernel for this matrix.
+Assuming that, within blocks, there is a perfect reuse of data from the source and destination vectors in registers, analyze the worst case memory access pattern in terms of number of read and write accesses, and find the corresponding arithmetic intensity of the BCSR-based SpMV kernel for this matrix.
+Ignore indexing arithmetic in your account of floating-point operations.
 \end{minipage}
 \end{frame}
 
