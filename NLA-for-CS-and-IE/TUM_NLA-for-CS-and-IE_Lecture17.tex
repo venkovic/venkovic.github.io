@@ -918,24 +918,40 @@ In \textbf{parallel}, they require $\Omega(s)$ \textbf{messages} (if the matrix 
 \tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2009). Minimizing communication in sparse matrix solvers. Proceedings of the 2009 ACM/IEEE Conference on Supercomputing (New York, NY, USA).}
 \end{frame}
 
-
-
-
 \section{Homework problems}
 
-% Slide 32
-\begin{frame}{Homework problems}
+% Slide 34
+\begin{frame}{Homework problem}\vspace{.1cm}
+Turn in \textbf{your own} solution to \textbf{Pb.~35}:\vspace{.15cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$35}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Consider a sparse matrix $A$ of size $10^6\times 10^6$ with $5\cdot 10^6$ non-zero values.
+Analyze the worst case memory access pattern in terms of number of read and write accesses and find the corresponding arithmetic intensity of standard CSR-based SpMV for this matrix.
+\end{minipage}\vspace{.15cm}
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$36}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Consider a sparse matrix $A$ of size $10^6\times 10^6$ with $5\cdot 10^6$ non-zero values spread in dense $4\times 4$ blocks.
+Let the matrix be stored in BCSR format with a block size of $r\times c=4\times 4$.
+You may further assume that all stored blocks of the BCSR data structure are perfectly aligned with the non-zero pattern of the matrix.
+Assuming, for within a block, a perfect reuse of data from the source and destination vectors in registers, analyze the worst case memory access pattern in terms of number of read and write accesses, and find the corresponding arithmetic intensity of the BCSR-based SpMV kernel for this matrix.
+\end{minipage}
 \end{frame}
 
 \section{Practice session}
 
-% Slide 33
+% Slide 35
 \begin{frame}[fragile]{Practice session}
 \begin{enumerate}
-\item Code a function \mintinline{julia}{BCGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR as IntraOrtho. 
-\item Code a function \mintinline{julia}{BCGS2} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR as IntraOrtho. 
-\item Code a function \mintinline{julia}{BMGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR as IntraOrtho. 
+\item Code a function \mintinline{julia}{BCGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR2 as IntraOrtho. 
+\item Code a function \mintinline{julia}{BCGS2} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR2 as IntraOrtho. 
+\item Code a function \mintinline{julia}{BMGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR2 as IntraOrtho. 
 \item Code a function \mintinline{julia}{BRGS} with the option to use either of RGS and RCholQR as IntraOrtho. 
+\item Compute QR factorizations of tall and skinny matrices using both BGS procedures with block sizes $s\in\{5,10\}$ and GS procedures.
+Compare running times and plot loss of orthogonality, i.e., $\|I_m-Q^TQ\|_2$.
 \end{enumerate}
 \end{frame}
 
