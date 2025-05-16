@@ -174,7 +174,7 @@ Problem of \textbf{short cache}:
 % Slide 07
 \begin{frame}{Cache misses analysis}
 \begin{itemize}
-\item Matrix-matrix multiplication with row major data:\vspace{.1cm}
+\item Matrix-matrix multiplication ($\texttt{C}=\texttt{C}+\texttt{A}\texttt{B}$) with row major data:\vspace{.1cm}
 \begin{center}\fbox{\begin{minipage}{6cm}
 \vspace{-.5cm}
 \begin{align*}
@@ -311,8 +311,8 @@ There are two cases of memory access:
 % Slide 13
 \begin{frame}{Recursive implementation}
 \begin{itemize}
-\item Assuming $n$ is a power of 2:
-\begin{center}\fbox{\begin{minipage}{6cm}
+\item Recursive implementation of dense square matrix-matrix multiplication ($\texttt{C}=\texttt{C}+\texttt{A}\texttt{B}$) assuming $n$ is a power of 2:
+{\small\begin{center}\fbox{\begin{minipage}{6cm}
 \vspace{-.5cm}
 \begin{align*}
 &\texttt{recursive\_gemm}(A, B, C, n):\hspace{2.55cm}{//\color{gray}{C_{1:n,1:n}=0}}\\\
@@ -329,7 +329,7 @@ There are two cases of memory access:
 &\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,1:\frac{n}{2}}, B_{1:\frac{n}{2}:n,\frac{n}{2}+1:n}, C_{\frac{n}{2}+1:n,\frac{n}{2}+1:n},n/2)\\
 &\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, C_{\frac{n}{2}+1:n,\frac{n}{2}+1:n},n/2)
 \end{align*}
-\end{minipage}}\end{center}
+\end{minipage}}\end{center}}
 \end{itemize}
 \end{frame}
 
@@ -437,8 +437,8 @@ with the following SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$):\
 \item \textbf{Irregular access} to the components of $\texttt{x}$:\vspace{.05cm}
 \begin{itemize}\normalsize
 \item[-] \textbf{No spatial locality}, \textbf{no temporal locality}.\vspace{.1cm}
-\item[-] \textbf{Every component} of $\texttt{x}$ loaded for a single multiply-and-add is \textbf{trashed immediatly from register}, i.e., no loop unrolling, no SIMD, ...\vspace{.1cm}
-\item[-] \textbf{Sparsity induces lower arithmetic intensity} (AI) than GEMV.\vspace{.1cm}
+\item[-] \textbf{Every component} of $\texttt{x}$ loaded for a single multiply-and-add is \textbf{trashed immediatly from register}. \textbf{No loop unrolling}, \textbf{no SIMD}, ...\vspace{.1cm}
+\item[-] \textbf{Sparsity induces lower arithmetic intensity} (AI) than for general dense matrix-vector product (GEMV) kernels.\vspace{.1cm}
 \item[-] \textbf{SpMV kernels} are \textbf{memory-bound}, even if $\texttt{x}$ fits in cache.\vspace{.1cm}
 \item[-] \textbf{Performance} of SpMV kernels depends on \textbf{data structure}, \textbf{non-zero structure} and \textbf{hardware}.
 \end{itemize}
@@ -552,8 +552,8 @@ $\begin{bmatrix}
 \end{bmatrix}\implies$ unrolled to {\color{red}{1110}}\\
 \hspace{2.77
 cm}$\implies {\color{red}{1}}\times 2^0+{\color{red}{1}}\times 2^1+{\color{red}{1}}\times 2^2+{\color{red}{0}}\times 2^3={\color{red}{7}}$.\vspace{.1cm}
-\item \textbf{if statements} in SpMV's loop \textbf{decrease efficiency}.
-Two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kannan, 2013).\\
+\item \textbf{if statements} in SpMV's loop \textbf{decrease efficiency}
+$\implies$ two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kannan, 2013).\\
 \medskip
 \tiny{Buluç, A., Williams, S., Oliker, L., \& Demmel, J. (2011). Reduced-bandwidth multithreaded algorithms for sparse matrix-vector multiplication. In 2011 IEEE International Parallel \& Distributed Processing Symposium (pp. 721-733)$\hspace{-1cm}$}\smallskip\\
 \tiny{Kannan, R. (2013). Efficient sparse matrix multiple-vector multiplication using a bitmapped format. In 20th Annual International Conference on High Performance Computing (pp. 286-294).}
@@ -775,7 +775,7 @@ TSQR     & $\mathcal{O}(\varepsilon)$ & none & Mori et al. (2012)\\
 \end{itemize}
 \item[] Carson et al. (2022):
 \begin{itemize}
-\item[-] $\text{BMGS}\circ\text{any IntraOrtho with }\|I_n-Q^TQ\|\leq\mathcal{O}(\varepsilon)$ is as stable MGS.
+\item[-] $\text{BMGS}\circ\text{any IntraOrtho with }\|I_n-Q^TQ\|\in\mathcal{O}(\varepsilon)$ is as stable MGS.
 \end{itemize}
 %\item See Carson et al. (2022) for an overview of stability properties of BGS algorithms.
 \end{itemize}
