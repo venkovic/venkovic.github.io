@@ -12,9 +12,13 @@
 
 Follow me on [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125), [LinkedIn](https://www.linkedin.com/in/nicolas-venkovic-97195b42/).
 
-### *Current position*
+
+### *Future position*
 
 Senior Researcher @ [Huawei Zurich Research Center](https://careers.huaweirc.ch/) (from 10/2025)<br />
+
+### *Current position*
+
 Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en/) (07/2024 - 09/2025)<br />
 
 ### *Education*
