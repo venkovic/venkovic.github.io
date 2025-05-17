@@ -114,7 +114,7 @@ notebook [<a href="NLA-for-CS-and-IE/PracticeSession17.ipynb">ipynb</a>, <a href
 <p>18. 
 <strong>Matrix function evaluation</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture18.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture05.18">pdf</a>], 
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture18.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture18">pdf</a>], 
 notebook [<a href="NLA-for-CS-and-IE/PracticeSession18.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession18.pdf">pdf</a>]</p>
 
 Extra notes [[tex](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.tex), [pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.pdf)].
