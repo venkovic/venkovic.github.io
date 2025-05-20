@@ -467,7 +467,7 @@ $\implies$ \textbf{some zero values} are \textbf{stored} for non-fully dense blo
 % Slide 20
 \begin{frame}{Blocked SpMV}
 \begin{itemize}
-\item Recall the BSR (or BCSR) data structure format:\vspace{-.75cm}\\
+\item Recall the BSR data structure format:\vspace{-.75cm}\\
 \hspace{-.4cm}\begin{minipage}[t]{0.42\textwidth}\vspace{.25cm}
 \begin{align*}
 A=&\;\left[\begin{matrix}
@@ -926,9 +926,9 @@ Analyze the worst case memory access pattern in terms of number of read and writ
 \end{minipage}
 \begin{minipage}[t]{0.89\textwidth}
 Consider a sparse matrix $A$ of size $10^6\times 10^6$ with $5\cdot 10^6$ non-zero values spread in dense $4\times 4$ blocks.
-Let the matrix be stored in BCSR format with a block size of $r\times c=4\times 4$.
-You may further assume that all stored blocks of the BCSR data structure are perfectly aligned with the non-zero pattern of the matrix.
-Assuming that, within blocks, there is a perfect reuse of data from the source and destination vectors in registers, analyze the worst case memory access pattern in terms of number of read and write accesses, and find the corresponding arithmetic intensity of the BCSR-based SpMV kernel for this matrix.
+Let the matrix be stored in BSR format with a block size of $r\times c=4\times 4$.
+You may further assume that all stored blocks of the BSR data structure are perfectly aligned with the non-zero pattern of the matrix.
+Assuming that, within blocks, there is a perfect reuse of data from the source and destination vectors in registers, analyze the worst case memory access pattern in terms of number of read and write accesses, and find the corresponding arithmetic intensity of the BSR-based SpMV kernel for this matrix.
 Ignore indexing arithmetic in your account of floating-point operations.
 \end{minipage}
 \end{frame}
