@@ -62,14 +62,14 @@ For the rest this lecture, we assume $A$ is real, but QR factorizations do exist
 The QR factorization has several applications in numerical linear algebra:
 \begin{enumerate}
 \item It can be used to solve least-squares problems, i.e., problems of the form $\arg\min_x\|Ax-b\|_2$ where $A$ is tall and skiny.
-\item It is used as part eigen- and singular value algorithms for small dense matrices.
+\item It is used as part of eigen- and singular value algorithms for small dense matrices.
 \item It is also used in iterative methods to solve linear systems and compute eigenvalues, such as in Krylov methods.
 \end{enumerate}
 \end{frame}
 
 % Slide 04
-\begin{frame}{QR factorization and least squares problems}
-To see why the QR factorization can be useful, let's look briefly at the least squares problem:
+\begin{frame}{QR factorization and least-squares problems}
+To see why the QR factorization can be useful, let's look briefly at the least-squares problem:
 \begin{itemize}
 \item Let $A\in\mathbb{R}^{m\times n}$ with $m>n$.
 We want to find $x$ such that $Ax$ is closest to $b$ in Euclidean distance.
@@ -207,7 +207,7 @@ where $Q=Q_1\dots Q_{n-1}\in\mathbb{R}^{m\times m}$, and $R$ has zeros in the $m
 % Slide 11
 \begin{frame}{Givens rotations}
 \begin{itemize}
-\item When the matrix $A$ is upper Hessenberg, i.e., whene $a_{ij}=0$ for all $i>j+1$, most of the subdiagonal components are already zero, and using Householder transformations in this situation is a bit of an overkill:
+\item When the matrix $A$ is upper Hessenberg, i.e., where $a_{ij}=0$ for all $i>j+1$, most of the subdiagonal components are already zero, and using Householder transformations in this situation is a bit of an overkill:
 \begin{center}
 \vspace{.2cm}
 \includegraphics[height=2.5cm]{images/Upper-Hessenberg-QR.jpg}
@@ -248,34 +248,190 @@ s=-\frac{u_2 }{\|u\|_2}.
 \begin{frame}{Givens rotations, cont'd\textsubscript{2}}
 \begin{itemize}
 \item For an upper Hessenberg matrix $A$ of size $m \times n$, we can compute its QR factorization using a sequence of Givens rotations.
-
-\item The algrithms is as follows:
-
+\item The algorithm is as follows:
 \begin{itemize}
 \item[1.] For each column $j=1,\dots,n-1$ :\vspace{.1cm}
 \item[2.]\hspace{.4cm}Construct a Givens rotation matrix $G^T$ that zeros $a_{j+1,j}$\vspace{.1cm}
 \item[3.]\hspace{.4cm}Apply $G^T$ to rows $j$ and $j+1$ of $A$
 \end{itemize}
-
 \end{itemize}
 \end{frame}
 
+\section{CholeskyQR}
 
+% Slide 14
+\begin{frame}{CholeskyQR factorization}
+\begin{itemize}
+\item The \textbf{CholeskyQR} algorithm builds an economic factorization (i.e., case III) of $A\in\mathbb{R}^{m\times n}$, typically for $n\ll m$.
+\item It proceeds by first obtaining the $R$ factor through a Cholesky factorization of the Gram matrix $A^TA$, then retrieving the $Q$ factor by forward substitution:\vspace{.1cm}\\
+The algorithm is as follows:
+\begin{itemize}
+\item[1.]$X:=A^TA${\color{gray}{ // BLAS 3}}\vspace{.1cm}
+\item[2.]Find the upper triangular $R$ s.t. $R^TR=X$
+{\color{gray}{ // Cholesky factorization}}\vspace{.1cm}
+\item[3.]$Q:=AR^{-1}${\color{gray}{ // triangular solves}}
+\end{itemize}
+\item CholeskyQR reaches higher arithmetic intensity and requires less synchronizations than Householder QR:\vspace{.1cm}\\
+\begin{center}$\implies$ favored for distributed implementations.\end{center}
+\item But, unlike Householder QR, CholeskyQR suffers from instability, with
+\begin{align*}
+\text{LOO}(Q)\in\mathcal{O}(u\cdot\kappa(A)).
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 15
+\begin{frame}{Reorthogonalized variants}
+\begin{itemize}
+\item The lack of stability of an orthogonlization procedure can be partly remedied by repetition.
+The repitition of CholeskyQR is referred to as \textbf{CholeskyQR2}:
+\begin{itemize}
+\item[1.]$(Q_1,R_1)\mapsfrom\text{CholeskyQR}(A)$\vspace{.1cm}
+\item[2.]$\;\,(Q,R_2)\mapsfrom\text{CholeskyQR}(Q_1)$\vspace{.1cm}
+\item[3.]$R:=R_2R_1$
+\end{itemize}
+\item[]Repeating CholeskyQR significantly improves orthogonality, yielding $\text{LOO}(Q)\in\mathcal{O}(u)$ under the condition that $\kappa(A)\in\mathcal{O}(u^{-1/2})$.
+\item Another way to improve the stability of CholeskyQR is to shift the Gram matrix, decreasing its condition number, thus improving the stability of the Cholesky factorization.
+The resulting \textbf{Shifted CholeskyQR} is given by:
+\begin{itemize}
+\item[1.]$X:=A^TA$\vspace{.1cm}
+\item[2.]$s:=11(mn+n(n+1))u\|A\|_2^2${\color{gray}{ // calculate shift}}\vspace{.1cm}
+\item[3.]$X:=X+sI_n${\color{gray}{ // shift Gram matrix}}\vspace{.1cm}
+\item[4.]Find the upper triangular $R$ s.t. $R^TR=X$
+{\color{gray}{ // Cholesky factorization}}\vspace{.1cm}
+\item[5.]$Q:=AR^{-1}${\color{gray}{ // triangular solves}}
+\end{itemize}
+which ensures $\kappa(Q)\in\mathcal{O}(u^{-1/2})$ as long as $\kappa(A)\in\mathcal{O}(u^{-1})$.
+%Although stability is achieved, we still have $\text{LOO}(Q)\in\mathcal{O}(u\cdot \kappa^2(A))$.
+\end{itemize}
+\end{frame}
+
+% Slide 16
+\begin{frame}{Reorthogonalized variants, cont'd}
+\begin{itemize}
+\item Therefore, Shifted CholeskyQR can be used as a preconditioner to CholeskyQR2. 
+This procedure is referred to as \textbf{Shifted CholeskyQR3}:
+\begin{itemize}
+\item[1.]$(Q_1,R_1)\mapsfrom\text{Shifted\,CholeskyQR}(A)$\vspace{.1cm}
+\item[2.]$\;\,(Q,R_2)\mapsfrom\text{CholeskyQR2}(Q_1)$\vspace{.1cm}
+\item[3.]$R:=R_2R_1$
+\end{itemize}
+which yields $\text{LOO}(Q)\in\mathcal{O}(u)$ as long as $\kappa(A)\in\mathcal{O}(u^{-1})$.
+\end{itemize}
+\medskip
+\tiny{Yamamoto, Y., Nakatsukasa, Y., Yanagisawa, Y., \& Fukaya, T. (2015). Roundoff error analysis of the CholeskyQR2 algorithm. Electron. Trans. Numer. Anal, 44(01), 306-326.}\smallskip\\
+\tiny{Fukaya, T., Kannan, R., Nakatsukasa, Y., Yamamoto, Y., \& Yanagisawa, Y. (2020). Shifted Cholesky QR for computing the QR factorization of ill-conditioned matrices. SIAM Journal on Scientific Computing, 42(1), A477-A503.}
+\end{frame}
+
+\section{Tall-and-skinny QR}
+
+% Slide 17
+\begin{frame}{Tall-and-skinny QR (TSQR)}
+\begin{itemize}
+\item Householder QR is unconditionally stable but memory-bound, and CholeskyQR variants, although they achieve high arithmetic intensity, offer limited stability.
+\item Tall-and-skinny (TSQR) algorithms offer both unconditional stability and high arithmetic intensity.\vspace{.1cm}\\
+TSQR is particularly relevant when only the upper triangular factor $R$ is needed.
+\item The key idea of TSQR is to \textbf{partition the matrix $A$ into blocks} and compute QR factorizations hierarchically.
+\end{itemize}
+\end{frame}
+
+% Slide 18
+\begin{frame}{Tall-and-skinny QR (TSQR), cont'd\textsubscript{1}}
+\begin{itemize}
+\item For a matrix $A\in\mathbb{R}^{m\times n}$ with $m\gg n$, we partition $A$ into $p$ blocks:
+\begin{align*}
+A = \begin{bmatrix}
+A_1 \\
+A_2 \\
+\vdots \\
+A_p
+\end{bmatrix}
+\end{align*}
+where each $A_i \in \mathbb{R}^{(m/p) \times n}$.
+\item We then compute the QR factorization of each block independently:
+\begin{align*}
+A_i=Q_i R_i,\quad i=1,\ldots,p.
+\end{align*}
+\item This gives us:
+\begin{align*}
+A = \begin{bmatrix}
+Q_1 R_1 \\
+Q_2 R_2 \\
+\vdots \\
+Q_p R_p
+\end{bmatrix} = \begin{bmatrix}
+Q_1 & & & \\
+& Q_2 & & \\
+& & \ddots & \\
+& & & Q_p
+\end{bmatrix} \begin{bmatrix}
+R_1 \\
+R_2 \\
+\vdots \\
+R_p
+\end{bmatrix}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 19
+\begin{frame}{Tall-and-skinny QR (TSQR), cont'd\textsubscript{2}}
+\begin{itemize}
+\item Next, we need to compute the QR factorization of the stacked $R$ matrices:
+\begin{align*}
+\begin{bmatrix}
+R_1 \\
+R_2 \\
+\vdots \\
+R_p
+\end{bmatrix} = \tilde{Q} \tilde{R}
+\end{align*}
+where $\tilde{Q} \in \mathbb{R}^{(pn) \times n}$ and $\tilde{R} \in \mathbb{R}^{n \times n}$.
+\item The final QR factorization is then:
+\begin{align*}
+A = \begin{bmatrix}
+Q_1 & & & \\
+& Q_2 & & \\
+& & \ddots & \\
+& & & Q_p
+\end{bmatrix} \tilde{Q} \tilde{R} = Q \tilde{R}
+\end{align*}
+where $Q = \text{diag}(Q_1, Q_2, \ldots, Q_p) \tilde{Q}$.
+\item \textbf{Key advantage}: Each block can be processed independently, making TSQR highly parallelizable.
+\end{itemize}
+\end{frame}
+
+% Slide 20
+\begin{frame}{Tall-and-skinny QR (TSQR), cont'd\textsubscript{3}}
+\begin{itemize}
+\item The TSQR algorithm is as follows:
+\begin{itemize}
+\item[1.] Partition $A$ into $p$ blocks: $A = [A_1^T, A_2^T, \ldots, A_p^T]^T$\vspace{.1cm}
+\item[2.] Parallelizable step: Compute $(Q_i, R_i) = \text{QR}(A_i)$ for $i = 1, \ldots, p$\vspace{.1cm}
+\item[3.] Stack the $R$ factors: $\tilde{A} = [R_1^T, R_2^T, \ldots, R_p^T]^T$\vspace{.1cm}
+\item[4.] Compute $(\tilde{Q}, \tilde{R}) = \text{QR}(\tilde{A})$\vspace{.1cm}
+\item[5.] If only $R$ is needed, return $\tilde{R}$. Otherwise, $Q = \text{diag}(Q_1, \ldots, Q_p) \tilde{Q}$
+\end{itemize}
+\item The loss of orthogonality of TSQR is such that $\text{LOO}(Q)\in\mathcal{O}(u)$ irrespective of $A$, i.e., TSQR is unconditionally stable.
+\item TSQR combines the best of both worlds: numerical stability of Householder QR with high arithmetic intensity and parallelizability.
+\item[]\begin{center}$\implies$ TSQR favored for high-performance implementations.\end{center}
+\end{itemize}
+\end{frame}
 
 \section{Gram-Schmidt procedures\\{\small Section 4.3 in Darve \& Wootters (2021)}}
 
-% Slide 14
+% Slide 21
 \begin{frame}{Gram-Schmidt procedures}
 \begin{itemize}
 \item Householder reflections and Givens rotations produce a square matrix $Q\in\mathbb{R}^{m\times m}$, even when $A\in\mathbb{R}^{m\times n}$ with $m>n$, i.e., case $\mathrm{III}$.\vspace{.1cm}\\
-On the other hand, \textbf{Gram-Schmidt} procedures will \textbf{produce a rectangular, tall and skinny matrix} $Q\in\mathbb{R}^{m\times n}$, i.e., like in case $\textrm{II}$.
+On the other hand, \textbf{Gram-Schmidt} procedures will \textbf{produce a rectangular, tall-and-skinny matrix} $Q\in\mathbb{R}^{m\times n}$, i.e., like in case $\textrm{II}$.
 \item Another peculiarity of \textbf{Gram-Schmidt} procedures is that they \textbf{work column-by-column}, i.e., to compute $q_i$ in $Q=[q_1,\dots,q_n]$, you only need access to $a_i$ from $A=[a_1,\dots,a_n]$ and $q_1,\dots,q_{k-1}$.\vspace{.1cm}\\
 This feature of the Gram-Schmidt procedures is particularly \textbf{useful in Krylov methods} where $A$ is not available all at once, and the new column $a_i$ to orthogonalize is only available after an performing a full iteration of computations.
 \item The first $k$ columns $q_1,\dots,q_k$ formed by Gram-Schmidt procedure in $Q$ are an \textbf{orthonormal basis} of the subspace spanned by $a_1,\dots,a_k$.
 \end{itemize}
 \end{frame}
 
-% Slide 15
+% Slide 22
 \begin{frame}{Gram-Schmidt procedures, cont'd\textsubscript{1}}
 \begin{itemize}
 \item Visualizing the column $a_k=QR_{:,k}$, and the fact that $R_{:,k}$ has $k$ non-zero entries followed by $m-k$ zeros on the subdiagonal, we can write $a_k=Q_{:,1:k}R_{1:k,k}$:
@@ -291,7 +447,7 @@ a_k=r_{1k}q_1+\dots+r_{kk}q_k.
 \end{itemize}
 \end{frame}
 
-% Slide 16
+% Slide 23
 \begin{frame}{Gram-Schmidt procedures, cont'd\textsubscript{2}}
 \begin{itemize}
 \item First, since we have $a_1=r_{11}q_1$, and $q_1$ has unit norm, we set $r_{11}=\|a_1\|_2$ and $q_1=a_1/r_{11}$.
@@ -304,7 +460,7 @@ Then $r_{12}$ and $r_{22}$ are found to close the system.
 \end{itemize}
 \end{frame}
 
-% Slide 17
+% Slide 24
 \begin{frame}{Classical Gram-Schmidt (CGS) procedure}
 \begin{itemize}
 \item More formally, for each $1\leq k\leq n$, we write
@@ -322,12 +478,12 @@ i< k.
 \end{align*}
 Next, to find $r_{kk}$, we have $q_kr_{kk}=a_k-\sum_{i=1}^{k-1}r_{ik}q_i$ where $q_k$ has unit norm so that
 \begin{align*}
-r_{kk}=\left\|a_k-\sum_{i=1}^{k-1}r_{ik}q_i\right\|_2
+r_{kk}=\left\|a_k-\sum_{i=1}^{k-1}r_{ik}q_i\right\|_2.
 \end{align*}
 \end{itemize}
 \end{frame}
 
-% Slide 18
+% Slide 25
 \begin{frame}{Classical Gram-Schmidt (CGS) procedure, cont'd\textsubscript{1}}
 \begin{itemize}
 \item[]
@@ -342,14 +498,14 @@ We see indeed that, in order to compute $q_k$, you need access to $a_k$ and $q_1
 \end{itemize}
 \end{frame}
 
-% Slide 19
+% Slide 26
 \begin{frame}{Classical Gram-Schmidt (CGS) procedure, cont'd\textsubscript{2}}
 \begin{center}
 \includegraphics[height=8cm]{images/cgs-sketch.png}
 \end{center}
 \end{frame}
 
-% Slide 20
+% Slide 27
 \begin{frame}{Classical Gram-Schmidt (CGS) procedure, cont'd\textsubscript{3}}
 \begin{itemize}
 \item So the CGS algorithm is implemented as follows:\vspace{.2cm}
@@ -373,19 +529,19 @@ where $\Pi_{k-1}:=I_m-Q_{:,1:k-1}Q_{:,1:k-1}^T$ is an \textbf{orthogonal project
 \end{itemize}
 \end{frame}
 
-% Slide 21
+% Slide 28
 \begin{frame}{Instability of CGS}
 \begin{itemize}
 \item CGS is known to \textbf{not} being very \textbf{stable}.
 \item For example, consider the matrix $A=\begin{bmatrix}1&1&1\\\varepsilon&0&0\\0&\varepsilon&0\\0&0&\varepsilon\end{bmatrix}$.\vspace{.4cm}\\
 If we assume $\varepsilon^2$ is smaller than the unit roundoff $u$, then the $Q$ matrix generated by CGS is $Q=\begin{bmatrix}1&0&0\\\varepsilon&-1/\sqrt{2}&-1/\sqrt{2}\\0&1/\sqrt{2}&0\\0&0&1/\sqrt{2}\end{bmatrix}$.\\
 Then we see that $q_2$ and $q_3$ are far from being orthogonal as we have $q_2^Tq_3=1/2$.
-\item Numerical stability is measured with respect to the loss of orthogonality, LOO, given by $\|I_m-Q^TQ\|_2$.
-\item With CGS, the LOO depends on the condition number of the matrix $A$, i.e., $\mathrm{LOO}=\mathcal{O}(u\cdot\kappa^2(A))$.
+\item Numerical stability is measured with respect to the loss of orthogonality, LOO, defined by $\text{LOO}(Q):=\|I_m-Q^TQ\|_2$.
+\item With CGS, the LOO depends on $A$, i.e., $\mathrm{LOO}\in\mathcal{O}(u\cdot\kappa^{n-1}(A))$, irrespective of $\kappa(A)$, although this bound is not sharp.
 \end{itemize}
 \end{frame}
 
-% Slide 22
+% Slide 29
 \begin{frame}{Re-orthogonalization, CGS2}
 \begin{itemize}
 \item An alternative is to orthogonalize twice by CGS, leading to CGS2:\\
@@ -411,12 +567,12 @@ where $\Pi_{k-1}:=I_m-Q_{:,1:k-1}Q_{:,1:k-1}^T.\hspace{-1cm}$
 \end{itemize}
 \vspace{.2cm}
 \end{minipage}\vspace{.08cm}\\
-\item The error bound becomes $\mathrm{LOO}=\mathcal{O}(u)$, so that CGS2 is inconditionally stable.
-\item However, CGS2 requires $4mn^2$ FLOP instead of $2mn^2$ for CGS.
+\item The loss of orthogonality becomes $\mathrm{LOO}(Q)\in\mathcal{O}(u)$ under the assumption that $\kappa(A)\in\mathcal{O}(u^{-1})$.
+\item However, CGS2 requires $4mn^2$ FLOPs instead of $2mn^2$ for CGS.
 \end{itemize}
 \end{frame}
 
-% Slide 23
+% Slide 30
 \begin{frame}{Modified Gram-Schmidt, MGS}
 \begin{itemize}
 \item Another alternative to CGS, referred to as modified Gram-Schmidt (MGS), is obtained by letting $\Pi_{k-1}:=(I_m-q_{:,k-1}q_{:,k-1}^T)\dots(I_m-q_{:,1}q_{:,1}^T)$ in\vspace{.2cm}
@@ -439,29 +595,29 @@ Assuming perfect arithmetic, this is equivalent to CGS, but it relies on BLAS 1 
 \end{itemize}
 \end{frame}
 
-% Slide 24
+% Slide 31
 \begin{frame}{Modified Gram-Schmidt, MGS, cont'd}
 \begin{itemize}
-\item The error bound of MGS is $\mathrm{LOO}=\mathcal{O}(u\cdot\kappa(A))$, so that it is more stable than CGS.
-\item Considering once again the matrix $A=\begin{bmatrix}1&1&1\\\varepsilon&0&0\\0&\varepsilon&0\\0&0&\varepsilon\end{bmatrix}$ where $\varepsilon^2<u$,\vspace{.4cm}\\
+\item The loss of orthogonality of MGS is $\mathrm{LOO}(Q)\in\mathcal{O}(u\cdot\kappa(A))$, irrespective of $\kappa(A)$, so that it is more stable than CGS.
+\item Considering once again the matrix $A=\begin{bmatrix}1&1&1\\\varepsilon&0&0\\0&\varepsilon&0\\0&0&\varepsilon\end{bmatrix}$ where $\varepsilon^2<u$,\vspace{.2cm}\\
 MGS yields a $Q$ matrix $A=\begin{bmatrix}1&0&0\\\varepsilon&-1/\sqrt{2}&-1/\sqrt{6}\\0&1/\sqrt{2}&-1/\sqrt{6}\\0&0&\sqrt{2}/\sqrt{3}\end{bmatrix}$.\vspace{.4cm}\\
 Contrarily to CGS, we see that $q_2$ and $q_3$ are exactly orthogonal, i.e., $q_2^Tq_3=0$,
 and $q_1$ is nearly orthogonal to $q_2$ and $q_3$, with $|q_1^Tq_2|=\varepsilon/\sqrt{2}$ and $|q_1^Tq_3|=\varepsilon/\sqrt{6}$.
 \item In practice, MGS and CGS2 are used instead of CGS.
+\item MGS is often preferred by default, but CGS2 is more stable and reaches higher arithmetic intensity.
 \end{itemize}
 \end{frame}
 
-
 \section{Least-squares problems\\{\small Section 4.4 in Darve \& Wootters (2021)}}
 
-% Slide 25
+% Slide 32
 \begin{frame}{Geometry of least-squares}
 \begin{itemize}
 \item One of the applications of the QR decomposition is the solving of least-squares problems $\arg\min_x\|Ax-b\|_2$:\vspace{.1cm}
 \begin{center}
 \includegraphics[height=2.5cm]{images/lsq-problem.png}
 \end{center}
-with a tall and skinny matrix $A\in\mathbb{R}^{m\times n}$ and a vector $b\in\mathbb{R}^n$.
+with a tall-and-skinny matrix $A\in\mathbb{R}^{m\times n}$ and a vector $b\in\mathbb{R}^n$.
 \item To minimize the 2-norm from a point $b$ to a subspace $\{Ax,\;x\in\mathbb{R}^n\}$, we can just do an orthogonal projection:
 \begin{center}
 \includegraphics[height=3cm]{images/orthogonal-projection-lsq.png}
@@ -469,7 +625,7 @@ with a tall and skinny matrix $A\in\mathbb{R}^{m\times n}$ and a vector $b\in\ma
 \end{itemize}
 \end{frame}
 
-% Slide 26
+% Slide 33
 \begin{frame}{Method of normal equations}
 \begin{itemize}
 \item As per property of orthogonal projections, the $x$ that minimizes $\|Ax-b\|_2$ has an error $e:=Ax-b$ which is orthogonal to the range of $A$.
@@ -490,7 +646,7 @@ which equivalently yields Eq.~\eqref{normal-eqs}.
 \end{itemize}
 \end{frame}
 
-% Slide 27
+% Slide 34
 \begin{frame}{Method of normal equations, cont'd}
 \begin{itemize}
 \item Assuming $A$ is full-rank, $A^TA$ is SPD so that we may compute its Cholesky factorization and solve for $x$ in $A^TAx=A^Tb$.
@@ -502,7 +658,7 @@ Finding the solution $x$ to the least-suqares problem $\arg\min\|Ax-b\|_2$ by so
 \end{itemize}
 \end{frame}
 
-% Slide 28
+% Slide 35
 \begin{frame}{QR factorization for least-squares problems}
 \begin{itemize}
 \item The origin of the method of normal equations stems from saying that the error $Ax-b$ is orthogonal to the range of $A$.\vspace{.1cm}\\
@@ -520,7 +676,7 @@ where $R$ is non-singular as long as $A$ is non-singular, so that there exists a
 \end{itemize}
 \end{frame}
 
-% Slide 29
+% Slide 36
 \begin{frame}{Case of rank-deficient $A$}
 \begin{itemize}
 \item If $A$ is rank-deficient, the null space of $A$ is non-trivial.
@@ -534,10 +690,10 @@ We can see the $x_0$ we are after is orthogonal to the null space of $A$, while 
 \end{itemize}
 \end{frame}
 
-% Slide 30
+% Slide 37
 \begin{frame}{SVD method for solving least-squares with rank-deficient $A$}
 \begin{itemize}
-\item Let $A\in\mathbb{R}^{m\times}$ be of rank $r<n<m$ have an SVD given by $A=U\Sigma V^T$ with $U\in\mathbb{R}^{m\times m},V\in\mathbb{R}^{n\times n}$ and $\Sigma\in\mathbb{R}^{m\times n}$ where $\Sigma$ has zeros from row $r+1$ to $m$.\vspace{.1cm}\\
+\item Let $A\in\mathbb{R}^{m\times n}$ be of rank $r<n<m$ have an SVD given by $A=U\Sigma V^T$ with $U\in\mathbb{R}^{m\times m},V\in\mathbb{R}^{n\times n}$ and $\Sigma\in\mathbb{R}^{m\times n}$ where $\Sigma$ has zeros from row $r+1$ to $m$.\vspace{.1cm}\\
 Then we can ignore the columns of $U$ and $V$ that correspond to zeros in $\Sigma$ to create the thin SVD $A=\widetilde{U}\widetilde{\Sigma}\widetilde{V}^T$:\vspace{.2cm}
 \begin{center}
 \includegraphics[height=2.75cm]{images/svd-lsq.png}
@@ -546,7 +702,7 @@ Then we can ignore the columns of $U$ and $V$ that correspond to zeros in $\Sigm
 \end{itemize}
 \end{frame}
 
-% Slide 31
+% Slide 38
 \begin{frame}{SVD method for solving least-squares with rank-deficient $A$}
 \begin{itemize}
 \item We know that any solution $x$ to the least-squares problem satisfies
@@ -566,7 +722,7 @@ where $\widetilde{U}=[\widetilde{u}_1,\dots,\widetilde{u}_r]$ and $\widetilde{\S
 \end{itemize}
 \end{frame}
 
-% Slide 32
+% Slide 39
 \begin{frame}{SVD method for solving least-squares with rank-deficient $A$}
 \begin{itemize}
 \item[] Then, since $\omega=\widetilde{\Sigma}^{-1}\widetilde{U}^Tb$, we have
@@ -589,10 +745,127 @@ But since $\mathrm{null}(\widetilde{V}^T)=\mathrm{null}(A)$, we have that $x_0\p
 \end{itemize}
 \end{frame}
 
+\section{LSQR}
+% Slide 40
+\begin{frame}{Iterative solve of normal equations}
+\begin{itemize}
+\item We saw that the least-squares solution $x_*$ of $\min_{x\in\mathbb{R}^n}\|Ax-b\|_2$ for $A\in\mathbb{R}^{m\times n}$ and $b\in\mathbb{R}^n$ with $m>n$ is such that $A^TAx_*=A^Tb$, i.e., $x_*$ is solution of the normal equation. 
+\item Building a QR factorization costs $\mathcal{O}(mn^2)$ FLOPs.
+For large sparse matrices, this can be an overkill.
+\item In future lectures, we will look into iterative methods to solve linear systems of the form $Bx=b$ with a square matrix $B\in\mathbb{R}^{n\times n}$.\vspace{.1cm}\\
+In particular, if $A$ is full-rank, one can use the conjugate gradient algorithm to solve $A^TAx_*=b$.\vspace{.1cm}\\
+However, in practice, for cases where $A$ is ill-conditioned, this approach can suffer from significantly delayed convergence.
+\item \textbf{LSQR} is an algorithm proposed by Paige and Sanders (1982) which, in case of exact arithmetic, reproduces the iterates of the conjugate gradient algorithm applied to the normal equation but, in practice, is \textbf{more reliable}.
+\end{itemize}
+\medskip
+\tiny{Paige, C. C., \& Saunders, M. A. (1982). LSQR: An algorithm for sparse linear equations and sparse least squares. ACM Transactions on Mathematical Software (TOMS), 8(1), 43-71.}
+\end{frame}
+
+% Slide 41
+\begin{frame}{Bidiagonalization}
+\begin{itemize}
+\item Bidiagonalization is a procedure proposed by Golub and Kahan (1965) which reduces any general matrix $A\in\mathbb{R}^{m\times n}$ into lower bidiagonal form.
+\item[] Let $x_0\in\mathbb{R}^n$ be an initial approximation of $x_*$ with residual $r_0:=b-Ax_0$.
+\item[] Starting the bidiagonalization procedure with $r_0$ goes as follows:\vspace{-.1cm}
+\begin{align*}
+\beta_1u_1=r_0,\;\alpha_1v_1=A^Tu_1
+\end{align*}
+\vspace{-1.1cm}\\
+\begin{align*}
+\left.
+\begin{aligned}
+\beta_{i+1}u_{i+1}=&\,Av_i-\alpha_iu_i\\
+\alpha_{i+1}v_{i+1}=&\,A^Tu_{i+1}-\beta_{i+1}v_i
+\end{aligned}
+\right\}
+\text{for }i=1,2\dots
+\end{align*}
+where the scalars $\alpha_i\geq0$ and $\beta_i\geq0$ are chosen so that $\|u_i\|_2=\|v_i\|_2=1$.
+\item[] Let $U_k:=[u_1,\dots,u_k]$, $V_k:=[v_1,\dots,v_k]$ and
+\begin{align*}
+B_k:=
+\begin{bmatrix}
+\alpha_1&&&\\
+\beta_2&\alpha_2&&\\
+&\ddots&\ddots&\\
+&&\beta_k&\alpha_k\\
+&&&\beta_{k+1}
+\end{bmatrix}
+\end{align*}
+\end{itemize}
+\tiny{Golub, G., \& Kahan, W. (1965). Calculating the singular values and pseudo-inverse of a matrix. Journal of the Society for Industrial and Applied Mathematics, Series B: Numerical Analysis, 2(2), 205-224.}
+\end{frame}
+
+% Slide 42
+\begin{frame}{Bidiagonalization, cont'd}
+\begin{itemize}
+\item[]Then, we have
+\begin{align*}
+U_{k+1}(\beta_1e_1)=&\,r_0\\
+AV_k=&\,U_{k+1}B_k\\
+A^TU_{k+1}=&\,V_kB_k^T+\alpha_{k+1}v_{k+1}e_{k+1}^T.
+\end{align*}
+In exact arithmetic, we have $U_k^TU_k=I_k$ and $V_k^TV_k=I_k$.
+\item[]Moreover, the columns of $U_k$ and $V_k$ are orthonormal bases of Krylov subspaces of $AA^T$ and $A^TA$, respectively, i.e.,
+\begin{align*}
+\text{range}(U_k)=&\,\mathcal{K}_k(AA^T,u_1)=
+\text{span}\left\{u_1,AA^Tu_1,\dots,(AA^T)^{k-1}u_1\right\}\\
+\text{range}(V_k)=&\,\mathcal{K}_k(A^TA,v_1)=
+\text{span}\left\{v_1,A^TAv_1,\dots,(A^TA)^{k-1}v_1\right\}.
+\end{align*}
+\end{itemize}
+\tiny{Golub, G., \& Kahan, W. (1965). Calculating the singular values and pseudo-inverse of a matrix. Journal of the Society for Industrial and Applied Mathematics, Series B: Numerical Analysis, 2(2), 205-224.}
+\end{frame}
+
+% Slide 43
+\begin{frame}{LSQR}
+\begin{itemize}
+\item LSQR defines a sequence of iterates $x_1,x_2,\dots,x_k$ which approximate the solution $x_*$ of $\min_{x\in\mathbb{R}^n}\|b-Ax\|_2$ by
+\begin{align*}
+x_k\in&\,x_0+\mathcal{K}_k(A^TA,v_1)\\
+r_k\in&\,\mathcal{K}_k(AA^T,u_1).
+\end{align*}
+Equivalently, that is, we have $x_k=x_0+V_ky_k$ such that
+\begin{align*}
+\hspace{-.2cm}
+x_k=\underset{x\in x_0+\text{range}(V_k)}{\arg\min}\|b-Ax\|_2
+\implies
+y_k=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|b-A(x_0+V_ky)\|_2\\
+=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|r_0-U_{k+1}B_ky\|_2\\
+=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|U_{k+1}(\beta_1e_1)-U_{k+1}B_ky\|_2\\
+=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|\beta_1e_1-B_ky\|_2.
+\end{align*}
+In exact arithmetic, the LSQR iterates exhibit monotonic decrease of residual norm, i.e., $\|r_{k+1}\|_2\leq\|r_k\|_2$.
+\end{itemize}
+\end{frame}
+
+% Slide 44
+\begin{frame}{LSQR, cont'd}
+\begin{itemize}
+\item Puting it out all together, this leads to the following algorithm:
+\begin{itemize}
+\item[1.]$r_0:=b-Ax_0$\vspace{.1cm}
+\item[2.]$u_1:=r_0$, $\beta_1:=\|u_1\|_2$, $u_1:=u_1/\beta_1$\vspace{.1cm}
+\item[3.]$v_1:=A^Tu_1$, $\alpha_1:=\|v_1\|_2$, $v_1:=v_1/\alpha_1$\vspace{.1cm}
+\item[4.]for $i=1,2,\dots$\vspace{.1cm}
+\item[5.]\hspace{.2cm}$u_{i+1}:=Av_i-\alpha_iu_i$, $\beta_{i+1}:=\|u_{i+1}\|_2$, $u_{i+1}:=u_{i+1}/\beta_{i+1}$\vspace{.1cm}
+\item[6.]\hspace{.2cm}$v_{i+1}:=A^Tu_{i+1}-\beta_{i+1}v_i$, $\alpha_{i+1}:=\|v_{i+1}\|_2$, $v_{i+1}:=v_{i+1}/\alpha_{i+1}$\vspace{.1cm}
+\item[7.]\hspace{.2cm}$y_i:=\underset{y\in\mathbb{R}^i}{\arg\min}\|\beta_1e_1-B_iy\|_2$\vspace{.1cm}
+\end{itemize}
+When convergence is achieved, the iterate $x_i:=x_0+V_iy_i$ is formed.
+\item[]Convergence monitoring is reliant on the evaluation of $\|r_i\|_2$.
+Note that we have
+\begin{align*}
+\|r_i\|_2
+=\|b-A(x_0+V_iy_i)\|_2
+=\|\beta_1e_1-B_iy_i\|_2
+\end{align*}
+so that $x_i$ needs not be assembled to evaluate the residual norm.
+\end{itemize}
+\end{frame}
 
 \section{Homework problems}
-
-% Slide 33
+% Slide 44
 \begin{frame}{Homework problem}\vspace{.1cm}
 Turn in \textbf{your own} solution to the following problem:\vspace{.15cm}\\
 \begin{minipage}[t]{0.1\textwidth}
@@ -607,8 +880,7 @@ Let $A=\begin{bmatrix}1&1\\1&-1\\1&1\end{bmatrix}$ and $b=\begin{bmatrix}1\\2\\3
 
 
 \section{Practice session}
-
-% Slide 34
+% Slide 45
 \begin{frame}[fragile]{Practice session}
 \begin{enumerate}
 \item CGS
