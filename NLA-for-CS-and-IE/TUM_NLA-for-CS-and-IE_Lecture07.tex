@@ -750,8 +750,8 @@ But since $\mathrm{null}(\widetilde{V}^T)=\mathrm{null}(A)$, we have that $x_0\p
 \begin{frame}{Iterative solve of normal equations}
 \begin{itemize}
 \item We saw that the least-squares solution $x_*$ of $\min_{x\in\mathbb{R}^n}\|Ax-b\|_2$ for $A\in\mathbb{R}^{m\times n}$ and $b\in\mathbb{R}^n$ with $m>n$ is such that $A^TAx_*=A^Tb$, i.e., $x_*$ is solution of the normal equation. 
-\item Building a QR factorization costs $\mathcal{O}(mn^2)$ FLOPs.
-For large sparse matrices, this can be an overkill.
+\item For very large matrices, the cost of computing a QR factorization by Householder QR, or even by CholeskyQR, can be prohibitive.
+When the matrix is sparse, computing a QR factorization is generally an overkill.
 \item In future lectures, we will look into iterative methods to solve linear systems of the form $Bx=b$ with a square matrix $B\in\mathbb{R}^{n\times n}$.\vspace{.1cm}\\
 In particular, if $A$ is full-rank, one can use the conjugate gradient algorithm to solve $A^TAx_*=b$.\vspace{.1cm}\\
 However, in practice, for cases where $A$ is ill-conditioned, this approach can suffer from significantly delayed convergence.
@@ -781,40 +781,56 @@ However, in practice, for cases where $A$ is ill-conditioned, this approach can 
 \text{for }i=1,2\dots
 \end{align*}
 where the scalars $\alpha_i\geq0$ and $\beta_i\geq0$ are chosen so that $\|u_i\|_2=\|v_i\|_2=1$.
-\item[] Let $U_k:=[u_1,\dots,u_k]$, $V_k:=[v_1,\dots,v_k]$ and
-\begin{align*}
+\item[] Let $U_k:=[u_1,\dots,u_k]$, $V_k:=[v_1,\dots,v_k]$,\vspace{-.15cm}
+{\footnotesize\begin{align*}
 B_k:=
+\begin{bmatrix}
+\alpha_1&&&\\
+\beta_2&\alpha_2&&\\
+&\ddots&\ddots&\\
+&&\beta_k&\alpha_k
+\end{bmatrix}
+\text{ and }\;
+\underline{B}_k:=
 \begin{bmatrix}
 \alpha_1&&&\\
 \beta_2&\alpha_2&&\\
 &\ddots&\ddots&\\
 &&\beta_k&\alpha_k\\
 &&&\beta_{k+1}
-\end{bmatrix}
-\end{align*}
+\end{bmatrix}.
+\end{align*}}
 \end{itemize}
-\tiny{Golub, G., \& Kahan, W. (1965). Calculating the singular values and pseudo-inverse of a matrix. Journal of the Society for Industrial and Applied Mathematics, Series B: Numerical Analysis, 2(2), 205-224.}
+\tiny{Golub, G., \& Kahan, W. (1965). Calculating the singular values and pseudo-inverse of a matrix. Journal of the Society for Industrial and Applied Mathematics, Series B: Numerical Analysis, 2(2), 205-224.}\smallskip\\
+\tiny{Paige, C. C. (1974). Bidiagonalization of matrices and solution of linear equations. SIAM Journal on Numerical Analysis, 11(1), 197-209.}
 \end{frame}
 
 % Slide 42
 \begin{frame}{Bidiagonalization, cont'd}
 \begin{itemize}
-\item[]Then, we have
+\item[]Then, we have\vspace{-.1cm}
 \begin{align*}
-U_{k+1}(\beta_1e_1)=&\,r_0\\
-AV_k=&\,U_{k+1}B_k\\
-A^TU_{k+1}=&\,V_kB_k^T+\alpha_{k+1}v_{k+1}e_{k+1}^T.
+\hspace*{.75cm}
+U_{k+1}(\beta_1e_1)=&\,r_0
+\hspace{5.55cm}{\color{gray}{(e_1:=I_{k+1}[:,1]})}\\
+AV_k=&\,U_{k+1}\underline{B}_k=U_kB_k+\beta_{k+1}u_{k+1}e_k^T
+\hspace{1.05cm}{\color{gray}{(e_k:=I_{k}[:,k]})}\\
+A^TU_{k+1}=&\,V_k\underline{B}_k^T+\alpha_{k+1}v_{k+1}e_{k+1}^T.
+\hspace{1cm}{\color{gray}{(e_{k+1}:=I_{k+1}[:,k+1]})}
 \end{align*}
 In exact arithmetic, we have $U_k^TU_k=I_k$ and $V_k^TV_k=I_k$.
+\item[]Clearly, $U_{k+1}^TAV_k=\underline{B}_k$, $U_k^TAV_k=B_k$, $\alpha_k=u_k^TAv_k$ and $\beta_k=u_{k}^TAv_{k-1}$.
 \item[]Moreover, the columns of $U_k$ and $V_k$ are orthonormal bases of Krylov subspaces of $AA^T$ and $A^TA$, respectively, i.e.,
 \begin{align*}
 \text{range}(U_k)=&\,\mathcal{K}_k(AA^T,u_1)=
-\text{span}\left\{u_1,AA^Tu_1,\dots,(AA^T)^{k-1}u_1\right\}\\
+\text{span}\left\{u_1,AA^Tu_1,\dots,(AA^T)^{k-1}u_1\right\},\\
 \text{range}(V_k)=&\,\mathcal{K}_k(A^TA,v_1)=
 \text{span}\left\{v_1,A^TAv_1,\dots,(A^TA)^{k-1}v_1\right\}.
 \end{align*}
+Bidiagonalization is an orthogonal equivalence transformation which plays a key role in the iterative solve of singular value decompositions.\smallskip
 \end{itemize}
-\tiny{Golub, G., \& Kahan, W. (1965). Calculating the singular values and pseudo-inverse of a matrix. Journal of the Society for Industrial and Applied Mathematics, Series B: Numerical Analysis, 2(2), 205-224.}
+\tiny{Golub, G., \& Kahan, W. (1965). Calculating the singular values and pseudo-inverse of a matrix. Journal of the Society for Industrial and Applied Mathematics, Series B: Numerical Analysis, 2(2), 205-224.}\tinyskip\\
+\tiny{Paige, C. C. (1974). Bidiagonalization of matrices and solution of linear equations. SIAM Journal on Numerical Analysis, 11(1), 197-209.}
 \end{frame}
 
 % Slide 43
@@ -822,18 +838,17 @@ In exact arithmetic, we have $U_k^TU_k=I_k$ and $V_k^TV_k=I_k$.
 \begin{itemize}
 \item LSQR defines a sequence of iterates $x_1,x_2,\dots,x_k$ which approximate the solution $x_*$ of $\min_{x\in\mathbb{R}^n}\|b-Ax\|_2$ by
 \begin{align*}
-x_k\in&\,x_0+\mathcal{K}_k(A^TA,v_1)\\
-r_k\in&\,\mathcal{K}_k(AA^T,u_1).
+x_k\in&\,x_0+\mathcal{K}_k(A^TA,v_1).
 \end{align*}
-Equivalently, that is, we have $x_k=x_0+V_ky_k$ such that
+That is, we search for $x_k=x_0+V_ky_k$ such that
 \begin{align*}
 \hspace{-.2cm}
 x_k=\underset{x\in x_0+\text{range}(V_k)}{\arg\min}\|b-Ax\|_2
 \implies
 y_k=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|b-A(x_0+V_ky)\|_2\\
-=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|r_0-U_{k+1}B_ky\|_2\\
-=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|U_{k+1}(\beta_1e_1)-U_{k+1}B_ky\|_2\\
-=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|\beta_1e_1-B_ky\|_2.
+=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|r_0-U_{k+1}\underline{B}_ky\|_2\\
+=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|U_{k+1}(\beta_1e_1)-U_{k+1}\underline{B}_ky\|_2\\
+=&\,\underset{y\in\mathbb{R}^k}{\arg\min}\|\beta_1e_1-\underline{B}_ky\|_2.
 \end{align*}
 In exact arithmetic, the LSQR iterates exhibit monotonic decrease of residual norm, i.e., $\|r_{k+1}\|_2\leq\|r_k\|_2$.
 \end{itemize}
@@ -842,7 +857,7 @@ In exact arithmetic, the LSQR iterates exhibit monotonic decrease of residual no
 % Slide 44
 \begin{frame}{LSQR, cont'd}
 \begin{itemize}
-\item Puting it out all together, this leads to the following algorithm:
+\item A basic implementation of the LSQR algorithm goes as follows:
 \begin{itemize}
 \item[1.]$r_0:=b-Ax_0$\vspace{.1cm}
 \item[2.]$u_1:=r_0$, $\beta_1:=\|u_1\|_2$, $u_1:=u_1/\beta_1$\vspace{.1cm}
@@ -850,22 +865,29 @@ In exact arithmetic, the LSQR iterates exhibit monotonic decrease of residual no
 \item[4.]for $i=1,2,\dots$\vspace{.1cm}
 \item[5.]\hspace{.2cm}$u_{i+1}:=Av_i-\alpha_iu_i$, $\beta_{i+1}:=\|u_{i+1}\|_2$, $u_{i+1}:=u_{i+1}/\beta_{i+1}$\vspace{.1cm}
 \item[6.]\hspace{.2cm}$v_{i+1}:=A^Tu_{i+1}-\beta_{i+1}v_i$, $\alpha_{i+1}:=\|v_{i+1}\|_2$, $v_{i+1}:=v_{i+1}/\alpha_{i+1}$\vspace{.1cm}
-\item[7.]\hspace{.2cm}$y_i:=\underset{y\in\mathbb{R}^i}{\arg\min}\|\beta_1e_1-B_iy\|_2$\vspace{.1cm}
+\item[7.]\hspace{.2cm}$y_i:=\underset{y\in\mathbb{R}^i}{\arg\min}\|\beta_1e_1-\underline{B}_iy\|_2$\vspace{.1cm}
 \end{itemize}
 When convergence is achieved, the iterate $x_i:=x_0+V_iy_i$ is formed.
-\item[]Convergence monitoring is reliant on the evaluation of $\|r_i\|_2$.
-Note that we have
+\item[]Convergence monitoring is reliant on the evaluation of $\|r_i\|_2$ and $\|A^Tr_i\|_2$.
+Note that we have\vspace{-.1cm}
 \begin{align*}
 \|r_i\|_2
-=\|b-A(x_0+V_iy_i)\|_2
-=\|\beta_1e_1-B_iy_i\|_2
+=&\,
+\|b-A(x_0+V_iy_i)\|_2
+=\|\underline{t}_i\|_2
+\;\text{ where }\;
+\underline{t}_i:=\beta_1e_1-\underline{B}_iy_i\\
+\|A^Tr_i\|_2=&\,
+\|A^TU_{i+1}\underline{t}_i\|_2
+=\|(V_{i}\underline{B}_i^T+\alpha_{i+1}v_{i+1}e_{i+1}^T)\underline{t}_i\|_2=
+\|B_{i+1}^T\underline{t}_i\|_2
 \end{align*}
-so that $x_i$ needs not be assembled to evaluate the residual norm.
+so that convergence can be monitored without forming neither $x_i$ nor $r_i$.
 \end{itemize}
 \end{frame}
 
 \section{Homework problems}
-% Slide 44
+% Slide 45
 \begin{frame}{Homework problem}\vspace{.1cm}
 Turn in \textbf{your own} solution to the following problem:\vspace{.15cm}\\
 \begin{minipage}[t]{0.1\textwidth}
@@ -879,14 +901,21 @@ Let $A=\begin{bmatrix}1&1\\1&-1\\1&1\end{bmatrix}$ and $b=\begin{bmatrix}1\\2\\3
 \end{frame}
 
 \section{Practice session}
-% Slide 45
+% Slide 46
 \begin{frame}[fragile]{Practice session}
 \begin{enumerate}
-\item Implement and test your implementation of Householder QR.
+\item Implement and test and time your implementation of Householder QR.
 \item Implement CholeskyQR, CholeskyQR2 and Shifted CholeskyQR3.
 \item Compare the runtime, loss of orthogonality and residual obtained with each CholeskyQR implementation for multiple tall-and-skinny matrices with different conditioning numbers.
 \item Implement CGS, CGS2 and MGS procedures.
 \item Compare the runtime, loss of orthogonality and residual obtained with each Gram-Schmidt implementation for multiple tall-and-skinny matrices with different conditioning numbers.
+\item Implement the Golub-Kahan bidiagonalization procedure.
+Then, compare $U_{k+1}^TAV_k$ to $\underline{B}_k$, and check the loss of orthogonality of $U_{k+1}$ and $V_k$. What do you observe?
+\item Implement LSQR using the following stopping criterion:
+\begin{align*}
+\frac{\|A^Tr_i\|_2}{\|A\|_F\|r_i\|_2}<\varepsilon_{tol}.
+\end{align*}
+Apply your algorithm to large sparse least-squares problems.
 \end{enumerate}
 \end{frame}
 
