@@ -99,13 +99,13 @@ In other words, the iterate $x_{i+1}$ is searched in a subspace of $\mathrm{span
 \begin{itemize}
 \item \textbf{Limitations of steepest descent}:
 \begin{itemize}\normalsize
-\item[-] Slow convergence, especially for ill-conditioned problems\vspace{.07cm}
+\item[-] Slow convergence, especially for ill-conditioned problems
 \item[-] Limited to 2-dimensional search space, i.e., $x_{i+1}\in\text{span}\{x_i, Tr_i\}$
 \end{itemize}
 \end{itemize}
-\vspace{-.05cm}
+\vspace{-.1cm}
 \begin{block}{Locally optimal preconditioned conjugate gradient (LOPCG) method}
-The recurrence formula for LOPCG is\vspace{-.3cm}
+The recurrence formula for LOPCG is\vspace{-.4cm}
 \begin{align*}
 x_{i+1} = \alpha_i x_i + \beta_i p_i + \gamma_i Tr_i
 \end{align*}
@@ -126,6 +126,7 @@ where $p_i$ is a search direction, $A$-conjugate to the previous direction $p_{i
 \item The iterate $x_{i+1}$ is formed by Rayleigh Ritz projection to optimize $\rho(x_{i+1})$.
 \end{itemize}
 \end{block}
+\tiny{Knyazev, A. V. (1991). A preconditioned conjugate gradient method for eigenvalue problems and its implementation in a subspace. In Numerical Treatment of Eigenvalue Problems Vol. 5/Numerische Behandlung von Eigenwertaufgaben Band 5: Workshop in Oberwolfach, February 25–March 3, 1990/Tagung in Oberwolfach, 25. Februar–3. März 1990 (pp. 143-154). Birkhäuser Basel.}
 \end{frame}
 	
 % Slide 05
@@ -178,7 +179,7 @@ $x_0:=x_{-1}\hat{x}_0$ ; $r_{0}:=Ax_{0}-Bx_{0}\lambda_{0}\,$\tinyskip\\
 \hspace*{.4cm}$(\hat{x}_{i+1},\lambda_{i+1})\mapsfrom\text{RR}(A,B,V_{i+1})$\tinyskip\\
 \hspace*{.4cm}$x_{i+1}:=V_{i+1}\hat{x}_{i+1}$; $r_{i+1}:=Ax_{i+1}-Bx_{i+1}\lambda_{i+1}$
 \end{varwidth}}\end{center}
-\medskip
+\tiny{Knyazev, A. V. (1991). A preconditioned conjugate gradient method for eigenvalue problems and its implementation in a subspace. In Numerical Treatment of Eigenvalue Problems Vol. 5/Numerische Behandlung von Eigenwertaufgaben Band 5: Workshop in Oberwolfach, February 25–March 3, 1990/Tagung in Oberwolfach, 25. Februar–3. März 1990 (pp. 143-154). Birkhäuser Basel.}
 \end{frame}
 	
 \section{Early development of LOBPCG iterations}
@@ -1504,7 +1505,7 @@ Maintaining converged eigenvectors to perform subsequent iterations
 	\item {\color{blue}{\underline{\href{https://github.com/lobpcg/blopex}{BLOPEX}}}}: C implementation with MPI support after Knyazev et al.~(2007).$\hspace{-.5cm}$\\
 	On GitHub at \texttt{lobpcg/blopex}.\tinyskip
 	\begin{itemize}
-	\item BLOPEX can be called from 
+	\item BLOPEX also available in 
 	{\color{blue}{\underline{\href{https://www.mathworks.com/matlabcentral/fileexchange/48-locally-optimal-block-preconditioned-conjugate-gradient}{Matlab}}}},
 	{\color{blue}{\underline{\href{https://slepc.upv.es/documentation/current/src/eps/impls/cg/lobpcg/lobpcg.c}{SLEPc}}}}
 	and
@@ -1566,8 +1567,38 @@ is $\nabla\rho(x)=\frac{2}{x^TBx}(Ax-\rho(x)Bx)$.
 Let $A$ be symmetric and $B$ be SPD.
 Then show that the matrix $X=[x_1,\dots,x_k]$ of the smallest general eigenvectors $x_1,\dots,x_k$ of $(A,B)$ is such that $\text{trace}(X^TAX)$ is minimized, subjected to $X^TBX=I_k$.
 \end{minipage}
-
 \end{frame}
 
+\section{Practice session}
+% Slide 52
+\begin{frame}[fragile]{Practice session}
+\begin{enumerate}
+\item Implement Basic\_LOBPCG.
+\item Implement BLOPEX\_LOBPCG.
+\item Implement Ortho\_LOBPCG.
+\item Implement Skip\_ortho\_LOBPCG.
+\item Use the matrices \texttt{bcsstk12} and \texttt{bcsstm12} from the SuiteSparse collection for $A$ and $B$, respectively.
+Then, using $m=200$, benchmark each algorithm by monitoring the convergence of the 10 smallest generalized eigenvalues, first with $\tau=10^{-5}$, then with $\tau=10^{-6}$.
+Use a preconditioner.
+What do you observe?
+\end{enumerate}
+\end{frame}
+
+
+
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
