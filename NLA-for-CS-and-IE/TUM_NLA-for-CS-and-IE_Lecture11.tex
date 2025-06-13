@@ -1083,13 +1083,28 @@ Then, the \textbf{search for} for the pair $(\sigma+\lambda,\hat{y})\in\mathbb{R
 Q_k^T(A-\sigma I_n)^T(A-\sigma I_n)Q_k\hat{y}=&\;\lambda Q_k^T(A-\sigma I_n)^TQ_k\hat{y}\\
 ((AQ_k)^TAQ_k-\sigma Q_k^TAQ_k)\hat{y}=&\;(\sigma+\lambda)(Q_k^TAQ_k-\sigma I_k)\hat{y}\\
 (T_kT_k+\beta_k^2e_ke_k^T-\sigma T_k)\hat{y}=&\;(\sigma+\lambda)(T_k-\sigma I_k)\hat{y}\\
-G_1\hat{y}=&\;(\sigma+\lambda)G_2\hat{y}
+((T_k-\sigma I_k)T_k+\beta_k^2e_ke_k^T)\hat{y}=&\;(\sigma+\lambda)(T_k-\sigma I_k)\hat{y}\\
+(T_k+\beta_k^2fe_k^T)\hat{y}=&\;(\sigma+\lambda)\hat{y}
 \end{align*}
-where $G_1:=T_k(T_k-\sigma I_k)+\beta_k^2e_ke_k^T$ and $G_2:=T_k-\sigma I_k$.
-\item[] \textbf{{\color{red}{Problem}}}: Even if $A$, and thus $T_k$ are positive definite, $G_2$ is likely \textbf{not positive definite}, which means the \textbf{harmonic Ritz pairs} are \textbf{{\color{red}{complex}}}.
-\item[] \underline{Question}: \textbf{How do you build real eigenpairs by harmonic Ritz?}
+where $f:=(T_k-\sigma I_k)^{-1}e_k$.
 \end{itemize}
 \end{frame}
+
+\begin{frame}{Lanczos harmonic Ritz for interior eigenpairs}
+\begin{itemize}
+\item Note that $fe_k^T$ is not symmetric so that the \textbf{reduced eigenpairs of} the \textbf{harmonic Ritz procedure} are \textbf{generally complex}.
+\item[] However, they do \textbf{converge towards} the \textbf{real eigenpairs}.
+\item Similarly as with Arnoldi, the Rayleigh quotient is given by
+\begin{align*}
+\rho=\sigma+\lambda-\beta_{k}^2(\hat{y}^Hf)(e_k^T\hat{y})
+\end{align*}
+whereas the residual $\hat{r}:=Ay-\rho y$ is such that 
+\begin{align*}
+\hat{r}^H\hat{r}=(\sigma+\lambda-\rho)\overline{(\rho-\sigma)}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
 
 % Slide 44
 \begin{frame}{Summary of Krylov subspace methods}
@@ -1182,6 +1197,9 @@ Quantify also the loss of orthogonality of the basis.
 For all this, use the matrix \texttt{Kuu} from the SuiteSparse collection.
 \item Implement a Rayleigh-Ritz procedure on top of your Lanczos process.
 For the matrix \texttt{Kuu} from the SuiteSparse collection, solve for the 5 largest eigenpairs using the reduced expressions derived in class to monitor convergence of residuals.
+Verify your residual estimates.
+\item Implement a harmonic Ritz procedure on top of your Lanczos process.
+For the matrix \texttt{Kuu} from the SuiteSparse collection, solve for the 2 eigenpairs closest to $\sigma=25$ using the reduced expressions derived in class to monitor convergence of residuals.
 Verify your residual estimates.
 \end{enumerate}
 \end{frame}
