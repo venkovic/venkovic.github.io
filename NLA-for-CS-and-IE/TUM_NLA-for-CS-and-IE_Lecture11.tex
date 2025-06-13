@@ -1078,7 +1078,7 @@ Alternatives:
 (A-\sigma I_n)y-\lambda y\perp (A-\sigma I_n)\text{range}(Q_k).
 \end{align*}
 Let the columns of $Q_k$ form an orthonormal basis of $\mathcal{K}_k(A,q_1)$.
-Then, the \textbf{search for} for the pair $(\sigma+\lambda,\hat{y})\in\mathbb{R}\times\mathbb{R}^{k}\setminus\{0\}$ is such that
+Then, the \textbf{search for} for the pair $(\sigma+\lambda,\hat{y})$ is such that
 \begin{align*}
 Q_k^T(A-\sigma I_n)^T(A-\sigma I_n)Q_k\hat{y}=&\;\lambda Q_k^T(A-\sigma I_n)^TQ_k\hat{y}\\
 ((AQ_k)^TAQ_k-\sigma Q_k^TAQ_k)\hat{y}=&\;(\sigma+\lambda)(Q_k^TAQ_k-\sigma I_k)\hat{y}\\
@@ -1090,6 +1090,7 @@ where $f:=(T_k-\sigma I_k)^{-1}e_k$.
 \end{itemize}
 \end{frame}
 
+% Slide 44
 \begin{frame}{Lanczos harmonic Ritz for interior eigenpairs}
 \begin{itemize}
 \item Note that $fe_k^T$ is not symmetric so that the \textbf{reduced eigenpairs of} the \textbf{harmonic Ritz procedure} are \textbf{generally complex}.
@@ -1105,8 +1106,7 @@ whereas the residual $\hat{r}:=Ay-\rho y$ is such that
 \end{itemize}
 \end{frame}
 
-
-% Slide 44
+% Slide 45
 \begin{frame}{Summary of Krylov subspace methods}
 \begin{itemize}
 \item We studied two main Krylov subspace methods for eigenvalue problems:
@@ -1134,7 +1134,7 @@ whereas the residual $\hat{r}:=Ay-\rho y$ is such that
 		
 \section{Homework problems}
 
-% Slide 45
+% Slide 46
 \begin{frame}{Homework problem}\vspace{.1cm}
 Turn in \textbf{your own} solution to \textbf{Pb.$\,$23}:\vspace{.15cm}\\
 \begin{minipage}[t]{0.1\textwidth}
@@ -1171,7 +1171,7 @@ use the Arnoldi process to build an orthonormal basis $Q_2=[q_1,q_2]$ of the Kry
 \end{frame}
 
 \section{Practice session}
-% Slide 46
+% Slide 47
 \begin{frame}[fragile]{Practice session}
 \begin{enumerate}
 \item Implement MGS and CGS2-based Arnoldi procedures.
@@ -1187,7 +1187,7 @@ Verify your residual estimates.
 \end{enumerate}
 \end{frame}
 
-% Slide 47
+% Slide 48
 \begin{frame}[fragile]{Practice session, cont'd}
 \begin{enumerate}
 \setcounter{enumi}{4} 
