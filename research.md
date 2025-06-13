@@ -36,7 +36,7 @@ Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, High Perfor
 
 ### *Publications*
 
-Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 2, Reports (R): 2.
+Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 2, Reports (R): 2.
 
 <!--[P4] N. Venkovic, A. Bourassa and H. Anzt (2024) __Domain decomposition for the computation of proper orthogonal decompositions by Galerkin projection__.-->
 
@@ -44,10 +44,11 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 2, Reports (R): 
 
 <!--[P2] N. Venkovic and L. Graham-Brady (2024) __A bottom-up dynamic algorithm for the evaluation of high order derivatives of 2D anisotropic elastic Green's functions__.-->
 
+[P2] N. Venkovic and H. Anzt (2025) __Permutation-avoiding FFT-based convolution__. arXiv preprint, arXiv:2403.07824.
 
-[C2] K. Tuteja, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (2025) __pyGinkgo: A Sparse Linear Algebra Operator Framework for Python__. 4th International Conference on Parallel Processing (ICPP 2025).
+[C2] K. Tuteja, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (2025) __pyGinkgo: A sparse linear algebra operator framework for Python__. 4th International Conference on Parallel Processing (ICPP 2025).
 
-[P1] N. Venkovic, P. Mycek, O.P. Le Maître and L. Giraud (2024) __Preconditioners based on Voronoi quantizers of random variable coefficients of stochastic elliptic partial differential equations__. arXiv preprint, arXiv:2403.07824.
+[P1] N. Venkovic, P. Mycek and O.P. Le Maître (2024) __Preconditioners based on Voronoi quantizers of random variable coefficients of stochastic elliptic partial differential equations__. arXiv preprint, arXiv:2403.07824.
 
 [PhD] N. Venkovic (2023) __Preconditioning strategies for stochastic elliptic partial differential equations__. PhD thesis, Université de Bordeaux.
 
@@ -66,6 +67,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 2, Reports (R): 
 ### *Conference presentations* 
 
 <!--[6] <ins>N. Venkovic</ins> (June 17-18, 2024) __Randomization of recycled block GMRES__. *Sparse Days 2024*, Cerfacs, Toulouse, France.-->
+[6] <ins>N. Venkovic</ins> and H. Anzt (September, 2025) __Compositions of proper orthogonal decompositions__. Workshop and Summer School on Applied Analysis 2025, TU Chemnitz, Chemnitz, Germany.
 
 [5] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France.
 
@@ -81,15 +83,15 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 2, Reports (R): 
 
 ### *Poster presentations*
 
-<ins>K. Tuteja</ins>, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (June 17, 2025) __pyGinkgo: Python Bindings for Ginkgo__. PASC25 conference, Brugg, Switzerland.
+[5] <ins>K. Tuteja</ins>, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (June 17, 2025) __pyGinkgo: Python bindings for Ginkgo__. PASC25 conference, Brugg, Switzerland.
 
-<ins>K. Tuteja</ins>, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (June 10, 2025) __pyGinkgo: A Sparse Linear Algebra Operator Framework for Python__. ISC High Performance 2025, Hamburg, Germany. 
+[4] <ins>K. Tuteja</ins>, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (June 10, 2025) __pyGinkgo: A sparse linear algebra operator framework for Python__. ISC High Performance 2025, Hamburg, Germany. 
 
-<ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (October 8, 2020) __Deflated iterative solver for stochastic elliptic PDEs__. JDD 2020, Cerfacs, Toulouse, France.
+[3] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (October 8, 2020) __Deflated iterative solver for stochastic elliptic PDEs__. JDD 2020, Cerfacs, Toulouse, France.
 
-<ins>N. Venkovic</ins> and L. Graham-Brady (April 4, 2018) __A piecewise polynomial approximation scheme based on the Hashin-Shtrikman variational principle of polycrystals__. MACH 2018, Annapolis, MD, USA.
+[2] <ins>N. Venkovic</ins> and L. Graham-Brady (April 4, 2018) __A piecewise polynomial approximation scheme based on the Hashin-Shtrikman variational principle of polycrystals__. MACH 2018, Annapolis, MD, USA.
 
-<ins>N. Venkovic</ins> and L. Graham-Brady (July 18, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.     
+[1] <ins>N. Venkovic</ins> and L. Graham-Brady (July 18, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.     
 
 <ins>Presenter</ins>
 
