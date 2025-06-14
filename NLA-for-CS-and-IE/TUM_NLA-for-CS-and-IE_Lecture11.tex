@@ -22,15 +22,15 @@
 \myoutlineframe
 	
 % Slide 01
-\begin{frame}{Krylov subspace methods for few eigen-pairs}
+\begin{frame}{Krylov subspace methods for few eigenpairs}
 \begin{itemize}
 \item So far we've seen:
 \begin{itemize}\normalsize
-\item \textbf{Power iterations}, \textbf{inverse iterations} and \textbf{Rayleigh quotient iterations} to compute a single eigen-pair
-\item \textbf{QR iterations}, the \textbf{divide-and-conquer method} and the \textbf{method of bissection} to compute all the eigen-pairs of a small-to-medium size and dense matrix
+\item \textbf{Power iterations}, \textbf{inverse iterations} and \textbf{Rayleigh quotient iterations} to compute a single eigenpair
+\item \textbf{QR iterations}, the \textbf{divide-and-conquer method} and the \textbf{method of bissection} to compute all the eigenpairs of a small-to-medium size and dense matrix
 \item \textbf{LOBPCG} to compute a few extremal generalized eigenpairs of a large, possibly sparse matrix pencil $(A,B)$.
 \end{itemize}
-\item \textbf{Krylov subspace methods} are another set of iterative methods to compute a few eigen-pairs of a large matrix $A$
+\item \textbf{Krylov subspace methods} are another set of iterative methods to compute a few eigenpairs of a large matrix $A$
 \begin{itemize}\normalsize
 \item We assume that the mapping $x\mapsto Ax$ can be operated efficiently, possibly because $A$ is sparse\vspace{.1cm}
 \item We denote two mehods in particular:
@@ -81,7 +81,7 @@ is upper Hessenberg.
 \begin{center}
 \includegraphics[height=2.5cm]{images/hessenberg-reduction.png}
 \end{center}
-\item As it turns out, the eigenpairs of the leading block $H_k$ of $H$ are good approximations of some eigen-pairs of $A$.
+\item As it turns out, the eigenpairs of the leading block $H_k$ of $H$ are good approximations of some eigenpairs of $A$.
 \end{itemize}
 \end{frame}
 
@@ -747,7 +747,7 @@ allows to rewrite the reduced eigenvalue problem of the harmonic Ritz projection
 \end{align*}
 %\vspace{-.45cm}\\
 where $f:=H_k^{-H}e_k\in\mathbb{C}^{k}$ and $e_k:=I_k[:,k]$.
-\item Then, the harmonic eigen-residual $\tilde{r}:=Ay-(\sigma+\lambda )y$ of a given harmonic Ritz approximate eigen-pair $(\sigma+\lambda,y)$ with $y:=Q_k\hat{y}$ is such that
+\item Then, the harmonic eigen-residual $\tilde{r}:=Ay-(\sigma+\lambda )y$ of a given harmonic Ritz approximate eigenpair $(\sigma+\lambda,y)$ with $y:=Q_k\hat{y}$ is such that
 \vspace{-.1cm}
 \begin{align*}
 \tilde{r}=&\;AQ_m\hat{y}-(\sigma+\lambda)Q_m\hat{y}\\
