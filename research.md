@@ -44,7 +44,7 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 2, Reports (R): 
 
 <!--[P2] N. Venkovic and L. Graham-Brady (2024) __A bottom-up dynamic algorithm for the evaluation of high order derivatives of 2D anisotropic elastic Green's functions__.-->
 
-[P2] N. Venkovic and H. Anzt (2025) __Permutation-avoiding FFT-based convolution__. arXiv preprint, arXiv:2403.07824.
+[P2] N. Venkovic and H. Anzt (2025) __Permutation-avoiding FFT-based convolution__. arXiv preprint, arXiv:2506.12718.
 
 [C2] K. Tuteja, G. Olenik, R. Mishchuk, N. Venkovic, M. Götz, A. Streit, H. Anzt, C. Debus (2025) __pyGinkgo: A sparse linear algebra operator framework for Python__. 4th International Conference on Parallel Processing (ICPP 2025).
 
