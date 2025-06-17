@@ -24,9 +24,9 @@
 % Slide 01
 \begin{frame}{Computing eigenvalues exactly is impossible}
 \begin{itemize}
-\item \textbf{Computing eigenvalues and -vectors is} a very \textbf{difficult} task.\vspace{.1cm}\\
+\item \textbf{Computing eigenvalues and eigenvectors is} a very \textbf{difficult} task.\vspace{.1cm}\\
 There is \textbf{no direct method} for computing eigenvalues of matrices of size five or higher in general.\vspace{.1cm}\\
-That is, there is \textbf{no algorithm} that \textbf{can compute eigenvalues exactly} assuming perfect arithmetic.
+That is, there is \textbf{no algorithm} that \textbf{can compute eigenvalues exactly} assuming exact arithmetic.
 \item Moreover, it can be proved that \textbf{a method that computes eigenvalues exactly cannot exist} for general matrices of size five or higher.\vspace{.1cm}\\
 The reason for this is the Abel-Ruffini theorem, which states that \textbf{no direct method} exists \textbf{to find exact zeros of a polynomial} of degree five or higher.\vspace{.1cm}\\
 That is the case because \textbf{computing the roots of any polynomial is equivalent to finding the eigenvalues of a matrix}.\vspace{.1cm}\\
@@ -46,7 +46,7 @@ Then, there is a matrix
 \begin{center}
 \includegraphics[height=2.5cm]{images/abel-matrix.png}\vspace{.2cm}
 \end{center}
-such that, if we pick $u=[1\,z\,z^2\,\dots\,z^{n-1}]^T$ where $z$ is a root of $p(x)$, then we have $Au=zu$ so that $(z,u)$ is an eigen-pair of $A$.\vspace{.1cm}\\
+such that, if we pick $u=[1\,z\,z^2\,\dots\,z^{n-1}]^T$ where $z$ is a root of $p(x)$, then we have $Au=zu$ so that $(z,u)$ is an eigenpair of $A$.\vspace{.1cm}\\
 Consequently, all roots of $p(x)$ are eigenvalues of $A$.
 \end{itemize}
 \end{frame}
@@ -73,11 +73,11 @@ Then $A$ has an eigenvalue decomposition $A=X\Lambda Y^H$ where the columns $x_i
 \begin{center}
 \includegraphics[height=2.5cm]{images/eigen-decomposition.png}\vspace{.2cm}
 \end{center}
-One thing about the eigen-decomposition is that powers of $A$ are such that
+One thing about the eigendecomposition is that powers of $A$ are such that
 \begin{align*}
 A^k=X\Lambda^k Y^H=\sum_i\lambda^k_ix_iy_i^H.
 \end{align*}
-Notice that, even if $A$ is real, it can have complex eigenvalues and -vectors.\vspace{.1cm}\\
+Notice that, even if $A$ is real, it can have complex eigenvalues and vectors.\vspace{.1cm}\\
 Note also that left and right eigenvectors of $A$ coincide if $A$ is normal.
 \end{itemize}
 \end{frame}
@@ -107,31 +107,31 @@ so that $A^kz/\|A^kz\|_2$ gives a \textbf{good approximation of} $x_1$.
 % Slide 06
 \begin{frame}{Power iteration}
 \begin{itemize}
-\item The power iteration is based on this idea of taking powers of $A$ to approximate the largest eigen-pair.
-The algorithm is as follows:\vspace{.2cm}
-\begin{itemize}
+\item The power iteration is based on this idea of taking powers of $A$ to approximate the largest eigenpair.
+The algorithm is as follows:\vspace{.15cm}
+\begin{itemize}\normalsize
 \item[1.] Sample a random vector $q^{(0)}\in\mathbb{C}^n$\vspace{.1cm}
 \item[2.]$q^{(0)}:=q^{(0)}/\|q^{(0)}\|_2$\vspace{.1cm}
 \item[3.]For $k=0,1,2\dots$\vspace{.1cm}
 \item[4.]\hspace{.4cm}$z^{(k)}:=Aq^{(k)}$\vspace{.1cm}
 \item[5.]\hspace{.4cm}$\lambda^{(k+1)}=z^{(k)}{}^Hq^{(k)}$\vspace{.1cm}
 \item[6.]\hspace{.4cm}$q^{(k+1)}:=z^{(k)}/\|z^{(k)}\|_2$
-\end{itemize}\vspace{.2cm}
-where $(\lambda^{(k)},q^{(k)})$ is an iterate approximating the largest eigen-pair of $A$.\vspace{.05cm}\\
-At the $k$-th step, the approximate eigenvector is 
+\end{itemize}\vspace{.15cm}
+where $(\lambda^{(k)},q^{(k)})$ is an iterate approximating the largest eigenpair of $A$.
+\item[]At the $k$-th step, the approximate eigenvector is 
 \begin{align*}
 q^{(k)}=A^kq^{(0)}/\|A^kq^{(0)}\|_2,
 \end{align*}
-and the corresponding approximate eigenvalue is $\lambda^{(k)}=q^{(k)}{}^HAq^{(k)}$.\vspace{.05cm}\\
-Note that, even though $q^{(k)}$ is formed with $A^k$, the matrix power $A^k$ is not explicitly computed.\vspace{.05cm}\\
-Instead, we just perform repeated matrix-vector products.
+and the corresponding approximate eigenvalue is $\lambda^{(k)}=q^{(k)}{}^HAq^{(k)}$.
+\item[]Note that, even though $q^{(k)}$ is formed with $A^k$, the matrix power $A^k$ is not explicitly computed.
+\item[]Instead, we just perform repeated matrix-vector products.
 \end{itemize}
 \end{frame}
 
 % Slide 07
 \begin{frame}{Convergence of power iteration}
 \begin{itemize}
-\item Let us assume again that the eigen-pairs $(\lambda_1,x_1),\dots,(\lambda_n,x_n)$ of $A$ are ordered such that $|\lambda_1|>|\lambda_2|\geq\dots\geq|\lambda_n|$.
+\item Let us assume again that the eigenpairs $(\lambda_1,x_1),\dots,(\lambda_n,x_n)$ of $A$ are ordered such that $|\lambda_1|>|\lambda_2|\geq\dots\geq|\lambda_n|$.
 \item The starting vector $q^{(0)}$ can be expressed in the basis formed by the eigenvectors of $A$, i.e.,
 \begin{align*}
 q^{(0)}=\alpha_1x_1+\dots+\alpha_nx_n.
@@ -155,7 +155,7 @@ A^kq^{(0)}=
 \begin{itemize}
 \item[] From that expression, we have
 \begin{align*}
-\|A^kq^{(0)}\|_2=&\,|\alpha_1\lambda_1^k|(1+\mathcal{O}(\lambda_2/\lambda_1))
+\|A^kq^{(0)}\|_2=&\,|\alpha_1\lambda_1^k|(1+\mathcal{O}(|\lambda_2/\lambda_1|))
 \text{  and  }\\
 \|(\alpha_1\lambda_1^k)^{-1}A^kq^{(0)}-x_1\|_2=&\,\mathcal{O}\left(\left|\frac{\lambda_2}{\lambda_1}\right|^k\right)
 \end{align*}
@@ -174,19 +174,19 @@ It also cannot leverage given approximations of $\lambda_i$.
 % Slide 09
 \begin{frame}{Inverse iteration}
 \begin{itemize}
-\item Assume we are equiped with an approximation $\mu$ of the eigenvalue $\lambda_i$ of $A$.
+\item Assume we are equipped with an approximation $\mu$ of the eigenvalue $\lambda_i$ of $\!A.\hspace{-1cm}$
 \item An \textbf{inverse $\!$iteration} uses $\mu$ to $\!$form an abritrarily good $\!$approximation of $\lambda_i.\hspace{-1cm}$
-\item If $\mu$ is a good approximation of $\lambda_i$, then\vspace{.1cm}\\
-The shifted matrix $A-\mu I_n$ has a small eigenvalue $\lambda_i-\mu$.\vspace{.1cm}\\
-The shift-and-invert matrix $(A-\mu I_n)^{-1}$ has a large eigenvalue $1/(\lambda_i-\mu)$.\vspace{.1cm}\\
-So, a power iteration applied to $(A-\mu I_n)^{-1}$ should allow us to calculate $x_i$ very quickly, since $1/(\lambda_i-\mu)$ is now the largest eigenvalue, with the corresponding eigenvector $x_i$.\vspace{.1cm}\\
-The algorithm of inverse iteration is as follows:\vspace{.1cm}
-\begin{itemize}
+\item If $\mu$ is a good approximation of $\lambda_i$, then
+\item[]The shifted matrix $A-\mu I_n$ has a small eigenvalue $\lambda_i-\mu$.
+\item[]The shift-and-invert matrix $(A-\mu I_n)^{-1}$ has a large eigenvalue $1/(\lambda_i-\mu)$.
+\item[]So, a power iteration applied to $(A-\mu I_n)^{-1}$ should allow us to calculate $x_i$ very quickly, since $1/(\lambda_i-\mu)$ is now the largest eigenvalue, with the corresponding eigenvector $x_i$.
+\item[]The algorithm of inverse iteration is as follows:\vspace{.1cm}
+\begin{itemize}\normalsize
 \item[1.] Sample a random vector $q^{(0)}\in\mathbb{C}^n$\vspace{.07cm}
 \item[2.]$q^{(0)}:=q^{(0)}/\|q^{(0)}\|_2$\vspace{.07cm}
 \item[3.]For $k=0,1,2\dots$\vspace{.07cm}
-\item[4.]\hspace{.4cm}Solve for $z^{(k)}$ such that $(A-\mu I_n)z^{(k)}=q^{(k)}
-\color{gray}{\;//\;z^{(k)}:=(A-\mu I_n)^{-1}q^{(k)}}$\vspace{.07cm}
+\item[4.]\hspace{.4cm}Solve for $z^{(k)}$ s.t. $(A-\mu I_n)z^{(k)}=q^{(k)}
+\color{gray}{\;//\;z^{(k)}:=(A-\mu I_n)^{-1}q^{(k)}}\hspace{-1cm}$\vspace{.07cm}
 \item[5.]\hspace{.4cm}$q^{(k+1)}:=z^{(k)}/\|z^{(k)}\|_2$\vspace{.07cm}
 \item[6.]\hspace{.4cm}$\lambda^{(k+1)}=q^{(k+1)}{}^HAq^{(k+1)}$
 \end{itemize}
@@ -210,7 +210,7 @@ If $|\lambda_i-\mu|\ll|\lambda_j-\mu|$, then the convergence is fast.
 \begin{itemize}
 \item As inverse iterations progess, the iterate $\lambda^{(k)}$ becomes a better approximation of the eigenvalue $\lambda_i$ than $\mu$.\vspace{.1cm}\\
 One could use this fact to redefine the shift $\mu$ and get faster convergence.
-\item Let us assume the matrix $A$ is real and symmetric so that its eigenvalues and -vectors are real, and the eigenvectors are orthogonal.
+\item Let us assume the matrix $A$ is real and symmetric so that its eigenvalues and eigenvectors are real, and the eigenvectors are orthogonal.
 \item The idea to \textbf{update the shift $\mu$ during the iteration} is deployed in an algortihm called \textbf{Rayleigh quotient iteration}.\vspace{.1cm}\\
 Let us consider the \textbf{Rayleigh quotient} given by $r(x)=\frac{x^TAx}{x^Tx}$ for $x\neq 0$.\vspace{.1cm}\\
 The Rayleigh quotient is used to approximate an eigenvalue.\vspace{.1cm}\\
@@ -222,7 +222,7 @@ Indeed, note that if $x$ is an eigenvector of $A$, i.e., $Ax=\lambda x$, then $r
 \begin{frame}{Rayleigh quotient iteration, cont'd}
 \begin{itemize}
 \item The algorithm for Rayleigh quotient iterations is as follows:\vspace{.1cm}
-\begin{itemize}
+\begin{itemize}\normalsize
 \item[1.] Sample a random vector $q^{(0)}\in\mathbb{C}^n$\vspace{.07cm}
 \item[2.]$q^{(0)}:=q^{(0)}/\|q^{(0)}\|_2$\vspace{.07cm}
 \item[3.] $\lambda^{(0)}:=\mu$\vspace{.07cm}
@@ -240,7 +240,7 @@ Indeed, note that if $x$ is an eigenvector of $A$, i.e., $Ax=\lambda x$, then $r
 \begin{frame}{Convergence of Rayleigh quotient iterations}
 \begin{itemize}
 \item Note first that the gradient of the Rayleigh quotient $r$ for a symmetric $A$ is given by $\nabla r(x)=\frac{2}{x^Tx}(Ax-r(x)x)$ so that $r(x_i)=\lambda_i$ implies $\nabla r(x_i)=0.\hspace{-1cm}$\vspace{.1cm}\\
-More often than not, the zeros of $\nabla r$ are saddle points, as the Rayleigh quotient is only minimized (resp. maximized) at the smallest eigen-pair (resp. largest eigen-pair).\vspace{.1cm}\\
+More often than not, the zeros of $\nabla r$ are saddle points, as the Rayleigh quotient is only minimized (resp. maximized) at the smallest eigenpair (resp. largest eigen-pair).\vspace{.1cm}\\
 In particular, we remember the Courant-Fischer theorem from lecture 1 which states\vspace{-.25cm}
 \begin{align*}
 \lambda_{min}=\min_{x\neq 0}\frac{x^TAx}{x^Tx}
@@ -274,7 +274,7 @@ and the behavior of the Rayleigh quotient near an eigenvector $x_i$ is as follow
 \begin{frame}{Basic QR iteration}
 \begin{itemize}
 \item The PageRank algorithm is a variant of power iteration aimed at finding the largest eigenvector of a modified adjacency matrix of a web graph.\vspace{.05cm}
-However, in general, iterative methods for computing a single eigen-pair have limited applicability.
+However, in general, iterative methods for computing a single eigenpair have limited applicability.
 \item Unlike those previously covered iterative methods for eigenvalue solving,\\
 QR iterations aim at \textbf{finding all the eigenvalues} of a matrix.
 \item The QR iteration was elected \textbf{one of the 10 best algorithms of the 20th century} by Dongarra and Sullivan (2000).
@@ -292,13 +292,13 @@ Because $A$ is real with separate eigenvalues, we have that eigen- and Schur dec
 \item Orthogonal iterations allow us to recover more than one eigenvalue at once.
 \item For starter, consider that only $r=2$ eigenvalues are needed.\vspace{.1cm}\\
 Then, the pseudocode of orthogonal iterations is as follows:\vspace{.2cm}
-\begin{itemize}
+\begin{itemize}\normalsize
 \item[1.] Sample two random vector $q_1,q_2\in\mathbb{R}^n$\vspace{.07cm}
 \item[2.] While not converged :\vspace{.07cm}
-\item[5.]\hspace{.4cm}$q_1:=Aq_1;\;q_2:=Aq_2$\vspace{.07cm}
-\item[6.]\hspace{.4cm}Project $q_2$ onto the space orthogonal to $q_1$ {\color{gray}// E.g., $q_2:=\left(I_n-\frac{q_1q_1^T}{q_1^Tq_1}\right)q_2$}\vspace{.07cm}
-\item[7.]\hspace{.4cm}$q_1:=q_1/\|q_1\|_2,\;q_2:=q_2/\|q_2\|_2$\vspace{.07cm}
-\item[8.] Return $q_1^TAq_1$ and $q_2^TAq_2$\vspace{.2cm}
+\item[3.]\hspace{.4cm}$q_1:=Aq_1;\;q_2:=Aq_2$\vspace{.07cm}
+\item[4.]\hspace{.4cm}Project $q_2$ onto the space orthogonal to $q_1$ {\color{gray}// $q_2:=\left(I_n-\frac{q_1q_1^T}{q_1^Tq_1}\right)q_2\hspace{-2cm}$}\vspace{.07cm}
+\item[5.]\hspace{.4cm}$q_1:=q_1/\|q_1\|_2,\;q_2:=q_2/\|q_2\|_2$\vspace{.07cm}
+\item[6.] Return $q_1^TAq_1$ and $q_2^TAq_2$\vspace{.2cm}
 \end{itemize}
 Disregarding the vector $q_2$, the vector $q_1$ undergoes a standard power iteration so that, at the $k$-th step, we have
 \begin{align*}
@@ -331,10 +331,10 @@ Then, we claim that $Q^TAQ$ where $Q=[q_1\,q_2]$ converges to an upper-triangula
 \begin{frame}{Orthogonal iteration for $r=2$, cont'd\textsubscript{2}}
 \begin{itemize}
 \item[]
-\begin{itemize}
+\begin{itemize}\normalsize
 \item[-] First, the upper-triangularity is explained as follows:
 \begin{align*}
-q_2^TAq_1\approx q_2Ax_1=\lambda_1q_2^Tx_1\approx\lambda_1q_2^Tq_1=0
+q_2^TAq_1\approx q_2^TAx_1=\lambda_1q_2^Tx_1\approx\lambda_1q_2^Tq_1=0
 \end{align*}
 so that the lower-left entry converges to zero.\vspace{.1cm}\\
 \item[-] To see that $\lambda_1$ and $\lambda_2$ lie on the diagonal, it suffices to show that they are eigenvalues of $Q^TAQ$, as $Q^TAQ$ is triangular.\vspace{.1cm}\\
@@ -352,7 +352,7 @@ so that $v_i$ is an eigenvector of $Q^TAQ$ with eigenvalue $\lambda_i$ for $i=1,
 \begin{frame}{Orthogonal iteration for general $r$}
 \begin{itemize}
 \item When an arbitrary number $r$ of eigenvalues is sought, the approximate eigenvectors are orthogonalized by performing a QR factorization, leading to the following pseudocode:\vspace{.2cm}
-\begin{itemize}
+\begin{itemize}\normalsize
 \item[1.] Sample a random matrix $Q_0\in\mathbb{R}^{n\times r}$\vspace{.07cm}
 \item[2.] $k:=0$\vspace{.07cm}
 \item[3.] While not converged :\vspace{.07cm}
@@ -449,10 +449,10 @@ T_{k+1}=Q_{k+1}^TAQ_{k+1}=R_{k+1}Q_k^TQ_{k+1}
 T_k=&\,U_{k+1}R_{k+1}\\
 T_{k+1}=&\,R_{k+1}U_{k+1}
 \end{align*}
-where $R_{k+1}$ is upper triangular, and $U_{k+1}$ is orthogonal.\vspace{.1cm}\\
-Note that $U_{k+1}R_{k+1}$ is a QR decomposition of $T_k=Q_k^TAQ_k$.\vspace{.1cm}\\
-This yields the following pseudocode to compute the eigenvalues of $A$ :\vspace{.2cm}
-\begin{itemize}
+where $R_{k+1}$ is upper triangular, and $U_{k+1}$ is orthogonal.
+\item[]Note that $U_{k+1}R_{k+1}$ is a QR decomposition of $T_k=Q_k^TAQ_k$.
+\item[]This yields the following pseudocode to compute the eigenvalues of $A$ :\vspace{.1cm}
+\begin{itemize}\normalsize
 \item[1.] $T_0:=A$\vspace{.07cm}
 \item[2.] $k:=0$\vspace{.07cm}
 \item[3.] While not converged :\vspace{.07cm}
@@ -485,13 +485,13 @@ As the algorithm converges, $Q_k$ and $Q_{k+1}$ become very close.
 \begin{itemize}
 \item The QR iteration presented so far has drawbacks:
 \begin{itemize}\normalsize
-\item[-] A QR factorization at cost $\mathcal{O}(n^3)$ is computed at each iteration\vspace{.1cm}
-\item[-] The convergence depends heavily on the distribution of the eigenvalues, and it may never converge if two eigenvalues have the same magnitude
+\item[-] A QR factorization at cost $\mathcal{O}(n^3)$ is computed at each iteration.\vspace{.1cm}
+\item[-] The convergence depends heavily on the distribution of the eigenvalues, and it may never converge if two eigenvalues have the same magnitude.
 \end{itemize}
 \item Improvements of the QR iteration method can be introduced to improve the robustness and efficiency:
 \begin{itemize}\normalsize
-\item[-] The transformation of $A$ into an upper Hessenberg form allows to decrease the cost of the QR factorizations\vspace{.1cm}
-\item[-] A shifted version of the QR iteration can improve convergence, even when the eigenvalues are not well-separated, making the method robust to cases of eigenvalues with equal magnitudes
+\item[-] The transformation of $A$ into an upper Hessenberg form allows to decrease the cost of the QR factorizations.\vspace{.1cm}
+\item[-] A shifted version of the QR iteration can improve convergence, even when the eigenvalues are not well-separated, making the method robust to cases of eigenvalues with equal magnitudes.
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -549,23 +549,24 @@ Using this sequence of polynomials, the method of bissection is able to efficien
 \begin{frame}{Existing implementations}
 \begin{itemize}
 \item QR iteration:
-\begin{itemize}
-\item[-] Implementation sometimes requires tridiagonalization,\\
-available for general matrices\vspace{.07cm}
-\item[-] Fastest to compute the eigendecomposition of small matrices, i.e., for $n\leq 25$\vspace{.07cm}
-\item[-] Algorithm behind the Matlab, NumPy and Julia functions \texttt{eig}\vspace{.07cm}
-\item[-] Available in LAPACK as \texttt{ssyev} for dense symmetric matrices\vspace{.07cm}
-\item[-] Available in LAPACK as \texttt{sstev} for symmetric tridiagonal matrices
+\begin{itemize}\normalsize
+\item[-] Available for general matrices.\vspace{.07cm}
+\item[-] Implementation sometimes requires tridiagonalization.\vspace{.07cm}
+\item[-] Fastest to compute the eigendecomposition of small matrices ($n\leq 25$).\vspace{.07cm}
+\item[-] Algorithm behind the Matlab, NumPy and Julia functions.\vspace{.07cm}
+\item[-] Available in LAPACK as \texttt{ssyev} for dense symmetric matrices.\vspace{.07cm}
+\item[-] Available in LAPACK as \texttt{sstev} for symmetric tridiagonal matrices.
 \end{itemize}
 \item Divide-and-conquer method:
-\begin{itemize}
-\item[-] Implementation requires tridiagonalization, available for symmetric matrices\vspace{.07cm}
-\item[-] Fastest to compute the eigendecomposition of medium size tridiagonal matrices, i.e., for $n> 25$\vspace{.07cm}
-\item[-] Available in LAPACK as \texttt{sstevd} for symmetric tridiagonal matrices,\\ \texttt{sstevd} defaults to QR iteration for smaller matrices
+\begin{itemize}\normalsize
+\item[-] Available for symmetric matrices.\vspace{.07cm}
+\item[-] Implementation requires tridiagonalization.\vspace{.07cm}
+\item[-] Fastest to compute the eigendecomposition of medium size tridiagonal matrices, i.e., for $n> 25$.\vspace{.07cm}
+\item[-] Available in LAPACK as \texttt{sstevd} for symmetric tridiagonal matrices,\\ \texttt{sstevd} defaults to QR iteration for smaller matrices.
 \end{itemize}
 \item Method of bissection:
-\begin{itemize}
-\item[-] Available in LAPACK as \texttt{ssyevx} for dense symmetric matrices
+\begin{itemize}\normalsize
+\item[-] Available in LAPACK as \texttt{ssyevx} for dense symmetric matrices.
 \end{itemize}
 \end{itemize}
 \end{frame}
