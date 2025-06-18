@@ -77,15 +77,16 @@ slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture11.tex">tex</a>,
 notebook [<a href="NLA-for-CS-and-IE/PracticeSession11.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession11.pdf">pdf</a>]</p>
 
 <p>12. 
-<strong>Krylov subspace methods for linear systems</strong><br />
+<strong>Jacobi-Davidson method</strong><br />
 &nbsp;&nbsp;&nbsp;
 slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture12.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture12.pdf">pdf</a>], 
 notebook [<a href="NLA-for-CS-and-IE/PracticeSession12.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession12.pdf">pdf</a>]</p>
 
 <p>13. 
-<strong>Multigrid methods</strong><br />
+<strong>Krylov subspace methods for linear systems</strong><br />
 &nbsp;&nbsp;&nbsp;
-slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture13.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture13.pdf">pdf</a>]</p>
+slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture13.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture13.pdf">pdf</a>], 
+notebook [<a href="NLA-for-CS-and-IE/PracticeSession13.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession13.pdf">pdf</a>]</p>
 
 <p>14. 
 <strong>Preconditioned iterative methods for linear systems</strong><br />
