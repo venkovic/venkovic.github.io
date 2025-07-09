@@ -1,0 +1,33 @@
+---
+---
+
+@import "jekyll-theme-hacker";
+
+@import "{{ site.theme }}";
+
+header {
+  display: none;
+}
+
+/* Dark dimmed */
+body {
+  background: #22272e;
+  color: #acbac7;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #97cb5b;
+}
+a {
+  color: #58a9e3;
+}
+
+/*
+body {
+  color: #f0e7d5;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #e8e8e8;
+}
+a {
+  color: #ffcc00;
+}*/
