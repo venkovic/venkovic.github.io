@@ -1,0 +1,412 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\title[NLA for CS and IE -- Lecture 00]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 00\\Introduction}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture00}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+\myoutlineframe
+
+\section{Numerical linear algebra:\\The "Why?", the "What?" and "What's next?"}
+
+% Slide 01
+\begin{frame}{Why do we need numerical linear algebra?}
+\textbf{Prevalence of linear algebra in research and industry}:
+\begin{itemize}
+\item[-] Scientific computing (often explicitly related to problems of linear algebra)
+\item[-] Simulations (e.g., discretized PDEs, ODEs, DAEs, ...)
+\item[-] Machine learning (e.g., PCA, RKHS, ...)
+\item[-] Optimization
+\end{itemize}
+\textbf{Methods taught in linear algebra}:
+\begin{itemize}
+\item[-] Solving linear systems: Cramer's rule and Gaussian elimination
+\item[-] Matrix factorizations: Cholesky, LU and QR
+\item[-] Eigenvalue problems: Root-finding of characteristic polynomials
+\end{itemize}
+\textbf{Limitations of methods taught in linear algebra}:
+\begin{itemize}
+\item[-] \textbf{{\color{red}{No general exact method for eigenvalues of matrices}}} larger than 4x4
+\item[-] \textbf{{\color{red}{Computational infeasibility}}} of analytical methods \textbf{{\color{red}{for large systems}}}
+\item[-] \textbf{{\color{red}{Numerical instability}}} leading to significant \textbf{{\color{red}{errors}}}
+\item[-] \textbf{{\color{red}{Inability to handle special structures}}} (e.g., sparsity, implicitness)
+\end{itemize}
+\begin{center}
+\fbox{\begin{minipage}{0.8\textwidth}\begin{center}
+\textbf{Need for methods to solve challenging problems efficiently}
+\end{center}\end{minipage}}
+\end{center}
+\end{frame}
+
+% Slide 02
+\begin{frame}{What is numerical linear algebra?}
+\textbf{What does numerical numerical linear algebra (NLA) address}:
+\begin{itemize}
+\item[-] $\!$Efficient algorithms for large-scale problems of linear algebra
+\item[-] $\!$Techniques for maintaining numerical stability and accuracy
+\item[-] $\!$Methods for exploiting matrix structure (e.g., sparsity, symmetry, low-rank)
+\item[-] $\!$Matrix-free formulations for implicit operators
+\item[-] $\!$Error analysis and conditioning 
+\end{itemize}
+\textbf{Scope of NLA}:
+\begin{itemize}
+\item[-] $\!$Focuses on both theoretical analysis (e.g., convergence, conditioning and stability) and practical implementation.
+\item[-] $\!$Incorporates aspects of performance and computer architecture for method\\
+$\!$development, $\!$e.g.,$\hspace{-1cm}$
+\begin{itemize}
+\item[-] Repurposing solvers into preconditioners for higher performance.\vspace{.05cm}
+\item[-] Designing sparse data structures and BLAS kernels to optimize memory usage.
+\end{itemize}
+\end{itemize}
+\textbf{Key branches of NLA}:
+\begin{itemize}
+\item[-] $\!$\textbf{Direct methods} vs \textbf{iterative methods} (stationary vs Krylov)
+\item[-] $\!$\textbf{Dense matrices} vs \textbf{sparse matrices} and \textbf{matrix-free operators}
+\end{itemize}
+\end{frame}
+
+% Slide 03
+\begin{frame}{What's coming next in numerical linear algebra?}
+Recent developments in NLA research show promise for significant performance improvements, but face challenges in widespread adoption:
+\begin{itemize}
+\item \textbf{Randomization}: Randomly reduces problem dimensions while preserving inherent structure with high probability.
+Associated challenges are
+\begin{itemize}
+\item[-] Ensuring convergence and assessing stability.\vspace{.08cm}
+\item[-] Defining and implementing reliably amortized sketching procedures.
+\end{itemize}
+\item \textbf{Communication avoidance}: Redesigns algorithms to minimize data movement between processors or memory hierarchies.
+Challenges are
+\begin{itemize}
+\item[-] Maintaining numerical stability with reduced communication.\vspace{.08cm}
+%\item[-] Balancing communication reduction with increased computational complexity.
+\end{itemize}
+\item \textbf{Mixed precision}: Utilizes different numerical precisions within a single algorithm to optimize performance.
+Associated challenges are
+\begin{itemize}
+\item[-] Ensuring overall stability and accuracy with lower precision components.\vspace{.08cm}
+\item[-] Developing adaptive strategies for precision selection.
+\end{itemize}
+\item \textbf{Extension of state-of-the art methods to tensor data}: Assessing convergence and stability when using low-rank approximation of tensor data, e.g., Tucker and Tensor-Train formats.
+\end{itemize}
+\end{frame}
+
+\section{Computational mathematics @ TUM}
+
+% Slide 04
+\begin{frame}{Computational mathematics @ TUM, Campus Heilbronn}
+\begin{itemize}
+\item $\!$Chair$\!$ of  COmputational$\!$  MAthematics$\!$  (COMA)$\!$ @$\!$ TUM: Prof.$\!$ \textbf{Hartwig Anzt}$\hspace{-1cm}$
+\begin{itemize}
+\item[-] Professor @ TUM since 01/2024\vspace{.04cm}
+\item[-] Director of the Innovative Computing Lab @ University of Tennessee (2022-23)$\hspace{-1cm}$\vspace{.04cm}
+\item[-] Junior Professor @ KIT (2021-22)\vspace{.04cm}
+\end{itemize}
+\item $\!$Recent and ongoing PhD theses directed by Hartwig:\vspace{.05cm}
+\begin{itemize}
+\item[-] Symbolic LU factorizations on GPUs (\textbf{Tobias Ribizel}, ongoing)\vspace{.05cm}
+\item[-] Scalable domain decomposition on GPUs (\textbf{Fritz Göbel}, ongoing)\vspace{.05cm}
+\item[-] Numerical $\!$compression $\!$in $\!$scientific $\!$computing $\!$(\textbf{Thomas Grützmacher}, $\!$ongoing)$\hspace{-1cm}$\vspace{.05cm}
+\item[-] Mixed precision algebraic multigrids on GPUs (\textbf{Yu-Hsiang Mike Tsai}, 2024)\vspace{.05cm}
+\item[-] Asynchronous and batched iterative solvers on GPUs (\textbf{Pratik Nayak}, 2023)
+\end{itemize}
+\item $\!$Ongoing projects in COMA:\vspace{.05cm}
+\begin{itemize}
+\item[-] \textbf{Ginkgo}: Portable high-performance numerical linear algebra library\vspace{.05cm}
+\item[-] \textbf{Sparse BLAS}: Basic linear algebra subprograms for sparse matrices\vspace{.05cm}
+\item[-] \textbf{ICON}: Large legacy codebase for climate modeling\vspace{.05cm}
+\item[-] \textbf{OGL/OpenFOAM}: Large legacy codebase for computational fluid dynamics\vspace{.05cm}
+\item[-] \textbf{MicroCARD}: Numerical modeling of cardiac electrophysiology\vspace{.05cm}
+\item[-] \textbf{PDExa}: Optimized software methods and technologies for PDEs\vspace{.05cm}
+\item[-] \textbf{nekRS}: Fast and scaleable computational fluid dynamics software package
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 05
+\begin{frame}{Computational mathematics @ TUM, Campus Heilbronn, cont'd}
+\begin{itemize}
+\item Course instructor:
+\begin{center}\includegraphics[height=2cm]{images/2024-Venkovic-headshot.jpeg}\end{center}\vspace{.15cm}
+\textbf{Nicolas Venkovic}, Postdoc. in COMA @ TUM%\vspace{.3cm}
+\begin{itemize}
+\item[-] Postdoctoral Researcher @ TUM since 07/2024\vspace{.07cm}
+\item[-] Software Developer @ NXP Semiconductors (09/2022 - 04/2024)\vspace{.07cm}
+\item[-] PhD in Applied Mathematics \& Scientific Computing @ Cerfacs (09/2023)\vspace{.07cm}
+\item[-] MSE in Applied Mathematics \& Statistics @ Johns Hopkins University (2018)\vspace{.07cm}
+\end{itemize}
+\item Recent and ongoing research efforts:
+\begin{itemize}
+\item[-] Randomization of block iterative methods\vspace{.07cm}
+\item[-] Low-rank approximation of integral operators\vspace{.07cm}
+\item[-] Iterative methods for parameter-dependent problems
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\section{Class overview}
+
+% Slide 06
+\begin{frame}{Objectives}
+Upon completion of the class, students should:
+\begin{itemize}
+\item Understand why numerical linear algebra (NLA) is essential in practice, and what it encompasses.
+\item Be familiar with the challenges of the main problems and procedures of NLA, such as orthogonalization, least-squares solving, factorization, linear solving, preconditioning, eigenvalue solving, ...
+\item Understand the definitions, implementations and main properties of the methods presented in class for solving these problems.
+\item Recognize some pathological behaviors of these methods and be able to explain unwanted numerical behaviors.
+\item Know the strengths and limits of the presented methods, and know when to use them in practice.
+\item Have the foundational background to explore methods for solving NLA problems beyond those covered in class.
+\end{itemize}
+\end{frame}
+
+% Slide 07
+\begin{frame}{Content}
+\begin{itemize}
+\vspace{-.1cm}
+\item We will cover the following core topics:%\vspace{.04cm}
+\begin{itemize}
+\item[-] \texttt{Lecture 01}: Essentials of linear algebra\vspace{.02cm}
+\item[-] \texttt{Lecture 02}: Essentials of the Julia language\vspace{.02cm}
+\item[-] \texttt{Lecture 03}: Floating-point arithmetic and error analysis\vspace{.02cm}
+\item[-] \texttt{Lecture 04}: Direct methods for dense linear systems\vspace{.02cm}
+\item[-] \texttt{Lecture 05}: Sparse data structures and basic linear algebra subprograms\vspace{.02cm}
+\item[-] \texttt{Lecture 06}: Introduction to direct methods for sparse linear systems\vspace{.02cm}
+\item[-] \texttt{Lecture 07}: Orthogonalization and least-squares problems\vspace{.02cm}
+\item[-] \texttt{Lecture 08}: Basic iterative methods for linear systems\vspace{.02cm}
+\item[-] \texttt{Lecture 09}: Basic iterative methods for eigenvalue problems\vspace{.02cm}
+\item[-] \texttt{Lecture 10}: Locally optimal block preconditioned conjugate gradient\vspace{.02cm}
+\item[-] \texttt{Lecture 11}: Arnoldi and Lanczos procedures\vspace{.02cm}
+\item[-] \texttt{Lecture 12}: Jacobi-Davidson method\vspace{.02cm}
+\item[-] \texttt{Lecture 13}: Krylov subspace methods for linear systems\vspace{.02cm}
+\item[-] \texttt{Lecture 14}: Preconditioned iterative methods for linear systems\vspace{.02cm}
+\item[-] \texttt{Lecture 15}: Restarted Krylov subspace methods\vspace{.02cm}
+\item[-] \texttt{Lecture 16}: Elements of randomized numerical linear algebra\vspace{.02cm}
+\item[-] \texttt{Lecture 17}: Introduction to communication-avoiding algorithms\vspace{.02cm}
+\item[-] \texttt{Lecture 18}: Matrix function evaluation
+\end{itemize}
+\end{itemize}
+%\vfill
+%\tiny{The duration of a lecture is not tied to a single class period.
+%Some lectures will span less than one class, while others will cover multiple meetings.
+%Several lectures can be covered within one meeting.}
+\end{frame}
+
+% Slide 08
+\begin{frame}{Content, cont'd}
+\begin{itemize}
+\item If time permits, additional lectures may be picked among the following based on students' interests:
+\begin{itemize}
+\item[-] \texttt{Lecture E1}: Multigrid methods and domain decomposition\vspace{.04cm}
+\item[-] \texttt{Lecture E2}: Multilinear algebra and tensor decompositions\vspace{.04cm}
+\item[-] \texttt{Lecture E3}: Introduction to mixed precision algorithms
+\end{itemize}
+%\end{itemize}
+%$\vspace{-.3cm}$\\
+%\tiny{The duration of a lecture is not tied to a single class period.
+%Some lectures will span less than one class, while others will cover multiple meetings.
+%Several lectures can be covered within one meeting.}\vspace{.05cm}
+%\begin{itemize}
+%\normalsize
+\item The duration of a lecture is not tied to a single class period.
+Some lectures will span less than one class, while others will cover multiple meetings.
+Several lectures can be covered within one meeting.
+\item Most lectures will begin by establishing formal foundations, and some will be followed by practice sessions using \textbf{Julia notebooks} or \textbf{exercise sheets} to test, visualize, and deepen your understanding of the methods and concepts introduced.
+\end{itemize}
+\end{frame}
+
+% Slide 09
+\begin{frame}{Reading material}
+\begin{itemize}
+\item \textbf{Main references}:
+\begin{itemize}
+\item[-] \textbf{Lecture slides} and \textbf{Julia notebooks} uploaded gradually on {\color{blue}{\underline{\href{https://www.moodle.tum.de/}{Moodle}}}}, throughout the semester.\\
+Content also uploaded at {\color{blue}{\underline{\href{https://venkovic.github.io/NLA-for-CS-and-IE}{venkovic.github.io/NLA-for-CS-and-IE}}}}.
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.15cm}
+\includegraphics[height=1.8cm]{images/Darve2021.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Darve, E., \& Wootters, M. (2021). Numerical linear algebra with Julia.
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\item[-] GitHub repository: 
+\begin{center}\url{https://github.com/EricDarve/numerical_linear_algebra}\end{center}\vspace{.3cm}
+\end{itemize}
+\item \textbf{Most used supplemental reference}:
+\begin{itemize}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.15cm}
+\includegraphics[height=1.8cm]{images/Saad2003.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Saad, Y. (2003). Iterative methods for sparse linear systems. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\end{itemize}
+\end{itemize}
+\vfill
+\tiny{${}^\dagger$ SIAM members get 30\% off book prices. SIAM membership is free for students.}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Reading material, cont'd\textsubscript{1}}
+\begin{itemize}
+\item \textbf{Other useful supplemental references}:
+\begin{itemize}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.8cm]{images/Demmel1997.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Demmel, J. W. (1997). Applied numerical linear algebra. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.8cm]{images/Golub2013.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Golub, G. H., \& Van Loan, C. F. (2013). Matrix computations. 
+JHU press.
+\end{minipage}\vspace{.3cm}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.8cm]{images/Greenbaum1997.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Greenbaum, A. (1997). Iterative methods for solving linear systems. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\end{itemize}
+\end{itemize}
+\vfill
+\tiny{${}^\dagger$ SIAM members get 30\% off book prices. SIAM membership is free for students.}
+\end{frame}
+
+% Slide 11
+\begin{frame}{Reading material, cont'd\textsubscript{2}}
+\begin{itemize}
+\item[]
+\begin{itemize}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.8cm]{images/Higham2002.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Higham, N. J. (2002). Accuracy and stability of numerical algorithms. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.8cm]{images/Trefethen2022.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Trefethen, L. N., \& Bau, D. (2022). Numerical linear algebra. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}
+\end{itemize}
+\end{itemize}
+\vspace{3.3cm}
+\tiny{${}^\dagger$ SIAM members get 30\% off book prices. SIAM membership is free for students.}
+\end{frame}
+
+% Slide 12
+\begin{frame}{Course evaluation}
+\begin{itemize}
+\item \textbf{Final exam (determines base grade)}:\vspace{.2cm}
+\begin{center}
+\fbox{\begin{minipage}{0.65\textwidth}\begin{center}
+\textbf{10:00$\,$-11:30}\\
+\textbf{Thursday, 31 July 2025}\\
+\textbf{Campus Heilbronn}\\
+\textbf{D.2.01}
+\end{center}\end{minipage}}
+\end{center}$\vspace{0cm}$\\
+\begin{itemize}\normalsize
+\item[-] Questions in relation to the homework problems, material presented in class, and practice sessions.
+\end{itemize}
+\item \textbf{Homework policy}:
+\begin{itemize}\normalsize
+\item[-] Submit your solution to one problem per lecture.\vspace{.05cm}
+\item[-] Deadline: 2 weeks after the end of the lecture.\vspace{.15cm}
+\item[-] Regular submissions upgrade the final grade by one step.
+\begin{itemize}\normalsize
+\item[-] Example: 2.0 becomes 1.7.\vspace{.05cm}
+\item[-] Notes: This upgrade applies to passing grades only.\\
+\hspace{1.2cm}1.0 remains the highest possible grade.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 12
+\begin{frame}{Course evaluation}
+\addtocounter{framenumber}{-1}
+\begin{itemize}
+\item \textbf{Retake exam}:\vspace{.2cm}
+\begin{center}
+\fbox{\begin{minipage}{0.65\textwidth}\begin{center}
+\textbf{10:00$\,$-11:30}\\
+\textbf{Monday, 29 September 2025}\\
+\textbf{Campus Heilbronn}\\
+\textbf{D.2.01}
+\end{center}\end{minipage}}
+\end{center}$\vspace{0cm}$\\
+\begin{itemize}\normalsize
+\item[-] Questions in relation to the homework problems, material presented in class, and practice sessions.
+\end{itemize}
+\item \textbf{Homework policy}:
+\begin{itemize}\normalsize
+\item[-] Submit your solution to one problem per lecture.\vspace{.05cm}
+\item[-] Deadline: 2 weeks after the end of the lecture.\vspace{.15cm}
+\item[-] Regular submissions upgrade the final grade by one step.
+\begin{itemize}\normalsize
+\item[-] Example: 2.0 becomes 1.7.\vspace{.05cm}
+\item[-] Notes: This upgrade applies to passing grades only.\\
+\hspace{1.2cm}1.0 remains the highest possible grade.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Homework assignment}
+
+% Slide 13
+\begin{frame}{Homework assignment}
+Send an email to me with the subject line \texttt{NLA-YourLastName} addressing the following points:\vspace{.1cm}
+\begin{enumerate}
+\item Briefly describe your background, if any, in numerical linear algebra, e.g.,
+    \begin{itemize}\normalsize
+    \item[-] Courses taken, practical experience, self-study, ...
+    \end{itemize}
+\item Identify a specific area of interest in numerical linear algebra:
+    \begin{itemize}\normalsize
+    \item[-] A problem, method or concept you either work on, want to understand better, or are curious about.
+    \end{itemize}
+\item Regarding the course syllabus:
+    \begin{itemize}\normalsize
+    \item[-] List 2-3 topics you're most excited to learn about.
+    \item[-] Mention any topics you feel you already have a strong grasp of, or simply would not mind skipping.
+    \end{itemize}
+\item Suggest elective topics, listed in the slides or not, that you'd like to see covered, in case time permits.
+\end{enumerate}
+%\vspace{0.05<cm}
+\textbf{Note:} Your responses could help adapt certain aspects of the course to the class's needs and interests.
+\end{frame}
+
+\end{document}

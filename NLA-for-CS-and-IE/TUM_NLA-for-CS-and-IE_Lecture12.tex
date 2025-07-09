@@ -1,0 +1,402 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\title[NLA for CS and IE -- Lecture 12]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 12\\
+Jacobi-Davidson method\vspace{-.47cm}}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture12}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+\myoutlineframe
+
+% Slide 01
+\begin{frame}{Motivation}
+\begin{itemize}
+\item \textbf{Rayleigh-Ritz projections in Krylov subspaces} from Lanczos/Arnoldi procedures are very \textbf{effective to compute exterior eigenpairs}, provided the targeted eigenvalues are well-separated from the rest of the spectrum.
+\item In combination with a \textbf{shift-and-invert} spectral transformation, Rayleigh-Ritz projections in Krylov subspaces are also \textbf{efficient to
+compute interior eigenpairs} in the vicinity of a shift $\sigma$.
+\item[] A proper implementation of shift-and-invert transformations requires an evaluation of the mapping $x\mapsto(A-\sigma I_n)^{-1}x$ at each iteration.
+\item The \textbf{Jacobi-Davidson} method is of particular interest when one cannot afford to evaluate $x\mapsto(A-\sigma I_n)^{-1}x$ with sufficient precision.
+\item[] The Jacobi-Davidson method was proposed by Sleijpen and Van der Vorst (2000) on the basis of ideas from Jacobi (1845-46) and Davidson (1975).
+\end{itemize}\smallskip
+\tiny{Sleijpen, G. L., \& Van der Vorst, H. A. (1996). A Jacobi--Davidson iteration method for linear eigenvalue problems. SIAM review, 42(2), 267-293.}\tinyskip\\
+\tiny{Jacobi, C.G.J. (1845), Ueber eine neue Auflosungsart der bei der Methode der kleinsten Quadrate vorkommende linearen Gleichungen, Astronom Nachr, 297-306.}\tinyskip\\
+\tiny{Jacobi, C. G. J. (1846). \"{U}ber ein leichtes Verfahren die in der Theorie der S\"{a}cularstörungen vorkommenden Gleichungen numerisch aufzul\"{o}sen. J. Reine Angew. Math., 30, 51–94.}\tinyskip\\
+\tiny{Davidson E. R. (1975). The iterative calculation of a few of the lowest eigenvalues and corresponding eigenvectors of large real symmetric matrices. J. Comput. Phys., 17, 87–94.}
+\end{frame}
+	
+\section{Davidson method}	
+	
+% Slide 02
+\begin{frame}{Davidson method}
+\begin{itemize}
+\item In the Davidson (1975) method, one is equipped with an \textbf{orthonormal basis} in the columns of $Q_k:=[q_1,\dots,q_k]\in\mathbb{F}^{n\times k}$.
+\item[] A \textbf{Rayleigh-Ritz projection} in $\text{range}(Q_k)$ is deployed where $\text{range}(Q_k)$ is \textbf{\textit{not} a Krylov subspace}.
+We search for $(\lambda,\hat{y})\in\mathbb{F}\times\mathbb{F}^k$ such that
+\begin{align*}
+B_k\hat{y}=\lambda\hat{y}
+\end{align*}
+where $B_k:=Q_k^HAQ_k$.
+We then have a Rayleigh-Ritz pair $(\lambda,y)$ in which $y:=Q_k\hat{y}$, and a residual given by $r:=Ay-\lambda y$.
+\item The purpose of the Davidson method is to \textbf{improve the Rayleigh-Ritz vector} $y$ to decrease the residual norm $\|r\|_2$.
+\item[] For this, Davidson (1975) suggests to compute the \textbf{expansion vector} $t\in\mathbb{F}^n$ such that
+\begin{align*}
+(D_A-\lambda I_n)t=r
+\end{align*}
+where $D_A\in\mathbb{F}^{n\times n}$ is the diagonal matrix formed with the diagonal $A$.
+\end{itemize}\smallskip
+\tiny{Davidson E. R. (1975). The iterative calculation of a few of the lowest eigenvalues and corresponding eigenvectors of large real symmetric matrices. J. Comput. Phys., 17, 87–94.}
+\end{frame}
+
+% Slide 03
+\begin{frame}{Davidson method, cont'd\textsubscript{1}}
+\begin{itemize}
+\item The \textbf{expansion vector} $t$ is then \textbf{orthogonalized} against $q_1,\dots,q_k$, \textbf{normalized} and \textbf{used to expand the search space}:\vspace{-.1cm}
+\begin{empheq}[box=\fbox]{align*}
+&\text{Solve for }t\text{ such that }(D_A-\lambda I_n)t=r\\
+&t:=\Pi^{(k)}t
+\hspace*{1cm}{\color{gray}{//\Pi^{(k)}\text{ is a projector onto range}(Q_k)^\perp}}\\
+&q_{k+1}:=t/\|t\|_2
+\end{empheq}
+New Rayleigh-Ritz pairs can then be sought in $\text{range}(Q_{k+1})$.
+\item The Davidson method has shown great success to approximate \textbf{exterior eigenpairs} of \textbf{diagonally dominant}, \textit{but not diagonal}, matrices $A$.
+\item[] Indeed, \textbf{if $A$ is diagonal}, then 
+\begin{align*}
+\hspace{-.6cm}
+t=
+(D_A-\lambda I_n)^{-1}r=
+(A-\lambda I_n)^{-1}
+(A-\lambda I_n)y=y
+\in\text{range}(Q_k)
+\end{align*}
+so that \textbf{the search space $\text{range}(Q_k)$ cannot be expanded with} $t$.
+\item[] Then the method \textbf{stagnates} and becomes unable to achieve convergence. 
+\item If $D_A\propto I_n$, then the Davidson method is equivalent to Lanczos or Arnoldi.
+\end{itemize}\smallskip
+\tiny{Davidson E. R. (1975). The iterative calculation of a few of the lowest eigenvalues and corresponding eigenvectors of large real symmetric matrices. J. Comput. Phys., 17, 87–94.}
+\end{frame}
+
+% Slide 04
+\begin{frame}{Davidson method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item Although the Davidson method was originaly applied to real symmetric matrices, it seamlessly applies to non-symmetric/Hermitian matrices.
+\item[] For \textbf{non-symmetric/Hermitian} matrices, the algorithm is as follows:\vspace{-.22cm}
+\begin{algorithm}[H]
+\small
+\caption{Davidson$:(A,q,k)\mapsto (\lambda,y)$}
+\begin{algorithmic}[1]
+\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $B_k\in\mathbb{F}^{k\times k}$}
+\STATE{$q_{1}:=q/\|q\|_2$}
+\FOR{$j=1,\dots,k$}
+\STATE{$w_j:=Aq_j$}
+\STATE{$B_k[1:j,j]:=Q_{j}^Hw_j$, $B_k[j,1:j-1]:=q_j^HW_{j-1}$}
+\STATE{Solve for an exterior eigenpair $(\lambda,\hat{y})$ of $B_j$}
+\COMMENT{$B_j:=B_k[1:j,1:j]$}
+\STATE{$y:=Q_j\hat{y}$}
+\STATE{$r:=Ay-\lambda y$}
+\STATE{Solve for $t$ such that $(D_A-\lambda I_n)t=r$}
+\STATE{$t:=\Pi^{(j)}t$}
+\COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
+\STATE{$q_{j+1}:=t/\|t\|_2$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}	
+\end{itemize}\vspace{-.22cm}
+\tiny{Davidson E. R. (1975). The iterative calculation of a few of the lowest eigenvalues and corresponding eigenvectors of large real symmetric matrices. J. Comput. Phys., 17, 87–94.}
+\end{frame}
+
+% Slide 05
+\begin{frame}{Davidson method, cont'd\textsubscript{3}}
+\begin{itemize}
+\item For \textbf{Hermitian matrices}, the algorithm is as follows:\vspace{-.22cm}
+\begin{algorithm}[H]
+\small
+\caption{Davidson$:(A,q,k)\mapsto (\lambda,y)$}
+\begin{algorithmic}[1]
+\STATE{Allocate memory for $Q_k\in\mathbb{F}^{n\times k}$ and $B_k\in\mathbb{F}^{k\times k}$}
+\STATE{$q_{1}:=q/\|q\|_2$}
+\FOR{$j=1,\dots,k$}
+\STATE{$w:=Aq_j$}
+\STATE{$B_k[1:j,j]:=Q_{j}^Hw$}
+\COMMENT{$B_k[j,1:j-1]:=B_k[1:j-1,j]^T$}
+\STATE{Solve for an exterior eigenpair $(\lambda,\hat{y})$ of $B_j$}
+\COMMENT{$B_j:=B_k[1:j,1:j]$}
+\STATE{$y:=Q_j\hat{y}$}
+\STATE{$r:=Ay-\lambda y$}
+\STATE{Solve for $t$ such that $(D_A-\lambda I_n)t=r$}
+\STATE{$t:=\Pi^{(j)}t$}
+\COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
+\STATE{$q_{j+1}:=t/\|t\|_2$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}\vspace{-.35cm}
+\item[] Although $\Pi^{(j)}$ is most commonly defined as a MGS procedure, CGS2 can also be used to mitigate potential stagnation, see van der Vorst (2002).
+\end{itemize}\smallskip
+\tiny{Davidson E. R. (1975). The iterative calculation of a few of the lowest eigenvalues and corresponding eigenvectors of large real symmetric matrices. J. Comput. Phys., 17, 87–94.}\tinyskip\\
+\tiny{van der Vorst, H. A. (2002). Computational methods for large eigenvalue problems.}
+\end{frame}
+
+\section{Generalized Davidson (GD) method}
+
+% Slide 06
+\begin{frame}{Generalized Davidson method}
+\begin{itemize}
+\item Some modificiations of the Davidson method introduced by Morgan \& Scott (1986) as well as Crouzeix et al. (1994) lead to variants collectively referrred to as the \textbf{generalized Davidson} (\textbf{GD}) method.\\
+\item[] \underline{Morgan \& Scott (1986)}:
+\begin{itemize}\normalsize
+\item[-] $\!$A \textbf{general preconditioner} of the form $M-\vartheta I_n$ is used instead of the\\
+$\!$original $D_A-\lambda I_n$, \textbf{without requirement of positive-definiteness}.
+\item[-] $\!$The aim is for $M-\vartheta I_n$ to \textbf{approximate} $A-\lambda I_n$ while allowing for \textbf{fast evaluation of} $r\mapsto(M-\vartheta I_n)^{-1}r$.
+\item[-] $\!$The \textbf{preconditioner should not be too good} to avoid stagnation, i.e., 
+\begin{align*}
+M-\vartheta I_n=A-\lambda I_n\implies
+t:=(M-\vartheta I_n)^{-1}r=y\in\text{range}(Q_k).
+\end{align*}
+$\!$This \textbf{contradicts the common notion of preconditioner}.
+\item[-] $\!$Numerical results reported with significantly \textbf{improved convergence}\\ 
+$\!$behaviors when \textbf{letting $M$ be the tridiagonal form of} $A$ and $\vartheta:=\lambda$.
+\item[-] $\!$Upon setting $\vartheta:=\sigma$, one can \textbf{drive global convergence} toward some $\sigma.\hspace{-1cm}$
+\end{itemize}
+\end{itemize}\smallskip
+\tiny{Morgan, R. B., \& Scott, D. S. (1986). Generalizations of Davidson’s method for computing eigenvalues of sparse symmetric matrices. SIAM Journal on Scientific and Statistical Computing, 7(3), 817-825.}
+\end{frame}
+
+% Slide 07
+\begin{frame}{Generalized Davidson method, cont'd\textsubscript{1}}
+\begin{itemize}
+\item[] \underline{Morgan (1991)}:
+\begin{itemize}\normalsize
+\item[-] \textbf{Harmonic Ritz} pairs are used to yield even \textbf{faster convergence towards interior eigeinpairs}.
+\end{itemize}
+\item[] \underline{Crouzeix et al. (1994)}:
+\begin{itemize}\normalsize
+\item[-] \textbf{Several eigenpairs} are sought \textbf{at the same time} and \textbf{several vectors} are \textbf{incorporated into each search space expansion}, leading to a \textbf{block implementation}.
+\item[-] A \textbf{maximum search space dimension} is introduced, triggering periodic \textbf{restarts} of the iterative method.
+\item[-] \textbf{Restarting} of the GD method \textbf{renders convergence dependent on positive-definiteness of the preconditioners}.
+\end{itemize}
+\item[] \underline{Sadkane (1993)}:
+\begin{itemize}\normalsize
+\item[-] \textbf{Extension} of the GD method \textbf{to real non-symmetric matrices}.
+\end{itemize}
+\end{itemize}\smallskip
+\tiny{Morgan, R. B. (1991). Computing interior eigenvalues of large matrices. Linear Algebra and its Applications, 154, 289-309.}\tinyskip\\
+\tiny{Crouzeix, M., Philippe, B., \& Sadkane, M. (1994). The Davidson method. SIAM Journal on Scientific Computing, 15(1), 62-76.}\tinyskip\\
+\tiny{Sadkane, M. (1993). Block-Arnoldi and Davidson methods for unsymmetric large eigenvalue problems. Numerische Mathematik, 64, 195-211.}
+\end{frame}
+
+% Slide 08
+\begin{frame}{Generalized Davidson method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item For a \textbf{harmonic Ritz} pair $(\lambda,y)$ with respect to a search space $\text{range}(Q_k)$, there exists $\hat{y}\in\mathbb{F}^k$ such that $y=Q_k\hat{y}$ and\vspace{-.1cm}
+\begin{align*}
+G_1\hat{y}=\lambda G_2^H\hat{y}
+\end{align*}
+$\vspace{-.55cm}$\\
+where $G_1:=((A-\sigma I_n)Q_k)^H(A-\sigma I_n)Q_k$ and
+$G_2:=Q_k^H(A-\sigma I_n)Q_k$.
+\item[] If $A$ is non-Hermitian, the harmonic GD method is as follows:
+\end{itemize}\vspace{-.25cm}
+\begin{algorithm}[H]
+\small
+\caption{Harmonic GD$:(A,q,\sigma,k)\mapsto (\lambda,y)$}
+\begin{algorithmic}[1]
+\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $G_1,G_2\in\mathbb{F}^{k\times k}$}
+\STATE{$q_{1}:=q/\|q\|_2$}
+\FOR{$j=1,\dots,k$}
+\STATE{$w_j:=(A-\sigma I_n)q_j$}
+\STATE{$G_1[1:j,j]:=W_j^Hw_j$}
+\COMMENT{$G_1[j,1:j-1]:=G_1[1:j-1,j]^H$}
+\STATE{$G_2[1:j,j]:=Q_j^Hw_j$, $G_2:=[j, 1:j-1]:=q_j^HW_{j-1}$}
+\STATE{Solve for eigenpair $(\lambda,\hat{y})$ of $(G_1[1:j,1:j],G_2[1:j,1:j]^H)$ closest to $\sigma$}
+\STATE{$y:=Q_j\hat{y}$, $\rho:=\sigma+\hat{y}^HG_2\hat{y}$, $r:=Ay-\rho y$}
+\STATE{Solve for $t$ such that $(M-\rho I_n)t=r$}
+\STATE{$t:=\Pi^{(j)}t$}
+\COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
+\STATE{$q_{j+1}:=t/\|t\|_2$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}	
+\end{frame}
+
+\section{Jacobi methods}
+% Slide 09
+\begin{frame}{Orthogonal complement corrections}
+\begin{itemize}
+\item \textbf{Jacobi orthogonal complement correction} (\textbf{JOCC}):
+\item[] Jacobi (1845) considered an eigenvalue problem as a linear system of equations for which an iterative solver, e.g., Jacobi iteration, is used as a means to generate a \textbf{sequence of orthogonal complement corrections to a given approximate eigenvector}.
+\begin{itemize}\normalsize
+\item[-] Suppose we have a \textbf{strongly diagonally dominant} matrix $A$, of which $\alpha:=a_{11}$ is the largest element.
+\item[-] Then $(\alpha,e_1)$ is an \textbf{approximation} of the \textbf{largest eigenpair} $(\theta,z)$ of $A$.
+\item[-] In matrix notation, the JOCC approach is as follows. Consider
+\begin{align*}
+A
+\left(
+e_1+\begin{bmatrix}0\\w\end{bmatrix}
+\right)
+=&\,
+\theta
+\left(
+e_1+\begin{bmatrix}0\\w\end{bmatrix}
+\right)\\
+\begin{bmatrix}\alpha&c^T\\b&F\end{bmatrix}
+\left(
+e_1+\begin{bmatrix}0\\w\end{bmatrix}
+\right)
+=&\,
+\theta
+\left(
+e_1+\begin{bmatrix}0\\w\end{bmatrix}
+\right)
+\end{align*}
+where $[0\,w^T]^T$ is an \textbf{orthogonal complement correction} to the approximate eigenvector $e_1$.
+\end{itemize}
+\end{itemize}\smallskip
+\tiny{Jacobi, C.G.J. (1845), Ueber eine neue Auflosungsart der bei der Methode der kleinsten Quadrate vorkommende linearen Gleichungen, Astronom Nachr, 297-306.}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Orthogonal complement corrections, cont'd}
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[-] The eigenvalue problem leads to the following equations:
+\begin{align*}
+\lambda=&\,\alpha+c^Tw\\
+(F-\lambda I_n)w=&\,-b
+\end{align*}
+which Jacobi proceeded to solve with the following iteration:
+\begin{align*}
+\lambda_k:=&\,\alpha+c^Tw_k\\
+(D_F-\lambda_k I_n)w_{k+1}=&\,(D_F-F)w_k-b
+\end{align*}
+with $w_1:=0$.
+\item[-] This later became known as the \textbf{Jacobi iteration}.
+\item[-] Although $\lambda_k$ is not a Rayleigh-Ritz value, it is nevertheless an approximation of the largest eigenvalue $\theta$.
+\end{itemize}
+\item As the \textbf{JOCC} approach is \textbf{best-suited for strongly diagonally dominant matrices}, Jacobi (1846) coupled this approach with a \textbf{set of rotations} whose application \textbf{makes the matrix more diagonally dominant}.
+\end{itemize}\smallskip
+\tiny{Jacobi, C.G.J. (1845), Ueber eine neue Auflosungsart der bei der Methode der kleinsten Quadrate vorkommende linearen Gleichungen, Astronom Nachr, 297-306.}\tinyskip\\
+\tiny{Jacobi, C. G. J. (1846). \"{U}ber ein leichtes Verfahren die in der Theorie der S\"{a}cularstörungen vorkommenden Gleichungen numerisch aufzul\"{o}sen. J. Reine Angew. Math., 30, 51–94.}
+\end{frame}
+
+\section{Jacobi-Davidson method}
+
+% Slide 11
+\begin{frame}{JOCC by Sleijpen and van der Vorst (1996)}
+\begin{itemize}
+\item Sleijpen and van der Vorst (1996) revisited the JOCC approach in the more general setting where an arbitrary iterate $y_j\in\mathbb{F}^n$ is known as an approximate eigenvector of $A\in\mathbb{F}^{n\times n}$.
+\item[] JOCC's adaptation to this more general context lies in setting a correction $\delta\in\mathbb{F}^n$ to $y_j$ such that
+\begin{align}\label{eq:corr}
+A(y_j+\delta)=\theta(y_j+\delta),\;\;
+\delta\perp y_j
+\end{align} 
+where $\theta$ is the wanted eigenvalue of $A$.
+\item[] Eq.~\eqref{eq:corr} can be decomposed into two parts, along and orthogonal to $y_j$:
+\begin{itemize}\normalsize
+\item[-] First, the \textbf{part parallel to} $y_j$, given by
+\begin{align*}
+y_jy_j^HA(y_j+\delta)=\theta y_jy_j^H(y_j+\delta)
+\end{align*}
+is such that $\boxed{\vartheta_j+y_j^HA\delta=\theta}$ where $\boxed{\vartheta_j:=y_j^HAy_j}$ is the \textbf{corrected eigenvalue estimate}.
+\end{itemize}
+\end{itemize}\smallskip
+\tiny{Sleijpen, G. L., \& Van der Vorst, H. A. (1996). A Jacobi--Davidson iteration method for linear eigenvalue problems. SIAM review, 42(2), 267-293.}
+\end{frame}
+
+% Slide 12
+\begin{frame}{JOCC by Sleijpen and van der Vorst (1996), cont'd}
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[-] Second, the \textbf{part orthogonal to} $y_j$, given by
+\begin{align*}
+(I_n-y_jy_j^H)A(y_j+\delta)=\theta (I_n-y_jy_j^H)(y_j+\delta)
+\end{align*}
+is such that 
+\begin{align*}
+(I_n-y_jy_j^H)(A-\theta I_n)\delta
+=&\,(I_n-y_jy_j^H)(-Ay_j+\theta y_j)\\
+=&\,-(I_n-y_jy_j^H)Ay_j\\
+=&\,-(Ay_j-\vartheta_jy_j)=:-r_j.
+\end{align*}
+Since $\delta\perp y_j$, we have $\delta=(I_n-y_jy_j^H)\delta$, and we obtain:
+\begin{align*}
+(I_n-y_jy_j^H)(A-\theta I_n)(I_n-y_jy_j^H)\delta=-r_j
+\end{align*}
+where $\theta$, which \textbf{is unknown}, is replaced by $\vartheta_j$ to yield the \textbf{Jacobi-Davidson correction equation} given by:
+\begin{align*}
+\boxed{
+(I_n-y_jy_j^H)(A-\vartheta_j I_n)(I_n-y_jy_j^H)\delta=-r_j
+}\,.
+\end{align*}
+
+\end{itemize}
+\end{itemize}\smallskip
+\tiny{Sleijpen, G. L., \& Van der Vorst, H. A. (1996). A Jacobi--Davidson iteration method for linear eigenvalue problems. SIAM review, 42(2), 267-293.}
+\end{frame}
+
+
+
+
+\section{Homework problems}
+
+% Slide ++
+\begin{frame}{Homework problem}\vspace{.1cm}
+Turn in \textbf{your own} solution to \textbf{Pb.$\,$25}:\vspace{.15cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$25}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Show that if a matrix $A\in\mathbb{F}^{n\times n}$ has constant diagonal components, i.e., $D_A\propto I_n$, then, assuming exact arithmetic, the Davidson method is equivalent to applying a Rayleigh-Ritz projection to a Krylov subspace generated by a Arnoldi procedure with the same starting vector $q$.
+\end{minipage}\vspace{.15cm}
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$26}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+***.
+\end{minipage}\vspace{.15cm}
+\end{frame}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,956 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\title[NLA for CS and IE -- Lecture 17]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 17\\Introduction to Communication-Avoiding Algorithms}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture17}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+\myoutlineframe
+
+\section{Introduction\\
+         {\small CS294/Math270 -- Demmel and Grigori (2016)}\\
+         {\small MIT 6.172 -- Shun (2018)}}
+	
+% Slide 01
+\begin{frame}{Cost of algorithm deployment}
+\begin{itemize}
+\item Deploying an algorithm has \textbf{two costs} measured in \textbf{time} (or \textbf{energy}):
+\begin{itemize}\normalsize
+\item[-] \textbf{Arithmetic} (floating-point operations, FLOPs)\vspace{.1cm}\\
+$\hspace{-.5cm}$\fbox{\# of \textbf{FLOPs} $\div$ (\# of \textbf{FLOPs per cycle} $\times$ \# \textbf{cycles per unit of time})}\vspace{.1cm}
+\item[-] \textbf{Communication} due to data movement between
+\end{itemize}
+\end{itemize}
+\begin{minipage}[t]{0.75\textwidth}
+\begin{itemize}
+\item[]
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[]$\vspace{-2.2cm}$
+\item[-] \textbf{levels of a memory hierarchy}:\vspace{.1cm}\\
+\textbf{sequential} part of a program\vspace{.1cm}\\
+transfers between DRAM, L3 cache, L2 cache,\\ 
+L1 cache and registers\vspace{.1cm}\\
+cache hit, cache miss, ...
+\item[]$\vspace{.2cm}$
+\item[-] \textbf{processors over a network}:\vspace{.1cm}\\
+\textbf{parallel} part of a program
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.2\textwidth}
+\includegraphics[height=2.2cm]{images/memory-hierarchy.png}\\
+$\vspace*{.1cm}$\\
+$\hspace*{.15cm}$\includegraphics[height=2.2cm]{images/distributed-memory.png}
+\end{minipage}
+\begin{itemize}
+\item[]
+\begin{itemize}
+\item[]
+\fbox{\# of \textbf{messages} $\times$ \textbf{latency}
+$+$
+\# of \textbf{words} $\div$ \textbf{bandwidth}}
+$\hspace{.45cm}$
+\fbox{\vphantom{\#}\textbf{idle} time}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 02
+\begin{frame}{Roofline model}
+\begin{itemize}
+\item \textbf{Algorithm} on given \textbf{hardware} characterized by \textbf{arithmetic intensity}:\vspace{-.15cm}
+\begin{block}{Arithmetic intensity (AI)}
+Ratio of number of FLOPs over amount of data moved.
+\end{block}
+\item \textbf{Hardware} characterized by \textbf{machine balance}:\vspace{-.15cm}
+\begin{block}{Machine balance (MB)}
+Ratio of peak floating-point performance over peak memory bandwidth.
+\end{block}\vspace{.15cm}
+\begin{center}\includegraphics[height=4cm]{images/roofline.png}\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 03
+\begin{frame}{Memory wall}
+\begin{itemize}
+\item Cost to move data much greater than cost of arithmetic:
+\begin{align*}
+\textbf{time per FLOP}\;\ll\;\frac{1}{\textbf{bandwidth}}\;\ll\;\textbf{latency}
+\end{align*}
+\item Peak floating-point performance evolves faster than memory bandwidth:\vspace{.1cm}
+\begin{center}\includegraphics[height=5cm]{images/memory-wall.png}\end{center}
+\item Relative cost of algorithms due to communication larger every year
+\end{itemize}
+\smallskip
+\tiny{Gholami, A., Yao, Z., Kim, S., Hooper, C., Mahoney, M.W., Keutzer, K. (2024). AI and Memory Wall. arXiv:2403.14123v1.}
+\end{frame}
+
+% Slide 04
+\begin{frame}{Ideal cache model}
+\begin{itemize}
+\item An \textbf{ideal cache model} is introduced for the analysis of algorithms:
+\begin{center}\includegraphics[height=4cm]{images/ideal-cache-model.png}\end{center}
+\item Model parameters:
+\begin{itemize}\normalsize
+\item[-] Two-level hierarchy
+\item[-] Cache size of $M$ bytes
+\item[-] Cache line length of $B$ bytes
+\item[-] Fully associative cache (cache lines can be stored anywhere in cache)
+\item[-] Least-recently used (LRU) cache replacement policy
+\item[-] Arbitrary large main memory
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 05
+\begin{frame}{Tall caches}
+\begin{itemize}
+\item Several of the coming cache analyses assume a tall cache:
+\begin{block}{Tall cache assumption}
+A cache of size $M$ bytes with $N/B$ lines of $B$ bytes is \textbf{tall} if $B^2<cM$ for some sufficiently small $c<1$.
+\end{block}
+Problem of \textbf{short cache}: 
+\begin{itemize}\normalsize
+\item[-] a $n\times n$ \textbf{sub}matrix may not fit in cache, even if $n^2<cM$
+\end{itemize}
+\end{itemize}
+\begin{center}\includegraphics[height=3cm]{images/short-cache.png}\end{center}
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[] i.e., cache lines store only contiguous data, and consecutive rows of a row major submatrix are not contiguous in memory.
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+% Slide 06
+\begin{frame}{Communication lower bounds}
+\begin{itemize}
+\item Assuming a fast memory of size $M$, Ballard et al. (2011) derive \textbf{lower bounds} on communication for valid all methods of \textbf{direct linear algebra}, \textbf{dense} or \textbf{sparse}:
+\begin{align*}
+\textbf{bandwidth cost}:&\hspace{.2cm}
+\#\text{ of words moved}
+\in
+\Omega\left(\frac{\#\text{ of arithmetic operations}}{\sqrt{M}}\right)\\
+\textbf{latency cost}:&\hspace{.2cm}
+\#\text{ of messages sent}
+\in
+\Omega\left(\frac{\#\text{ of arithmetic operations}}{\sqrt{M^3}}\right)
+\end{align*}
+\item These bounds hold for
+\begin{itemize}\normalsize
+\item[-] Matrix-multiply, LU, QR, eigensolving, SVD, tensor contraction, ...
+\item[-] Some whole programs (sequences of these operations, no matter how individual operations are interleaved, e.g. $A^k$)
+\item[-] \textbf{Sequential} and \textbf{parallel} algorithms
+\item[-] Some graph-theoretic algorithms (e.g. Floyd-Warshall)
+\end{itemize}
+\item Significant efforts by the NLA community to rethink algorithms to try and achieve these bounds.
+\end{itemize}
+\smallskip
+\tiny{Ballard, G., Demmel, J., Holtz, O., \& Schwartz, O. (2011). Minimizing communication in numerical linear algebra. SIAM Journal on Matrix Analysis and Applications, 32(3), 866-901.}
+\end{frame}
+
+\section{Matrix-matrix multiplication\\
+         {\small MIT 6.172 -- Shun (2018)}}
+
+% Slide 07
+\begin{frame}{Cache misses analysis}
+\begin{itemize}
+\item Matrix-matrix multiplication ($\texttt{C}=\texttt{C}+\texttt{A}\texttt{B}$) with row major data:\vspace{.1cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\text{for}\;i=0,\dots,n-1
+\hspace{3.1cm}{\color{gray}{\text{//zero-based indexing}}}\\
+&\;\;\;\text{for}\;j=0,\dots,n-1\\
+&\;\;\;\;\;\;\text{for}\;k=0,\dots,n-1\\
+&\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
+\end{align*}
+\end{minipage}}\end{center}
+$\vspace*{0cm}$\\
+Cache miss complexity, $Q(n)$, \textbf{dominated by access to} $B$.\vspace{.1cm}\\
+Assume a \textbf{tall} and \textbf{ideal cache}. 
+There are 3 cases:\vspace{.05cm}
+\begin{itemize}\normalsize
+\item[-] Case 1: $n>cM/B$\vspace{.05cm}\\ 
+\hspace{1.3cm}$B$ misses on every access $\implies$ $Q(n)=\Theta(n^3)$\vspace{.1cm}
+\item[-] Case 2: $c^\prime M^{1/2}<n<cM/B$\vspace{.05cm}\\ 
+\hspace{1.3cm}$B$ exploits spatial locality $\implies$ $Q(n)=\Theta(n^3/B)$\vspace{.1cm}
+\item[-] Case 3: $n<cM^{1/2}$\vspace{.05cm}\\
+\hspace{1.3cm}$B$ fits in cache $\implies$ $Q(n)=\Theta(n^2/B)$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 08
+\begin{frame}{Blocked (tiled) matrix multiplication}
+\begin{itemize}
+\item Introduce a block size $s$:\vspace{.1cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\text{for}\;i_1=0,s,\dots,n-s
+\hspace{3.5cm}{\color{gray}{\text{//zero-based indexing}}}\\
+&\;\;\;\text{for}\;j_1=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\text{for}\;k_1=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\;\;\;\text{for}\;i=i_1,\dots,i_1+s-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j=j_1,\dots,j_1+s-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k=k_1,\dots,k_1+s-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
+\end{align*}
+\end{minipage}}\end{center}
+$\vspace*{0cm}$\\
+\textbf{Tune} $s$ so that the submatrices fit in cache, i.e., $s=\Theta(M^{1/2})$.\vspace{.1cm}\\
+$\hspace{1.2cm}\implies$ \textbf{cache-aware} algorithm, \textbf{architecture dependent}.\vspace{.1cm}\\
+Then $\Theta(s^2/B)$ misses per submatrix so that
+\begin{align*}
+Q(n)=\Theta((n/s)^3(s^2/B))=\Theta(n^3/(BM^{1/2}))
+\rightarrow\;
+\text{provably \textbf{optimal}}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 09
+\begin{frame}{Two-level cache}
+\begin{center}\hspace*{-1cm}\includegraphics[height=7cm]{images/two-levels-blocks.png}\end{center}
+$\vspace{-6.05cm}$\\
+$\hspace*{2.55cm}$
+\begin{minipage}[t]{0.5\textwidth}
+\fcolorbox{black}{white}{\parbox{0.3\linewidth}{
+$\vspace{-.9cm}$\\
+{\small \begin{align*}
+&\text{for}\;i_2=0,s,\dots,n-s
+\hspace{2.8cm}{\color{gray}{\text{//zero-based indexing}}}\\
+&\;\;\;\text{for}\;j_2=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\text{for}\;k_2=0,s,\dots,n-s\\
+&\;\;\;\;\;\;\;\;\;\text{for}\;i_1=i_2,i_2+t,\dots,i_2+s-t\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j_1=j_2,j_2+t,\dots,j_2+s-t\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k_1=k_2,k_2+t,\dots,k_2+s-t\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;i=i_1,\dots,i_1+t-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;j=j_1,\dots,j_1+t-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\text{for}\;k=k_1,\dots,k_1+t-1\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{C}[i*n+j]:=\texttt{C}[i*n+j]\\
+&\hspace{5cm}+\texttt{A}[i*n+k]*\texttt{B}[k*n+j]
+\end{align*}$\vspace*{-.75cm}$}
+}}
+\end{minipage}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Two-level cache, cont'd}
+$\vspace*{-1.08cm}$\\
+\begin{center}\hspace{-1cm}\includegraphics[height=7cm]{images/two-levels-blocks.png}\end{center}
+$\vspace{-3.8cm}$\\
+$\hspace*{6cm}$
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}
+\item[-] \textbf{Two architecture-dependent parameters} $s$ and $t$ \textbf{to tune}.
+\item[-] Multidimensional tuning \textbf{cannot}\\
+\textbf{be done with binary search}. 
+\end{itemize}
+\end{minipage}
+\end{frame}
+
+% Slide 11
+\begin{frame}{Three-level cache}
+$\vspace*{-1cm}$\\
+\begin{center}\hspace{-1cm}\includegraphics[height=7cm]{images/three-levels-blocks.png}\end{center}
+$\vspace{-3.7cm}$\\
+$\hspace*{5.8cm}$
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}
+\item \textbf{Real cache} memories have 3 levels:\\
+\begin{itemize}\normalsize
+\item[-] 12 nested loops.
+\item[-] 3 \textbf{architecture-dependent} $s$, $t$ and $u$ parameters to tune.
+\item[-] Complicated \textbf{offline} optimization.
+\end{itemize}
+\item Existing implementations:
+\begin{itemize}
+\item[-] OpenBLAS, BLIS, ATLAS.
+\end{itemize}
+\end{itemize}
+\end{minipage}
+\end{frame}
+
+% Slide 12
+\begin{frame}{Recursive matrix multiplication}
+\begin{itemize}
+\item Divide-and-conquer on $n\times n$ matrices:\vspace{.15cm}
+\begin{center}\hspace{-1cm}\includegraphics[height=2cm]{images/divide-and-conquer-matrix-multiply-1.png}\end{center}\vspace{.15cm}
+\begin{center}\hspace{2.45cm}\includegraphics[height=2cm]{images/divide-and-conquer-matrix-multiply-2.png}\end{center}
+Recurrence of 8 multiply-and-add of $n/2\times n/2$ matrices.\vspace{.1cm}\\
+There are two cases of memory access:
+\begin{itemize}\normalsize
+\item[-] Case 1: $n<cM^{1/2}$ $\implies$ $Q(n)=\Theta(n^2/B)$\vspace{.1cm}
+\item[-] Case 2: otherwise $\implies$ $Q(n)=8Q(n/2)+\Theta(1)$\vspace{.1cm}\\
+\hspace{.02cm}(Master theorem) $\implies$ $Q(n)=\Theta(n^3/(BM^{1/2}))$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 13
+\begin{frame}{Recursive implementation}
+\begin{itemize}
+\item Recursive implementation of dense square matrix-matrix multiplication ($\texttt{C}=\texttt{C}+\texttt{A}\texttt{B}$) assuming $n$ is a power of 2:
+{\small\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\texttt{recursive\_gemm}(A, B, C, n):\hspace{2.55cm}{//\color{gray}{C_{1:n,1:n}=0}}\\\
+&\;\;\;\text{if }(n=1):\\
+&\;\;\;\;\;\;c_{11}:=c_{11}+a_{11}*b_{11}
+\hspace{3.5cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\text{else}:\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},1:\frac{n}{2}}, B_{1:\frac{n}{2},1:\frac{n}{2}}, C_{1:\frac{n}{2},1:\frac{n}{2}},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,1:\frac{n}{2}}, C_{1:\frac{n}{2},\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},1:\frac{n}{2}}, B_{1:\frac{n}{2},\frac{n}{2}+1:n}, C_{1:\frac{n}{2},\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{1:\frac{n}{2},\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, C_{1:\frac{n}{2},\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,1:\frac{n}{2}}, B_{1:\frac{n}{2},1:\frac{n}{2}}, C_{\frac{n}{2}+1:n,1:\frac{n}{2}},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,1:\frac{n}{2}}, C_{\frac{n}{2}+1:n,1:\frac{n}{2}},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,1:\frac{n}{2}}, B_{1:\frac{n}{2}:n,\frac{n}{2}+1:n}, C_{\frac{n}{2}+1:n,\frac{n}{2}+1:n},n/2)\\
+&\;\;\;\;\;\;\texttt{recursive\_gemm}(A_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, B_{\frac{n}{2}+1:n,\frac{n}{2}+1:n}, C_{\frac{n}{2}+1:n,\frac{n}{2}+1:n},n/2)
+\end{align*}
+\end{minipage}}\end{center}}
+\end{itemize}
+\end{frame}
+
+% Slide 14
+\begin{frame}{Efficient cache-oblivious algorithms}
+\begin{itemize}
+\item \textbf{Cache complexity} of $\texttt{recursive\_gemm}$ \textbf{similar to} that of \textbf{tiled matrix multiply}.
+\item Implementation of $\texttt{recursive\_gemm}$ \textbf{not dependent on memory layout}.
+It is a \textbf{cache-oblivious} algorithm.
+\item The best cache-oblivious algorithm work on arbitrary rectangular matrices and perform binary splitting (instead of 8-way).
+\item Recursive matrix-multiply is \textbf{typically not implemented in BLAS}, \textbf{despite good theoretical cache behavior}, because:
+\begin{itemize}\normalsize
+    \item[-] It incurs overhead from recursion and function calls.
+    \item[-] Difficult to efficiently vectorize and parallelize on modern hardware.
+    \item[-] Hard to outperform hand-optimized, architecture-aware, cache-aware implementations.
+\end{itemize}
+\item Recursive matrix multiply is more used as a pedagogical tool for illustrating cache efficiency and divide-and-conquer design.
+\item Recursion is the basis of other fast matrix multiply algorithms, e.g., Strassen's method.
+\end{itemize}
+\end{frame}
+
+\section{Overview and principles of communication avoidance}
+
+% Slide 15
+\begin{frame}{Reducing data movement}
+\begin{itemize}
+\item Principles to reduce communication:
+\begin{itemize}
+\item[-] \textbf{Maximize arithmetic intensity}: Perform more floating-point operations per byte of data moved.
+\begin{center}\includegraphics[height=2.7cm]{images/spectrum-arithmetic-intensity.png}\end{center}
+\item[-] \textbf{Exploit data locality}: Reuse data in fast memory (cache/registers) as much as possible.
+\item[-] \textbf{Aggregate communication}: Communicate in bulk instead of fine-grained messages.
+\end{itemize}
+\item Associated challenges:
+\begin{itemize}
+\item[-] \textbf{Numerical stability}: Communication-avoiding variants may be less stable or harder to analyze.
+\item[-] \textbf{Architecture-specific tuning}: Optimal strategies depend on cache hierarchy, network topology, etc...
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 16
+\begin{frame}{Sample speedups}
+\begin{itemize}
+\item Demmel and Grigori (2016) documents the following speedups achieved by reformulating NLA and other kernels to reduce communication:\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] Up to \textbf{12X} faster for \textbf{2.5D matrix multiply} on 64K core IBM BG/P\vspace{.1cm}
+\item[-] Up to \textbf{3X} faster for \textbf{tensor contractions} on 2K core Cray XE/6\vspace{.1cm}
+\item[-] Up to \textbf{6.2X} faster for \textbf{All-Pairs-Shortest-Path} on 24K core Cray CE6\vspace{.1cm}
+\item[-] Up to \textbf{2.1X} faster for \textbf{2.5D LU} on 64K core IBM BG/P\vspace{.1cm}
+\item[-] Up to \textbf{11.8X} faster for \textbf{direct N-body} on 32K core IBM BG/P\vspace{.1cm}
+\item[-] Up to \textbf{13X} faster for \textbf{Tall Skinny QR} on Tesla C2050 Fermi NVIDIA GPU\vspace{.1cm}
+\item[-] Up to \textbf{6.7X} faster for \textbf{symeig(band A)} on 10 core Intel Westmere\vspace{.1cm}
+\item[-] Up to \textbf{2X} faster for \textbf{2.5D Strassen} on 38K core Cray XT4\vspace{.1cm}
+\item[-] Up to \textbf{4.2X} faster for MiniGMG benchmark bottom solver, using \textbf{CA-BiCGStab} (\textbf{2.5X} for overall solve)\vspace{.1cm}
+\item[-] Up to \textbf{2.5X} for combustion simulation code
+\end{itemize}
+\end{itemize}
+\smallskip
+\tiny{Demmel J. \& Grigori L. (2016) Introduction to communication-avoiding algorithms. CS294/Math270, UC Berkeley.}
+\end{frame}
+
+\section{Sparse matrix-vector product (SpMV)}
+
+% Slide 17
+\begin{frame}{Low data locality of SpMV}
+\begin{itemize}
+\item Recall the CSR data structure:\vspace{.05cm}
+\begin{align*}
+A=&\;\left[\begin{matrix}
+a_{11}&a_{12}&a_{13}&0\\
+a_{21}&a_{22}&0     &0     \\
+0     &0     &a_{33}&a_{34}\\
+0     &0     &a_{43}&0
+\end{matrix}\right]\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{13}, a_{21}, a_{22}, a_{33}, a_{34}, a_{43}]\\
+\texttt{col\_idx}=&\;[1, 2, 3, 1, 2, 3, 4, 3]\\
+\texttt{row\_start}=&\;[1, 4, 6, 8, 9]
+\end{align*}
+with the following SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$):\vspace{.1cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\text{for}\;i=1,\dots,n\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\;\;\;\texttt{y}[i] := \texttt{y}[i] + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]
+\end{align*}
+\end{minipage}}\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 18
+\begin{frame}{Low data locality of SpMV, cont'd}
+\begin{itemize}
+\item SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$) for CSR data structures:\vspace{0cm}
+\begin{center}\fbox{\begin{minipage}{6cm}
+\vspace{-.5cm}
+\begin{align*}
+&\text{for}\;i=1,\dots,n\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\;\;\;\texttt{y}[i] := \texttt{y}[i] + \texttt{val}[j]*\texttt{x}[\texttt{col\_idx}[j]]
+\end{align*}
+\end{minipage}}\end{center}
+%\vspace*{-.7cm}\\
+\item \textbf{Irregular access} to the components of $\texttt{x}$:\vspace{.05cm}
+\begin{itemize}\normalsize
+\item[-] \textbf{No spatial locality}, \textbf{no temporal locality}.\vspace{.1cm}
+\item[-] \textbf{Every component} of $\texttt{x}$ loaded for a single multiply-and-add is \textbf{trashed immediatly from register}. \textbf{No loop unrolling}, \textbf{no SIMD}, ...\vspace{.1cm}
+\item[-] \textbf{Sparsity induces lower arithmetic intensity} (AI) than for general dense matrix-vector product (GEMV) kernels.\vspace{.1cm}
+\item[-] \textbf{SpMV kernels} are \textbf{memory-bound}, even if $\texttt{x}$ fits in cache.\vspace{.1cm}
+\item[-] \textbf{Performance} of SpMV kernels depends on \textbf{data structure}, \textbf{non-zero structure} and \textbf{hardware}.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 19
+\begin{frame}{Register blocking}
+\begin{itemize}
+\item Improve data locality by promoting \textbf{register reuse}:
+\begin{itemize}\normalsize
+\item[-] \textbf{Register reuse} is \textbf{achieved} for the source vector \textbf{by blocking}, also known as \textbf{tiling}, i.e., relying on contiguous storage of non-zero blocks in the matrix.\vspace{.05cm}
+\item[-] \textbf{Registers} are small, i.e., only \textbf{store a handfull of data}:\vspace{.05cm}\\
+\begin{center}$\implies$ small $r\times c$ block sizes : $r$ values of destination vector + $c$ values\\
+\hspace{.25cm}of source vector + $rc$ values of a block are stored in register.\vspace{.05cm}\end{center}
+\item[-] Blocking allows for \textbf{compiler optimizations}, e.g., loop unrolling, pipelining, ...\vspace{.05cm}
+\item[-] \textbf{Optimal block size dependent} on \textbf{sparsity strucutre} and \textbf{machine architecture}.\vspace{.05cm}
+\item[-] Considerable \textbf{overhead} in changing data structure for register blocking.\vspace{.05cm}
+\item[-] Applications such as finite element methods (FEM) naturally store small dense blocks in sparse matrices.\vspace{.05cm}
+\item[-] Most matrices do not have uniform block structures:\vspace{.05cm}\\
+$\implies$ \textbf{some zero values} are \textbf{stored} for non-fully dense blocks.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 20
+\begin{frame}{Blocked SpMV}
+\begin{itemize}
+\item Recall the BSR data structure format:\vspace{-.75cm}\\
+\hspace{-.4cm}\begin{minipage}[t]{0.42\textwidth}\vspace{.25cm}
+\begin{align*}
+A=&\;\left[\begin{matrix}
+a_{11}&a_{12}&a_{13}&0\\
+a_{21}&a_{22}&0     &0     \\
+0     &0     &a_{33}&a_{34}\\
+0     &0     &a_{43}&0
+\end{matrix}\right]
+\end{align*}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\begin{align*}
+\texttt{r}=&\;2,\;\texttt{c}=2\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{21}, a_{22},a_{13}, 0, 0, 0,\\
+             &\;\;a_{33}, a_{34}, a_{43}, 0]\\
+\texttt{col\_idx}=&\;[1, 2, 2],\;
+\texttt{row\_start}=[1, 3, 4]
+\end{align*}
+\end{minipage}\vspace{.15cm}\\
+with the following SpMV kernel ($\texttt{y}:=\texttt{y}+\texttt{A}\texttt{x}$):\vspace{-.35cm}\\
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{for}\;i=1,\dots,n/r\hspace{5.9cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;\text{for}\;j=\texttt{row\_start}[i],\dots,\texttt{row\_start}[i+1]-1\\
+&\;\;\;\;\;\;\text{for}\;ii=1,\dots,r\\
+&\;\;\;\;\;\;\;\;\;\text{for}\;jj=1,\dots,c\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\texttt{y}[(i-1)*r+ii]:=\texttt{y}[(i-1)*r+ii]\,+\\
+&\;\;\;\;\;\;\;\;\;\;\;\;\;\texttt{val}[(j-1)*rc+(ii-1)*c+jj]*\texttt{x}[(\texttt{col\_idx}[j]-1)*rc+jj]
+\end{align*}
+\vspace{-.8cm}
+\end{minipage}}\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 21
+\begin{frame}{Tuning of register blocks}
+\begin{itemize}
+\item Optimal block size for register reuse depends on \textbf{sparsity} and \textbf{machine architecture}:
+\begin{itemize}\normalsize
+\item[-] Automated tuning interface by Vuduc et al. (2005): OSKI
+\end{itemize}
+\begin{center}\includegraphics[height=6.2cm]{images/OSKI.png}\end{center}
+\end{itemize}
+\smallskip
+\tiny{Vuduc, R., Demmel, J. W., \& Yelick, K. A. (2005). OSKI: A library of automatically tuned sparse matrix kernels. In Journal of Physics: Conference Series (Vol. 16, No. 1, p. 521). IOP Publishing.}
+\end{frame}
+
+% Slide 22
+\begin{frame}{Encoding block sparsity}
+\begin{itemize}
+\item \textbf{Zeros stored} in non-fully dense blocks \textbf{result in} extra floating-point operations, and more importantly, \textbf{extra data movement}.
+\item Only non-zero values need be stored and fetched when \textbf{local block sparsity} is \textbf{encoded}:\vspace{-.95cm}\\
+\hspace*{-.6cm}\begin{minipage}[t]{0.4\textwidth}\vspace{.35cm}
+\begin{align*}
+A=&\;\left[\begin{matrix}
+a_{11}&a_{12}&a_{13}&0\\
+a_{21}&a_{22}&0     &0     \\
+0     &0     &{\color{red}{a_{33}}}&{\color{red}{a_{34}}}\\
+0     &0     &{\color{red}{a_{43}}}&{\color{red}{0}}
+\end{matrix}\right]
+\end{align*}
+\end{minipage}
+\begin{minipage}[t]{0.47\textwidth}
+\begin{align*}
+\texttt{r}=&\;2,\texttt{c}=2\\
+\texttt{val}=&\;[a_{11}, a_{12}, a_{21}, a_{22},a_{13}, {\color{red}{a_{33}}}, {\color{red}{a_{34}}}, {\color{red}{a_{43}}}]\\
+\texttt{col\_idx}=&\;[1, 2, 2],\;
+\texttt{row\_start}=[1, 3, 4]\\
+\texttt{b\_map}=&\;[15, 1, {\color{red}{7}}]
+\end{align*}
+\end{minipage}\vspace{.15cm}
+E.g., 
+$\begin{bmatrix}
+{\color{red}{a_{33}}}&{\color{red}{a_{34}}}\\
+{\color{red}{a_{43}}}&{\color{red}{0}}
+\end{bmatrix}\implies$
+sparsity pattern
+$\begin{bmatrix}
+{\color{red}{1}}&{\color{red}{1}}\\
+{\color{red}{1}}&{\color{red}{0}}
+\end{bmatrix}\implies$ unrolled to {\color{red}{1110}}\\
+\hspace{2.77
+cm}$\implies {\color{red}{1}}\times 2^0+{\color{red}{1}}\times 2^1+{\color{red}{1}}\times 2^2+{\color{red}{0}}\times 2^3={\color{red}{7}}$.\vspace{.1cm}
+\item \textbf{if statements} in SpMV's loop \textbf{decrease efficiency}
+$\implies$ two approaches: operate on zeros (Buluç et al., 2011), de Bruijn sequences (Kannan, 2013).\\
+\medskip
+\tiny{Buluç, A., Williams, S., Oliker, L., \& Demmel, J. (2011). Reduced-bandwidth multithreaded algorithms for sparse matrix-vector multiplication. In 2011 IEEE International Parallel \& Distributed Processing Symposium (pp. 721-733)$\hspace{-1cm}$}\smallskip\\
+\tiny{Kannan, R. (2013). Efficient sparse matrix multiple-vector multiplication using a bitmapped format. In 20th Annual International Conference on High Performance Computing (pp. 286-294).}
+\end{itemize}
+\end{frame}
+
+\section{Block Gram-Schmidt procedures}
+
+% Slide 23
+\begin{frame}{Block Gram-Schmidt procedures}
+\begin{itemize}
+\item \textbf{Gram-Schmidt} (\textbf{GS}) procedure:
+\begin{itemize}\normalsize
+\item[-] Returns the QR factorization of an $m\times n$ matrix $X$ by \textbf{orthogonalizing vectors}, \textbf{one-at-a-time}, against previously orthogonalized vectors.
+\end{itemize}
+\end{itemize}\vspace{-.3cm}
+\begin{minipage}[t]{.65\textwidth}
+\begin{itemize}
+\item \textbf{Block Gram-Schmidt} (\textbf{BGS}) procedure:
+\begin{itemize}\normalsize
+\item[-] Works on \textbf{blocks of $s$ vectors} at a time.
+\item[-] Procedure fully specified upon definition of\\
+a \textbf{projector $\Pi^{(i)}$ onto} $\text{range}(Q_{:,1:is})^\perp$ and an \textbf{IntraOrtho} orthogonalization procedure:
+\end{itemize}
+\vspace{-.45cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})\\
+&\text{for}\;i=2,\dots,p\hspace{2.2cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;Q_{:,(i-1)s+1:is}:=\Pi^{(i-1)}X_{:,(i-1)s+1:is}\\
+&\;\;\;\text{IntraOrtho}(Q_{:,(i-1)s+1:is})\mapsto\\
+&\hspace{2.07cm}(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is})
+\end{align*}
+\vspace{-.8cm}
+\end{minipage}}
+\end{center}
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{.3\textwidth}\vspace{.2cm}
+\begin{center}\hspace*{.4cm}\includegraphics[height=6cm]{images/blocked-X.png}\end{center}
+\end{minipage}\vspace{-.6cm}
+\begin{itemize}
+\item[] 
+\begin{itemize}\normalsize
+\item[-] Applying $\Pi^{(i)}$ to blocks of $s$ vectors at a time \textbf{increases}\\ 
+\textbf{arithmetic intensity}, and \textbf{decreases synchronizations}.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 24
+\begin{frame}{Block classical Gram-Schmidt (BCGS)}
+\begin{itemize}
+\item BCGS is formed with $\Pi^{(i)}:=I_n-Q_{:,1:is}Q_{:,1:is}^T$ which leads to
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})
+\hspace{2.7cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;R_{1:(i-1)s,(i-1)s+1:is}:=Q_{:,1:(i-1)s}^TX_{:,(i-1)s+1:is}
+\hspace{2.74cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;W:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R_{1:(i-1)s,(i-1)s+1:is}
+\hspace{1.85cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is})
+\end{align*}
+\end{minipage}}
+\end{center}
+\vspace{.1cm}
+\textbf{All $s$ vectors} of the block treated by IntraOrtho are \textbf{simultaneously available}.\vspace{.1cm}\\
+Therefore, \textbf{IntraOrtho needs not} necessarily \textbf{be Gram-Schmidt}.\vspace{.1cm}\\
+The QR factorization can be computed by Cholesky QR (CholQR), tall and skinny QR (TSQR), Householder QR (HouseQR), ...:
+\begin{align*}
+\text{IntraOrtho}\in\{\text{CGS},\text{CGS2},\text{MGS},\text{CholQR},\text{CholQR2},\text{TSQR},\text{HouseQR},\dots\}
+\end{align*}
+Each so-specified variant is referred to as $\text{BCSG}\circ\text{IntraOrtho}$.
+\end{itemize}
+\end{frame}
+
+% Slide 25
+\begin{frame}{Block classical Gram-Schmidt reorthogonalized (BCGS2)}
+\begin{itemize}
+\item BCGS is stabilized by reorthogonalizing either by running BCSG twice, or by repeating each inner loop (BCGS2):\vspace{-.3cm}
+\begin{center}$\hspace*{-.5cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.4cm}
+{\footnotesize\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})
+\hspace{4.25cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;R^{(1)}_{1:(i-1)s,(i-1)s+1:is}:=Q_{:,1:(i-1)s}^TX_{:,(i-1)s+1:is}
+\hspace{4.2cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;W:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R^{(1)}_{1:(i-1)s,(i-1)s+1:is}
+\hspace{3.45cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(\widehat{Q},R^{(1)}_{(i-1)s+1:is,(i-1)s+1:is})\\
+&\;\;\;R^{(2)}_{1:(i-1)s,(i-1)s+1:is}:=Q_{:,1:(i-1)s}^T\widehat{Q}
+\hspace{5.75cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;W:=\widehat{Q}-Q_{:,1:(i-1)s}R^{(2)}_{1:(i-1)s,(i-1)s+1:is}
+\hspace{5cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(Q_{:,(i-1)s+1:is},R^{(2)}_{(i-1)s+1:is,(i-1)s+1:is})\\
+&\;\;\;R_{1:(i-1)s,(i-1)s+1:is}:=R^{(1)}_{1:(i-1)s,(i-1)s+1:is}+R^{(2)}_{1:(i-1)s,(i-1)s+1:is}R^{(1)}_{(i-1)s+1:is,(i-1)s+1:is}\\
+&\;\;\;R_{(i-1)s+1:is,(i-1)s+1:is}=R^{(2)}_{(i-1)s+1:is,(i-1)s+1:is}R^{(1)}_{(i-1)s+1:is,(i-1)s+1:is}
+\end{align*}}
+\end{minipage}}
+\end{center}\vspace{.15cm}
+We refer to associated variants as $\text{BCGS2}\circ\text{IntraOrtho}$ where\vspace{-.15cm}
+\begin{align*}
+\text{IntraOrtho}\in\{\text{CGS},\text{CGS2},\text{MGS},\text{CholQR},\text{CholQR2},\text{TSQR},\text{HouseQR},\dots\}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 26
+\begin{frame}{Block modified Gram-Schmidt (BMGS)}
+\begin{itemize}
+\item BMGS is formed with\vspace{-.2cm}
+\begin{align*}
+\Pi^{(i)}:=
+(I_n-Q_{:,(i-1)s+1:is}Q_{:,(i-1)s+1:is}^T)
+\dots
+(I_n-Q_{:,1:s}Q_{:,1:s}^T)
+\end{align*}
+$\vspace*{-.8cm}$\\
+which leads to\vspace{.1cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{IntraOrtho}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s})
+\hspace{2.7cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;W:=X_{:,(i-1)s+1:is}\\
+&\;\;\;\text{for}\;j=1,\dots,i-1\\
+&\;\;\;\;\;\;R_{(j-1)s+1:js,(i-1)s+1:is}:=Q_{:,(j-1)s+1:js}^TW
+\hspace{3.05cm}{\color{gray}{\text{//BLAS-3}}}\\
+&\;\;\;\;\;\;W:=W-Q_{:,(j-1)s+1:js}R_{(j-1)s+1:js,(i-1)s+1:is}\\
+&\;\;\;\text{IntraOrtho}(W)\mapsto(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is})
+\end{align*}
+\end{minipage}}
+\end{center}\vspace{.1cm}
+We refer to associated variants as $\text{BMGS}\circ\text{IntraOrtho}$ where
+\begin{align*}
+\text{IntraOrtho}\in\{\text{CGS},\text{CGS2},\text{MGS},\text{CholQR},\text{CholQR2},\text{TSQR},\text{HouseQR},\dots\}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 27
+\begin{frame}{Block randomized Gram-Schmidt (BRGS)}
+\begin{itemize}
+\item BRGS is formed by with $\Pi^{(i)}:=I_n-Q_{:,1:is}(\Theta Q_{:,1:is})^\dagger\Theta$ which leads to\vspace{0cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&\text{Compute }Q_{:,1:s}\text{ and }R_{1:s,1:s}
+\hspace{4.28cm}{\color{gray}{\text{//RGS or RCholQR}}}\\
+&\text{s.t.}\,\Theta Q_{:,1:s}R_{1:s,1:s}=\Theta X_{:,1:s}\\
+&\text{and }(\Theta Q_{:,1:s})^T\Theta Q_{:,1:s}=I_s\\
+&S_{:,1:s}:=\Theta Q_{:,1:s}
+\hspace{5.85cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\text{for}\;i=2,\dots,p\\
+&\;\;\;P:=\Theta X_{:,(i-1)s+1:is}\\
+&\;\;\;R_{1:(i-1)s,(i-1)s+1:is}:=\arg\underset{Y\in\mathbb{R}^{(i-1)s\times s}}{\min}\|S_{:,1:(i-1)s}Y-P\|_F\\
+&\;\;\;Q_{:,(i-1)s+1:is}:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R_{1:(i-1)s,(i-1)s+1:is}\\
+&\;\;\;\text{Compute }Q_{:,(i-1)s+1:is}\text{ and }R_{(i-1)s+1:is,(i-1)s+1:is}
+\hspace{.4cm}{\color{gray}{\text{//RGS or RCholQR}}}\\
+&\;\;\;\text{s.t. }\Theta Q_{:,(i-1)s+1:is}R_{(i-1)s+1:is,(i-1)s+1:is}=\Theta X_{:,(i-1)s+1:is}\\
+&\;\;\;\text{and }(\Theta Q_{:,(i-1)s+1:is})^T\Theta Q_{:,(i-1)s+1:is}=I_s\\
+&\;\;\;S_{:,(i-1)s+1:is}:=\Theta Q_{:,(i-1)s+1:is}
+\end{align*}
+\end{minipage}}
+\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 28
+\begin{frame}{Stability aspects}
+\begin{itemize}
+\item The loss of orthogonality $\|I_n-Q^TQ\|_2$ achieved in finite precision by BGS algorithms depends on $\Pi^{(i)}$ as well as on IntraOrtho.\vspace{.1cm}\\
+If IntraOrtho is unconditionally stable, i.e., if $\text{IntraOrtho}(X)\mapsto(Q,R)$ is such that
+$\|I_n-Q^TQ\|_2=\mathcal{O}(\varepsilon)$ irrespective of $\kappa(X)$, then:\vspace{-.25cm}
+\begin{center}{\small\hspace*{-.65cm}
+\begin{tabular}{|c|c|c|c|}
+\hline
+BGS   & $\|I_n-Q^TQ\|_2$ & Assumption on $\kappa(X)$ & Reference(s)\\
+\hline
+BCGS  & $\mathcal{O}(\varepsilon)\kappa^{n-1}(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & conjecture\\ 
+BCGS2 & $\mathcal{O}(\varepsilon)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & $\!\!$Barlow and Smoktunowicz (2013)$\!\!\!$\\ 
+BMGS  & $\mathcal{O}(\varepsilon)\kappa(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Jalby and Philippe (1991)\\ 
+\hline
+\end{tabular}}
+\end{center}\vspace{.1cm}
+\item Most orthogonalization procedures are not unconditionally stable:\vspace{-.3cm}
+\begin{center}\hspace*{-.55cm}{\small
+\begin{tabular}{|c|c|c|c|}
+\hline
+IntraOrtho & $\|I_n-Q^TQ\|_2$ & Assumption on $\kappa(X)$ & Reference(s)\\
+\hline
+CGS      & $\mathcal{O}(\varepsilon)\kappa^{n-1}(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Kiełbasiński (1974)\\ 
+CGS2     & $\mathcal{O}(\varepsilon)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Giraud et al. (2005)\\ 
+MGS      & $\mathcal{O}(\varepsilon)\kappa(X)$ & $\mathcal{O}(\varepsilon)\kappa(X)<1$ & Björck (1967)\\ 
+CholQR   & $\mathcal{O}(\varepsilon)\kappa^2(X)$ & $\mathcal{O}(\varepsilon)\kappa^2(X)<1$ & Yamamoto et al. (2015)\\ 
+CholQR2  & $\mathcal{O}(\varepsilon)$ & $\mathcal{O}(\varepsilon)\kappa^2(X)<1$ & Yamamoto et al. (2015)\\ 
+HouseQR  & $\mathcal{O}(\varepsilon)$ & none & Section 10 in Higham (2002)$\!\!$\\ 
+TSQR     & $\mathcal{O}(\varepsilon)$ & none & Mori et al. (2012)\\
+\hline
+\end{tabular}}
+\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 29
+\begin{frame}{Stability aspects, cont'd}
+\begin{itemize}
+\item Other results available:
+\item[] Jalby and Philippe (1991):
+\begin{itemize}\normalsize
+\item[-] $\text{BMGS}\circ\text{MGS}$ behaves like CGS.\vspace{.1cm}
+\item[-] $\text{BMGS}\circ\text{MGS2}$ is as stable as MGS.
+\end{itemize}
+\item[] Carson et al. (2022):
+\begin{itemize}
+\item[-] $\text{BMGS}\circ\text{any IntraOrtho with }\|I_n-Q^TQ\|\in\mathcal{O}(\varepsilon)$ is as stable MGS.
+\end{itemize}
+%\item See Carson et al. (2022) for an overview of stability properties of BGS algorithms.
+\end{itemize}
+\smallskip
+\tiny{Balabanov, O., \& Grigori, L. (2025). Randomized block Gram–Schmidt process for the solution of linear systems and eigenvalue problems. SIAM Journal on Scientific Computing, 47(1), A553-A585.}\tinyskip\\
+\tiny{Barlow, J. L., \& Smoktunowicz, A. (2013). Reorthogonalized block classical Gram–Schmidt. Numerische Mathematik, 123(3), 395-423.}\tinyskip\\
+\tiny{Björck, Å. (1967). Solving linear least squares problems by Gram-Schmidt orthogonalization. BIT Numerical Mathematics, 7(1), 1-21.}\tinyskip\\
+\tiny{Carson, E., Lund, K., Rozložník, M., \& Thomas, S. (2022). Block Gram-Schmidt algorithms and their stability properties. Linear Algebra and its Applications, 638, 150-195.}\tinyskip\\
+\tiny{Giraud, L., Langou, J., Rozložník, M., \& Eshof, J. V. D. (2005). Rounding error analysis of the classical Gram-Schmidt orthogonalization process. Numerische Mathematik, 101(1), 87-100.}\tinyskip\\
+\tiny{Higham, N. J. (2002). Accuracy and stability of numerical algorithms. Society for industrial and applied mathematics.}\tinyskip\\
+\tiny{Jalby, W., \& Philippe, B. (1991). Stability analysis and improvement of the block Gram–Schmidt algorithm. SIAM journal on scientific and statistical computing, 12(5), 1058-1073.}\tinyskip\\
+\tiny{Kiełbasiński, A. (1974). Analiza numeryczna algorytmu ortogonalizacji Grama-Schmidta. Mathematica Applicanda, 2(2).$\!\!$}\tinyskip\\
+\tiny{Mori, D., Yamamoto, Y., \& Zhang, S. L. (2012). Backward error analysis of the AllReduce algorithm for Householder QR decomposition. Japan journal of industrial and applied mathematics, 29, 111-130.}\tinyskip\\
+\tiny{Yamamoto, Y., Nakatsukasa, Y., Yanagisawa, Y., \& Fukaya, T. (2015). Roundoff error analysis of the CholeskyQR2 algorithm. Electron. Trans. Numer. Anal, 44(01), 306-326.}
+\end{frame}
+
+\section{$s$-step iterative solvers}
+
+% Slide 30
+\begin{frame}{Introduction to $s$-step Krylov subspace methods}
+\begin{itemize}
+\item Krylov subspace methods seek for iterates in some Krylov subspace $\mathcal{K}_m$ with residual orthogonal to some subspace $\mathcal{L}_m$.\vspace{.05cm}\\ 
+At each iteration, the following steps are executed:
+\begin{enumerate}\normalsize
+\item Increase the dimension of $\mathcal{K}_m$:\\
+Sparse matrix-vector (\textbf{SpMV}) product (\textbf{communication-bound})\vspace{.05cm}
+\item Orthogonalize against $\mathcal{L}_m$:\\
+\textbf{Gram-Schmidt} procedure (\textbf{communication-bound})\vspace{.05cm}
+\end{enumerate}
+$\hspace{-.2cm}\implies$ \textbf{Performance} of Krylov subspace methods \textbf{limited by comunication}.$\hspace{-1cm}$\vspace{.05cm}
+\item $s$-step Krylov subspace methods \textbf{compute blocks of $s$ iterations} at once:\\
+\begin{itemize}\normalsize
+\item[-] Iteration loop split into an \textbf{outer loop} and an \textbf{inner loop}.\vspace{.05cm}\\
+\hspace{1.38cm}SpMV ($Av$) $\rightarrow$ \textbf{Matrix power kernel} $(Av,\dots,A^{s}v)$\vspace{.05cm}\\
+\hspace{1cm}Gram-Schmidt $\rightarrow$ \textbf{Block Gram-Schmidt}\vspace{.05cm}
+\item[-] Mathematically equivalent to standard methods (in perfect arithmetic).\vspace{.05cm}
+%\item[-] Increases arithmetic intensity (sequential implementation) and reduces number of synchronization (parallel implementation).\vspace{.05cm}
+\end{itemize}
+$\hspace{-.2cm}\implies$ \textbf{Increases arithmetic intensity} (sequential implementation),\\
+$\hspace{.78cm}$\textbf{Reduces number of synchronizations} (parallel implementation).
+%\item[] $\hspace{-.2cm}\implies$ \textbf{Reduces communication} cost \textbf{by} $\mathcal{O}(s)$.
+\end{itemize}
+\end{frame}
+
+% Slide 31
+\begin{frame}{s-step Arnoldi}
+\begin{itemize}
+\item An $s$-step Arnoldi procedure computes a basis $\mathfrak{Q}_j:=[Q_1,\dots,Q_j]$ of the Krylov subspace $\text{range}([V_1,\dots,V_j])=\mathcal{K}_{js}(A,v)$ using a projector $\Pi^{(j)}$ onto $\text{range}(\mathfrak{Q}_j)^{\perp}$ and an IntraOrtho procedure:\vspace{.1cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&V_1:=[v,Av,\dots,A^{s-1}v]\\
+&\text{IntraOrtho}(V_1)\mapsto(Q_1,R_1)\\
+&\text{for}\;j=2,\dots,p\\
+&\;\;\;v:=V_{j-1}[:,s]
+\hspace{1.5cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;V_j:=[Av,\dots,A^{s}v]
+\hspace{.43cm}{\color{gray}{\text{//matrix power kernel}}}\\
+&\;\;\;Q_j:=\Pi^{(j-1)}V_j\\
+&\;\;\;\text{IntraOrtho}(Q_j)\mapsto(Q_j,R_j)
+\end{align*}
+\vspace{-.75cm}
+\end{minipage}}
+\end{center}
+\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] Hoemmen (2010) uses $\Pi^{(j)}:=I_n-\mathfrak{Q}_j\mathfrak{Q}_j^T$ (BCGS), IntraOrtho$\,=$TSQR.$\hspace{-1cm}$\vspace{.05cm}
+\item[-] In parallel, $s$-step Arnoldi requires $s$X less messages than regular Arnoldi.\vspace{.05cm}
+\item[-] Loss of orthogonality increases rapidly with $s$, delaying convergence $\implies$ optimal $s$ depends on $A$ and architecture.
+\end{itemize}
+\end{itemize}
+\smallskip
+\tiny{$\!\!$Hoemmen, M. (2010). Communication-avoiding Krylov subspace methods. PhD thesis. University of California, Berkeley.$\hspace{-1cm}$}
+\end{frame}
+
+% Slide 32
+\begin{frame}{s-step Arnoldi, cont'd}
+\begin{itemize}
+\item In practice, the ill-conditioning grows so quick that $s$ values need to be kept small, i.e., typically no more than 5.\vspace{.1cm}\\
+Two ways to improve stability:
+\begin{itemize}\normalsize
+\item[-] Use a more stable BGS kernel than BCGS, e.g., BMGS or BCGS2.\vspace{.1cm}
+\item[-] Use Chebyshev or Newton matrix polynomials instead of monomials.
+\end{itemize}
+Arbitrary matrix polynomials are used as follows:\vspace{.1cm}
+\begin{center}$\hspace*{-.4cm}$\fbox{\begin{minipage}{6cm}
+\vspace{-.6cm}
+\begin{align*}
+&V_1:=[p_0(A)v,p_1(A)v,\dots,p_{s-1}(A)v]\\
+&\text{IntraOrtho}(V_1)\mapsto(Q_1,R_1)\\
+&\text{for}\;j=2,\dots,p\\
+&\;\;\;v:=V_{j-1}[:,s]
+\hspace{2.65cm}{\color{gray}{\text{//one-based indexing}}}\\
+&\;\;\;V_j:=[p_1(A)v,\dots,p_s(A)v]
+\hspace{.43cm}{\color{gray}{\text{//matrix power kernel}}}\\
+&\;\;\;Q_j:=\Pi^{(j-1)}V_j\\
+&\;\;\;\text{IntraOrtho}(Q_j)\mapsto(Q_j,R_j)
+\end{align*}
+\vspace{-.75cm}
+\end{minipage}} 
+\end{center}
+\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] $s$-step Arnoldi forms the basis for $s$-tep GMRES.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Matrix power kernels}
+
+% Slide 33
+\begin{frame}{Matrix power kernels}
+\begin{itemize}
+\item An essential part of $s$-step methods is the \textbf{computation} of $s$ \textbf{matrix powers}
+\begin{align*}
+p_{1}(A)v,\dots,p_s(A)v
+\end{align*}
+which relies on \textbf{memory-bound SpMV} calls.\vspace{.05cm}\\
+In a \textbf{sequential} computation, $s$ SpMV invocations require \textbf{reading the entire matrix $s$ times from
+slow memory}.\vspace{.05cm}\\
+In \textbf{parallel}, they require $\Omega(s)$ \textbf{messages} (if the matrix is not block diagonal).
+\item Demmel et al. (2007, 2008, 2009) develop \textbf{communication-avoiding matrix power kernels}:
+\begin{itemize}\normalsize
+\item[-] Requires $1+o(1)$ read of the sparse matrix $A$ for \textbf{sequential} implementations.\vspace{.05cm}
+\item[-] Requires only $\mathcal{O}(1)$ messages in \textbf{parallel}. 
+\end{itemize}
+\end{itemize}
+\smallskip
+\tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2007). Avoiding communication in computing Krylov subspaces. Tech. Rep. UCB/EECS-2007-123, University of California, Berkeley.}\tinyskip\\
+\tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2008). Avoiding communication in sparse matrix computations. IEEE International Parallel and Distributed Processing Symposium.}\tinyskip\\
+\tiny{Demmel J.W., Hoemmen M., Mohiyuddin M. \& Yelick K.A. (2009). Minimizing communication in sparse matrix solvers. Proceedings of the 2009 ACM/IEEE Conference on Supercomputing (New York, NY, USA).}
+\end{frame}
+
+\section{Homework problems}
+
+% Slide 34
+\begin{frame}{Homework problem}\vspace{.1cm}
+Turn in \textbf{your own} solution to \textbf{Pb.$\,$35}:\vspace{.15cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$35}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Consider a sparse matrix $A$ of size $10^6\times 10^6$ with $5\cdot 10^6$ non-zero values.
+Analyze the worst case memory access pattern in terms of number of read and write accesses and find the corresponding arithmetic intensity of standard CSR-based SpMV for this matrix.
+\end{minipage}\vspace{.15cm}
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$36}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Consider a sparse matrix $A$ of size $10^6\times 10^6$ with $5\cdot 10^6$ non-zero values spread in dense $4\times 4$ blocks.
+Let the matrix be stored in BSR format with a block size of $r\times c=4\times 4$.
+You may further assume that all stored blocks of the BSR data structure are perfectly aligned with the non-zero pattern of the matrix.
+Assuming that, within blocks, there is a perfect reuse of data from the source and destination vectors in registers, analyze the worst case memory access pattern in terms of number of read and write accesses, and find the corresponding arithmetic intensity of the BSR-based SpMV kernel for this matrix.
+Ignore indexing arithmetic in your account of floating-point operations.
+\end{minipage}
+\end{frame}
+
+\section{Practice session}
+
+% Slide 35
+\begin{frame}[fragile]{Practice session}
+\begin{enumerate}
+\item Code a function \mintinline{julia}{BCGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR2 as IntraOrtho. 
+\item Code a function \mintinline{julia}{BCGS2} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR2 as IntraOrtho. 
+\item Code a function \mintinline{julia}{BMGS} with the option to use either of CGS, CGS2, MGS, CholQR and CholQR2 as IntraOrtho. 
+\item Code a function \mintinline{julia}{BRGS} with the option to use either of RGS and RCholQR as IntraOrtho. 
+\item Compute QR factorizations of tall and skinny matrices using both BGS procedures with block sizes $s\in\{5,10\}$ and GS procedures.
+Compare running times and plot loss of orthogonality, i.e., $\|I_m-Q^TQ\|_2$.
+\end{enumerate}
+\end{frame}
+
+
+
+
+
+
+
+\end{document}

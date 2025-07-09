@@ -1,0 +1,951 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{ifxetex}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{minibox}
+\usepackage{minted}
+
+\renewcommand{\algorithmiccomment}[1]{{\hfill\color{gray}$\triangleright$ #1}}
+
+\usefonttheme[onlymath]{serif}
+
+\title[NLA for CS and IE -- Lecture 02]{Numerical Linear Algebra\\for Computer Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 02\\Essentials of the Julia Language}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture02}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+%\myoutlineframe
+	
+	
+% Slide 1
+\begin{frame}
+	\frametitle{Fact sheet of the Julia language}
+	\vspace{-.15cm}
+	\begin{itemize}
+		\item Started at \textbf{MIT} in 2009 to develop a \textbf{fast open source} and \textbf{free high-level} language
+		\item Features
+		\begin{itemize}
+			\item[-] \textbf{Dynamically typed} (also enables \textbf{static types for better performance})
+			\item[-] Just-in-time (JIT) compiled (i.e., \textbf{compiled at runtime})
+			\item[-] Provided with full-featured interactive command-line \textbf{REPL} (read-eval-print loop)
+			\item[-] Designed for \textbf{parallelism} and \textbf{distributed computing} (part of the standard library)
+			\item[-] \textbf{No need to vectorize code for performance}
+			\item[-] Supports notebooks
+		\end{itemize}
+	    \item Version 1.0 released in 2018
+	    \item Current release is \textbf{1.11.5}
+	    \item Used at MIT, Stanford, UC Berkeley, Amazon, Apple, Google, IBM, Intel, Microsoft, ...
+	    \item Over 45 millions  downloads as of January 2023
+	\end{itemize}
+\end{frame}
+
+% Slide 2
+\begin{frame}
+	\frametitle{What is Julia made of?}
+	\begin{center}
+	\includegraphics[height=1.6cm]{Julia_GitHub.png}  
+    \end{center}	
+	\begin{itemize}
+		\item Most of the Julia \textbf{standard library} is written in \textbf{Julia}\vspace{.1cm}
+		\item Julia makes use of \textbf{pre-existing libraries} (mostly in C/C++) for:
+		\begin{itemize}\normalsize
+			\vspace{.1cm}
+			\item[-] \textbf{BLAS/LAPACK}, however, native Julia versions exist for most functionalities. Optimized native Julia BLAS can match the performances of Intel MKL and OpenBLAS.
+			\vspace{.1cm}
+			\item[-] \textbf{Regular expressions} (PCRE)
+			\vspace{.1cm}
+            \item[-] \textbf{Downloading files} (libcurl)
+            \vspace{.1cm}
+			\item[-] \textbf{Low-level asynchronous IO} (libuv)
+			\vspace{.1cm}
+			\item[-] \textbf{Compilation} (LLVM)
+			\vspace{.1cm}
+			\item[-] \textbf{Extended precision arithmetic} (GMP, MPFR), but native Julia solutions also exist.			
+		\end{itemize}
+    \end{itemize}  
+\end{frame}   
+
+% Slide 3
+\begin{frame}
+	\frametitle{RBGS: An algorithm for comparison purposes}	
+	\begin{itemize}
+		\item Randomized block Gram-Schmidt (RBGS) procedure by Balabanov and Grigori (2021):
+		\begin{align*}
+		\mathrm{RBGS}:(X,\Theta)\in\mathbb{R}^{n\times m}\times\mathbb{R}^{k\times m}
+		\mapsto
+		(Q,R)\in\mathbb{R}^{n\times m}\times\mathbb{R}^{m\times m}
+		\end{align*}
+	    such that $X=QR$ where $m<k\ll n$, $(\Theta Q)^T\Theta Q=I_m$ and $\mathrm{Ran}(\Theta Q)=\mathrm{Ran}(\Theta X)$. We exploit the following structure of $p$  blocks of size $n\times s$:
+		\begin{align*}
+			X=[X_{:,1:s},X_{:,s+1:2s},\dots,X_{:,(p-1)s+1:ps}]\\
+			Q=[Q_{:,1:s},Q_{:,s+1:2s},\dots,Q_{:,(p-1)s+1:ps}]
+		\end{align*}
+	    where $m=ps$.
+		\item Exploiting those block structures, we have $(\Theta Q)^T\Theta Q=I_m\implies$
+		\begin{align*}
+			\hspace{-.5cm}
+			R_{(i-1)s+1:is,(j-1)s+1:js}=(\Theta Q_{:,(i-1)s+1:is})^T\Theta X_{;,(j-1)s+1:js},
+			\;(i,j)\in[1,p]^2
+		\end{align*}
+	\end{itemize}  
+\end{frame}   
+
+% Slide 4
+\begin{frame}
+	\frametitle{RBGS: An algorithm for comparison purposes}	
+	\begin{itemize}
+		\item There are different possible implementations of RBGS algorithm.
+		Let us consider the following:
+	\setcounter{algorithm}{0}
+	\begin{algorithm}[H]
+		\small
+		\caption{\small$\mathrm{RBGS}:(X,\Theta)\mapsto$($Q$, $R$)}
+		\begin{algorithmic}[1]
+			\STATE{$\mathrm{RGS}(X_{:,1:s})\mapsto(Q_{:,1:s},R_{1:s,1:s},S_{:,1:s})$}
+			\COMMENT{$S:=\Theta Q$}
+			\FOR{$i=2,\dots,p$}
+			\STATE{$P:=\Theta X_{:,(i-1)s+1:is}$}
+			\COMMENT{Sketching}
+			\STATE{$R_{1:(i-1)s,(i-1)s+1:is}:=S^\dagger_{:,1:(i-1)s}P$}
+			\COMMENT{Block least-squares problem}
+			\STATE{$Q_{:,(i-1)s+1:is}:=X_{:,(i-1)s+1:is}-Q_{:,1:(i-1)s}R_{1:(i-1)s,(i-1)s+1:is}$}
+			\COMMENT{BLAS-3}
+			\STATE{$\mathrm{RGS}(Q_{:,(i-1)s+1:is})\mapsto(Q_{:,(i-1)s+1:is},R_{(i-1)s+1:is,(i-1)s+1:is},S_{:,(i-1)s+1:is})$}
+			\ENDFOR
+		\end{algorithmic}
+	\end{algorithm}
+	where RGS corresponds to RBGS with $s=1$.\emph{}
+		\item In what follows, line 3 will be done more efficiently using a matrix-free fast transform.
+	\end{itemize}  
+\end{frame}   
+
+% Slide 5
+\begin{frame}[fragile]
+\frametitle{Julia is close to math}
+\footnotesize
+\begin{minted}[linenos]{julia}
+function RBGS(X::Array{Float64,2}, p::Int, k::Int)
+  n, m = size(X)
+  s = Int(m / p)  
+  P = Array{Float64}(undef, k, s)
+  Q = Array{Float64,2}(undef, n, m)
+  R = zeros(Float64, m, m)
+  S = Array{Float64,2}(undef, k, m)
+  srht = set_srht(n, k)
+  Q[:, 1:s], R[1:s, 1:s], S[:, 1:s] = RGS(X[:, 1:s], srht)
+  for i in 2:p
+    P .= MatrixFreeTheta(X[:, (i-1)*s+1:i*s], srht)
+    R[1:(i-1)*s, (i-1)*s+1:i*s] = S[:, 1:(i-1)*s] \ P
+    Q[:, (i-1)*s+1:i*s] = X[:, (i-1)*s+1:i*s] 
+                         .- Q[:, 1:(i-1)*s] * R[1:(i-1)*s, (i-1)*s+1:i*s]
+    Q[:, (i-1)*s+1:i*s], 
+    R[(i-1)*s+1:i*s, (i-1)*s+1:i*s], 
+    S[:, (i-1)*s+1:i*s] = RGS(Q[:, (i-1)*s+1:i*s], srht)
+  end
+  return Q, R, S
+end
+\end{minted}
+\end{frame}  
+
+% Slide 6
+\begin{frame}[fragile]
+\frametitle{So is Python}
+\footnotesize
+\begin{minted}[linenos]{python}
+def RBGS(X, p, k):
+  n, m = X.shape
+  s = int(m / p)
+  P = np.zeros((k, s))
+  Q = np.zeros((n, m))
+  R = np.zeros((m ,m))
+  S = np.zeros((k, m))
+  srht = set_srht(n, k)
+  Q[:, :s], R[:s, :s], S[:, :s] = RGS(X[:, :s], srht)
+  for i in range(1, p):
+    P[:, :] = MatrixFreeTheta(X[:, i*s:(i+1)*s], srht)
+    R[:i*s, i*s:(i+1)*s] = np.linalg.lstsq(S[:, :i*s], P)[0]
+    Q[:, i*s:(i+1)*s] = X[:, i*s:(i+1)*s] 
+                        - np.matmul(Q[:, :i*s], R[:i*s, i*s:(i+1)*s])
+    Q[:, i*s:(i+1)*s], 
+    R[i*s:(i+1)*s, i*s:(i+1)*s], 
+    S[:, i*s:(i+1)*s] = RGS(Q[:, i*s:(i+1)*s], srht)
+  return Q, R, S
+\end{minted}
+\end{frame} 
+
+% Slide 7
+\begin{frame}[fragile]
+	\frametitle{But not C}
+	\tiny
+\begin{minted}[linenos]{C}
+void RBGS(int n, int m, int p, int k, double *X, struct SRHT srht, double *Q, double *R, double *S) {
+  int s = m / p;
+  double *P = (double*)malloc(k * s * sizeof(double));
+  double *Rtmp = (double*)malloc(m * s * sizeof(double));
+  double *StS = (double*)malloc(m * m * sizeof(double));
+  lapack_int *ipiv = (lapack_int*)malloc(m * sizeof(lapack_int));
+  RGS(n, s, k, &X[0], srht, &Q[0], Rtmp, &S[0]);
+  for (int v=0; v<s; v++)
+    for (int u=0; u<s; u++)
+      R[v * m + u] = Rtmp[v * s + u];
+  for (int v=0; v<s; v++)
+    for (int u=s; u<m; u++)
+      R[v * m + u] = 0.;
+  for (int i=1; i<p; i++) {
+    BlockMatrixFreeTheta(&X[i * s * n], srht, s, P);
+    cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, i * s, i * s, k, 1., S, k, S, k, 0., StS, i * s);
+    cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, i * s, s, k, 1., S, k, P, k, 0., Rtmp, i * s);
+    LAPACKE_dsysv(LAPACK_COL_MAJOR, 'U', i * s, s , StS, i * s, ipiv, Rtmp, i * s);
+    for (int v=0; v<s; v++)
+      for (int u=0; u<i*s; u++)
+        R[i * s * m + v * m + u] = Rtmp[v * i * s + u];
+    cblas_dcopy(n * s, &X[i * s * n], 1, &Q[i * s * n], 1);
+    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, n, s, i * s, -1., Q, n, Rtmp, i * s, 1., &Q[i * s * n], n);
+    RGS(n, s, k, &Q[i * s * n], srht, &Q[i * s * n], Rtmp, &S[i * s * k]);
+    for (int v=0; v<s; v++)
+      for (int u=0; u<s; u++)
+        R[i * s * m + v * m + i * s + u] = Rtmp[v * s + u];
+    for (int v=0; v<s; v++)
+      for (int u=(i+1)*s; u<m; u++)
+        R[i * s * m + v * m + u] = 0.;
+  }
+  free(P);
+  free(Rtmp);
+  free(StS);
+  free(ipiv);
+}
+\end{minted}
+\end{frame} 
+
+% Slide 8
+\begin{frame}
+	\frametitle{Stepping away from matrix computation}	
+	\begin{itemize}
+		\item SRHT refers to subsampled randomized Walsh-Hadamard transform.
+		\item MatrixFreeTheta: $X\rightarrow\Theta X$, where $\Theta$ is a SRHT matrix given by:
+		\begin{align*}
+			\Theta:=\sqrt{n/k}RHD
+		\end{align*}
+	$R\in\mathbb{R}^{k\times n}$: Random restriction, i.e., each row is a row from $I_n$.\\
+	$H\in\mathbb{R}^{n\times n}$: Normalized Walsh-Hadamard transform matrix.\\
+	$D\in\mathbb{R}^{n\times n}$: Random sign flip, i.e., diagonal array with $\pm 1$ components.\\
+	\item We have $H=1/\sqrt{n}H_n$, in which the non-normalized Walsh-Hadamard transform $H_n$ is defined by the following recursion:
+	\begin{align*}
+		H_1:=\left[\begin{matrix}1&1\\1&-1\end{matrix}\right]
+		\;,\;\;
+		H_q:=\left[\begin{matrix}H_{q/2}&H_{q/2}\\H_{q/2}&-H_{q/2}\end{matrix}\right]
+		\;,\;\;
+		q=2,4,\dots,n/2,n.
+	\end{align*}
+	\item The recurrence of the SRHT lends itself to \textbf{divide and conquer}, which yields a \textbf{non-vectorized fast algorithm}.
+	\end{itemize}  
+\end{frame}   
+
+% Slide 9
+\begin{frame}
+	\frametitle{Algorithm for the fast Walsh-Hadamard transform (FWHT)}	
+	\begin{itemize}
+		\vspace{-.2cm}
+		\item Pseudocode of the FWHT assuming $n$ is a power of 2:
+		\vspace{-.31cm}
+		\setcounter{algorithm}{1}
+		\begin{algorithm}[H]
+		\small
+		\caption{\small$\mathrm{FWHT}:z\mapsto H_nz$}
+		\begin{algorithmic}[1]
+			\STATE{$h:=1$}
+			\WHILE{$h<n$}
+			\FOR{$i=1,1+2h,\dots,n-2h,n$}
+			\FOR{$j=i,\dots,i+h-1$}
+			\STATE{$x:=z_j$}
+			\STATE{$y:=z_{j+h}$}
+			\STATE{$z_j:=x+y$}
+			\STATE{$z_{j+h}:=x-y$}
+			\ENDFOR
+			\ENDFOR
+			\STATE{$h:=2h$}
+			\ENDWHILE
+			\RETURN{$z$}
+		\end{algorithmic}
+		\end{algorithm}
+	    \vspace{-.5cm}		
+		\item If $n$ is not a power of 2, zero-pad up to the smallest power of 2 greater than $n$.
+		\item Then, define MatrixFreeTheta by making use of FWHT.
+	\end{itemize}  
+\end{frame}   
+
+% Slide 10
+\begin{frame}
+	\frametitle{Runtime of the fast Walsh-Hadamard transform (FWHT)}
+	\begin{columns}
+	\begin{column}{0.64\textwidth}
+	\begin{center}
+		\includegraphics[height=5.5cm]{dt_fwht.png}  
+	\end{center}
+	\end{column}
+	\begin{column}{0.36\textwidth}
+		$\vspace{.5cm}$\\
+		\textbf{C} is approximately\\
+		\hspace{.18cm}\textbf{1.5x} faster than \textbf{Julia}\\
+		\hspace{.1cm}\textbf{300x} faster than \textbf{Python}
+		\vspace{.3cm}
+		
+		For \textbf{fast Python}:\\
+		\hspace{.1cm}code in \textbf{C} w/ \textbf{pybind11}\\
+		\hspace{.1cm}code in \textbf{Fortran} w/ \textbf{f2py}
+		\vspace{.3cm}
+		
+		\textbf{Julia} is \textbf{fast}\\
+		\hspace{.6cm}and \textbf{high level}
+	\end{column}
+	\end{columns}
+\end{frame}   
+
+% Slide 11
+\begin{frame}
+	\frametitle{Other benchmarks}
+	\begin{itemize}
+		\item See \url{julialang.org/benchmarks/}
+		\begin{center}
+		\vspace{.2cm}
+		\includegraphics[height=6.5cm]{Julia_benchmark.png}  
+		\end{center}
+	\end{itemize}
+\end{frame}
+
+% Slide 12
+\begin{frame}[fragile]
+	\frametitle{Installing Julia}
+	\begin{itemize}
+		\item Install \texttt{juliaup}:
+		\begin{itemize}\normalsize
+		\item[-] On Linux and MacOS:\\
+		\begin{minted}{bash}
+$ curl -fsSL https://install.julialang.org | sh
+		\end{minted}
+		\item[-] On Windows:\\
+		\small
+		\begin{minted}{bash}
+> winget install --name Julia --id 9NJNWW8PVKMN -e -s msstore
+		\end{minted}
+		\normalsize
+		\end{itemize}
+		This will install the latest version of Julia.
+		\item \texttt{juliaup} is also used to update Julia to the latest version:
+		\begin{minted}{bash}
+$ juliaup update
+		\end{minted}
+		\item You can use \texttt{juliaup} to install arbitrary releases, e.g.:
+\begin{minted}{bash}
+$ juliaup add 1.9.3
+\end{minted}
+		\item Start a new terminal and access the REPL as follows:
+\begin{minted}{bash}
+$ julia
+julia>
+\end{minted}
+		\item To run a specific release, e.g.,
+\begin{minted}{bash}
+$ julia +1.9.3
+\end{minted}
+		\item To see the installed versions:	
+		\texttt{\$ juliaup status}
+	\end{itemize}
+\end{frame}  
+  
+% Slide 13
+\begin{frame}[fragile]
+	\frametitle{Package management}
+	\begin{itemize}
+	\item The default project is defined by two files
+	\begin{itemize}\normalsize
+		\item[-] {\scriptsize$\sim$}/.julia/environments/v1.11/\textbf{Project.toml}: contains names of packages.
+		\item[-] {\scriptsize$\sim$}/.julia/environments/v1.11/\textbf{Manifest.toml}: contains version numbers and dependencies.
+	\end{itemize}
+	\item To \textbf{clone your environment} on a new machine, only \textbf{copy} the \textbf{Project.toml} in the new default
+	folder.
+	\vspace{.15cm}
+	\item In REPL, hit the key \textbf{]} to get in \textbf{Pkg mode}. You then get the following prompt:
+	\vspace{.1cm}
+	\begin{minted}{bash}
+		(@1.11) pkg> 
+	\end{minted}
+	\normalsize			
+	\vspace{.1cm}
+	\item To \textbf{initialize} a \textbf{new environment} in {\scriptsize$\sim$}/MyEnvironment/, \textbf{activate} the path and \textbf{add} a
+	\textbf{package}:
+	\vspace{.1cm}
+	\begin{minted}{bash}
+		(@1.11) pkg> activate ~/MyEnvironment/
+		(@1.11) pkg> add NPZ
+	\end{minted}
+	\normalsize		
+	this will automatically create the Project.toml and Manifest.toml files in {\scriptsize$\sim$}/MyEnvironment/.
+\end{itemize}
+\end{frame}  
+
+% Slide 14
+\begin{frame}[fragile]
+	\frametitle{Package management, cont'd}
+	\begin{itemize}
+	\item \textbf{Load} an \textbf{existing environment} using the \textbf{activate} command as follows:
+	\vspace{.1cm}
+	\begin{minted}{bash}
+		(@1.11) pkg> activate ~/MyEnvironment/
+		Activating project at '~/MyEnvironment'
+	\end{minted}
+	\normalsize			
+	\vspace{.1cm}
+	\item Check the status of an environment with the \textbf{st} command:
+	\vspace{.1cm}
+	\begin{minted}{bash}
+		(@1.11) pkg> st
+		Status '~/MyEnvironment/Project.toml'
+		[15e1cf62] NPZ v0.4.2
+	\end{minted}
+	\normalsize		
+	\vspace{.1cm}
+	\item When loaded for the first time, use the command \textbf{instantiate} to \textbf{install} all the \textbf{packages} from \textbf{Project.toml}:
+	\vspace{.1cm}
+	\begin{minted}{bash}
+		(@1.11) pkg> instantiate
+	\end{minted}
+	\normalsize		
+	\vspace{.1cm}		
+	\item All these operations defined in the Pkg mode can be done with the Pkg package inside a script, e.g.:
+	\vspace{.1cm}
+	\begin{minted}{julia}
+		using Pkg
+		activate("~/MyEnvironment/")
+	\end{minted}
+	\normalsize		
+	\end{itemize}
+\end{frame}  
+
+% Slide 15
+\begin{frame}
+	\frametitle{Overview of available packages}
+	\begin{itemize}
+		\item Scientific computing
+		\begin{itemize}\normalsize
+			\item[-] \textbf{LinearAlgebra.jl}: Basic linear algebra subroutines, multithreaded BLAS and LAPACK
+			\vspace{.05cm}
+			\item[-] \textbf{SparseArrays.jl}: Support for sparse vectors and matrices
+			\vspace{.05cm}
+			\item[-] \textbf{Distributed.jl}: Methods for distributed computing
+			\vspace{.05cm}
+			\item[-] \textbf{DistributedArrays.jl}
+			\vspace{.05cm}
+			\item[-] \textbf{MPI.jl}: Wrapper for the message passing interface
+			\vspace{.05cm}
+			\item[-] \textbf{CUDA.jl}: Main entrypoint for programming NVIDIA GPUs
+			\vspace{.05cm}
+			\item[-] \textbf{AlgebraicMultigrid.jl}: GPU-based implementation of AMG solvers and preconditioners
+			\vspace{.05cm}
+			\item[-] \textbf{Metis.jl}: Wrapper for the Metis library
+			\vspace{.05cm}
+			\item[-] \textbf{FFTW.jl}: Bindings to the FFTW library for fast Fourier transforms
+			\vspace{.05cm}
+			\item[-] \textbf{SuiteSparse.jl}: Wrapper for the SuiteSparse library
+			\vspace{.05cm}
+			\item[-] \textbf{Arpack.jl}: Wrapper for the Arpack library to solve large-scale eigenvalue problems
+			\vspace{.05cm}
+			\item[-] \textbf{BenchmarkTools.jl}: Methods for performance tracking
+		\end{itemize}
+	\end{itemize}
+\end{frame}  
+
+% Slide 16
+\begin{frame}
+	\frametitle{Overview of available packages, cont'd}
+	\begin{itemize}
+	\item Scientific computing (cont'd)
+	\begin{itemize}\normalsize
+		\item[-] \textbf{IterativeSolvers.jl}: Iterative algorithms to solve large linear systems
+		\vspace{.05cm}
+		\item[-] \textbf{KrylovKit.jl}: Matrix-free Krylov-based algorithms for linear, singular value and eigenvalue problems
+		\vspace{.05cm}
+		\item[-] \textbf{TriangleMesh.jl}: Generate and refine 2D unstructured triangular meshes
+		\vspace{.05cm}
+		\item[-] \textbf{Gridap.jl}: Finite elements for partial differential equations in arbitrary dimensions
+		\vspace{.05cm}
+		\item[-] \textbf{DifferentialEquations.jl}: Suite for numerically solving differential equations (including DAEs)
+	\end{itemize}
+	\item Machine learning
+	\begin{itemize}\normalsize
+		\item[-] \textbf{Flux.jl}: Go-to library for neural networks and machine learning
+		\vspace{.05cm}
+		\item[-] \textbf{Zygote.jl}: Automatic differentiation package
+		\vspace{.05cm}
+		\item[-] \textbf{Knet.jl}: Deep learning framework developed at Koç University
+		\vspace{.05cm}
+		\item[-] \textbf{TensorFlow.jl}: Wrapper for TensorFlow
+		\vspace{.05cm}
+		\item[-] \textbf{ScikitLearn.jl}: Implementation of the scikit-learn API
+	\end{itemize}
+	\end{itemize}
+\end{frame}  
+
+% Slide 17
+\begin{frame}[fragile]
+\frametitle{Interoperability with Python}
+\begin{itemize}
+\item Calling Python from Julia
+\begin{itemize}\normalsize
+\item[-] Set-up Python installation as follows using \textbf{PyCall.jl}:
+\begin{minted}{julia}
+julia> ENV["PYTHON"] = "/usr/bin/python3"
+\end{minted}
+\begin{minted}{bash}
+(@1.11) pkg> build PyCall
+\end{minted}
+\begin{minted}{julia}
+julia> using PyCall
+\end{minted}
+\item[-] Import packages using \textbf{pyimport} from PyCall.jl:
+\begin{minted}{julia}
+julia> np = pyimport("numpy");
+julia> pushfirst!(pyimport("sys")."path", ""); 
+julia> GS = pyimport("GramSchmidt");          
+\end{minted}
+\item[-] Proceed seamlessly in Julia as in Python:
+\begin{minted}{julia}
+julia> x = np.random.rand(2^24);
+julia> z = GS.fwht(x);
+\end{minted}
+\item[-] Other packages:
+\begin{itemize}\normalsize
+\item[-] \textbf{PyPlot.jl}: Enables Matplotlib in Julia
+\item[-] \textbf{NPZ.jl}: Enables saving and loading NumPy binary data files
+\item[-] \textbf{Conda.jl}: Provides access to the Conda package manager
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}  
+
+% Slide 18
+\begin{frame}[fragile]
+	\frametitle{Interoperability with Python, cont'd}
+\begin{itemize}
+\item Calling Julia from Python
+\begin{itemize}\normalsize
+\item[-] Install \textbf{PyJulia}:
+\begin{minted}{bash}
+$ pip install julia
+\end{minted}
+\item[-] The \textbf{default environment} of Julia is then \textbf{available} from Python. For example, we can do
+\begin{minted}{python}
+>>> from julia import NPZ
+\end{minted}
+\item[-] The \textbf{global namespace} of Julia's interpreter can be accessed via the module \textbf{julia.Main}:
+\begin{minted}{python}
+>>> from julia import Main
+\end{minted}
+\item[-] You can set a variable's name in the julia.Main module to send data from Python to Julia:
+\begin{minted}{python}
+>>> import numpy as np
+>>> Main.x = np.random.rand(2**24)
+\end{minted}
+\item[-] Use the \textbf{eval} function from \textbf{julia.Main} to run Julia code:
+\begin{minted}{python}
+>>> Main.eval('push!(LOAD_PATH, ".")')     # add current
+>>> Main.eval('using MyGramSchmidt: fwht') # folder to path
+>>> z = Main.eval('fwht(x)')
+\end{minted}
+\end{itemize}
+\end{itemize}
+\end{frame}  
+
+% Slide 19
+\begin{frame}[fragile]
+\frametitle{Interoperability with C}
+\begin{itemize}
+\item Calling C libraries from Julia:\vspace{.1cm}\\
+(see \href{docs.julialang.org/en/v1/manual/calling-c-and-fortran-code/}{\textcolor{blue}{docs.julialang.org/en/v1/manual/calling-c-and-fortran-code/}})\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-] The C code must be available as a \textbf{shared library}\vspace{.1cm}
+\item[-] No additional overhead for calling from Julia compared to calling from C\vspace{.1cm}
+\item[-] The function \textbf{ccall} is used to call a C function with the following arguments:\vspace{.1cm}
+\begin{itemize}\normalsize
+\item[-]1. A (:function, "path/to/library") pair\vspace{.1cm}
+\item[-]2. The function's return type\vspace{.1cm}
+\item[-]3. A tuple of input types corresponding to the function's signature\vspace{.1cm}
+\item[-]4. Argument values to be passed to the function\vspace{.1cm}
+\end{itemize}
+\item[-] Example for \mintinline{c}{double *fwht(double *a, int n)} in srht.so:
+\begin{minted}{julia}
+julia> z_ptr = ccall((:fwht, "./srht.so"), Ptr{Cdouble}, 
+                     (Ptr{Cdouble}, Cint), rand(2^24), 
+                     2^24)
+julia> z = unsafe_wrap(Vector{Float64}, z_ptr, 2^24)
+\end{minted}
+\end{itemize}
+\end{itemize}
+\end{frame}  
+
+% Slide 20
+\begin{frame}[fragile]
+\frametitle{Interoperability with C, cont'd}
+\begin{itemize}
+\item Calling Julia code from C:\vspace{.05cm}\\
+(see \href{docs.julialang.org/en/v1/manual/embedding/}{\textcolor{blue}{docs.julialang.org/en/v1/manual/embedding/}})\vspace{.05cm}
+\begin{itemize}
+\item[-] A header file \textbf{julia.h} is made available in the Julia folder\vspace{.05cm}
+\item[-] Example of C code (main.c) calling Julia code:\vspace{.05cm}
+\begin{minted}{c}
+#include <julia.h>
+JULIA_DEFINE_FAST_TLS
+int main(int argc, char *argv[]) {
+  jl_init();
+  jl_eval_string("push!(LOAD_PATH, \".\")");
+  jl_eval_string("using MyGramSchmidt: fwht");
+  jl_array_t *z = (jl_array_t*)jl_eval_string("fwht(rand(2^24))");
+  double *z_data = (double*)jl_array_data(z);
+  jl_atexit_hook(0);
+  return 0;}
+\end{minted}
+$\vspace*{-.3cm}$\\
+\item[-] Compile as follows:
+\scriptsize
+\begin{minted}{bash}
+$ gcc -o main -fPIC 
+  -I/home/venkovic/.julia/juliaup/julia-1.11.5+0.x64.linux.gnu/include/julia
+  -L/home/venkovic/.julia/juliaup/julia-1.11.5+0.x64.linux.gnu/lib
+  -Wl,-rpath,/home/venkovic/.julia/juliaup/julia-1.11.5+0.x64.linux.gnu/lib
+  main.c -ljulia
+\end{minted}
+\end{itemize}
+\end{itemize}
+\end{frame}  
+
+% Slide 21
+\begin{frame}[fragile]
+\frametitle{Shared memory multithreading}
+\begin{itemize}
+\item The number of threads is set through an environment variable:
+\begin{minted}{bash}
+$ export JULIA_NUM_THREADS=12
+\end{minted}
+\item Multithreaded for loop:
+\begin{minted}{julia}
+julia> Z = Array{Float64,2}(undef, 1_024, Threads.nthreads());
+julia> Threads.@threads for i in 1:Threads.nthreads()
+         Z[:, i] = fwht(rand(1_024));
+       end
+\end{minted}
+\item Parallel task launching:
+\begin{minted}{julia}
+julia> a = Threads.@spawn fwht(rand(1_024));
+julia> b = Threads.@spawn fwht(rand(1_024));
+julia> z = fetch(a) .+ fetch(b)
+\end{minted}
+\item Multithreaded BLAS:
+\begin{minted}{julia}
+julia> using LinearAlgebra.BLAS
+julia> BLAS.set_num_threads(Threads.nthreads())
+julia> BLAS.dot(10_000_000, rand(10_000_000), 1, 
+                rand(10_000_000), 1);
+\end{minted}
+\end{itemize}	
+\end{frame}  
+
+% Slide 22
+\begin{frame}[fragile]
+\frametitle{Distributed computing}
+\begin{minipage}{.7\framewidth}
+$\vspace{-.2cm}$
+\begin{itemize}
+\item Add aliases of your machines to \textbf{/etc/hosts}:
+\begin{minted}{bash}
+  192.168.1.74 hector0 ... 192.168.1.23 hector3
+\end{minted}
+\item Set-up \textbf{password-less ssh} connection between machines
+\item Import the \textbf{Distributed.jl} package and \textbf{add} the \textbf{machines}:
+\begin{minted}{julia}
+using Distributed
+machines = ["hector$i" for i in 0:3];
+for machine in machines
+  addprocs((["venkovic@$machine", Sys.CPU_THREADS]), 
+           tunnel=true)
+end
+\end{minted}
+\item There are \textbf{processes} and \textbf{workers}. 
+The \textbf{master process} is \textbf{not a worker}:
+\begin{minted}{julia}
+julia> println(procs(), workers())
+       [1,2,3,4,5,6,7,8,9,10,11,12][2,3,4,5,6,7,8,9,10,11,12]
+\end{minted}
+\end{itemize}
+\end{minipage}
+\begin{minipage}{.28\framewidth}
+$\vspace{-3.2cm}$
+\begin{center}
+\textbf{hector}\\
+4x Intel Core i7\vspace{.2cm}\\
+\includegraphics[height=2.5cm]{hector.png}
+\end{center}
+\end{minipage}
+\end{frame} 
+
+% Slide 23
+\begin{frame}[fragile]
+\frametitle{Distributed computing, cont'd\textsubscript{1}}
+\begin{itemize}
+\item Load code on \textbf{all processes} making use of the \textbf{@everywhere} macro:
+\begin{minted}{julia}
+@everywhere push!(LOAD_PATH, ".")
+@everywhere using MyGramSchmidt: fwht
+\end{minted}
+\item Define a \textbf{shared array} as follows:
+\begin{minted}{julia}
+@everywhere using SharedArrays
+Z = SharedArray(Array{Float64,2}(undef, 1_024, nworkers()))
+\end{minted}
+\item Do a \textbf{distributed for loop} as follows. The loop is distributed over \textbf{workers}:
+\begin{minted}{julia}
+@distributed for p in 1:nworkers()
+  Z[:, p] = fwht(rand(1_024))
+end
+\end{minted}
+\item Use \textbf{pmap} as follows to divide the work among \textbf{workers}:
+\begin{minted}{julia}
+Z = pmap(i->fwht(rand(1_024), 1:nworkers()))
+\end{minted}
+\item Do a \textbf{reduction} through a \textbf{distributed for loop} as follows:\small
+\begin{minted}{julia}
+z = Array{Float64,1}(undef, 1_024)
+z .= @distributed (.+) for _ in 1_nworkers()
+  fwht(rand(1_024))
+end
+\end{minted}
+\end{itemize}
+\end{frame}
+
+% Slide 24
+\begin{frame}
+\frametitle{Distributed computing, cont'd\textsubscript{2}}
+\begin{itemize}
+\item \textbf{Dynamic mapreduce} routine for large parallel unbalanced working loads:\\
+\href{github.com/venkovic/julia-phd-krylov-spdes/blob/master/Utils/PllUtils.jl}{\textcolor{blue}{github.com/venkovic/julia-phd-krylov-spdes/blob/master/Utils/PllUtils.jl}}
+\begin{center}\includegraphics[height=4cm]{dynamic_mapreduce.png}\end{center}
+\item Used for \textbf{parallel Karhunen-Loève decompositions on unstructured meshes}:\vspace{-.3cm}\\
+\begin{center}$\hspace{1cm}$\includegraphics[height=2cm]{kl.png}\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 25
+\begin{frame}[fragile]
+\frametitle{Distributed computing, cont'd\textsubscript{3}}
+\begin{itemize}
+\item An alternative to reduction for loops is the \textbf{mapreduce} function:
+\begin{minted}{julia}
+z = mapreduce(x->fwht(rand(1_024)), .+, 1:nworkers())
+\end{minted}
+\item Launch a \textbf{task} on \textbf{any available worker}:
+\begin{minted}{julia}
+z = fetch(@spawn fwht(rand(1_024)))
+\end{minted}
+\item Launch a \textbf{task} on a \textbf{specific process}, say the 4th process:
+\begin{minted}{julia}
+z = fetch(@spawnat 4 fwht(rand(1_024)))
+\end{minted}
+\end{itemize}
+\end{frame}
+
+% Slide 26
+\begin{frame}[fragile]
+\frametitle{Performance tips}
+\begin{itemize}
+\item \textbf{Access arrays} in memory order, i.e., \textbf{along columns}
+\item \textbf{Pre-allocate} returned variables\\
+\begin{minipage}{.25\framewidth}
+$\vspace*{-1.8cm}$\\
+Instead of this:
+$\vspace{1.55cm}$\\
+Use this:
+\end{minipage}
+\begin{minipage}{.5\framewidth}
+$\vspace{.02cm}$
+\begin{minted}{julia}
+for i in 1:10
+  x = fwht(rand(1_024))
+  println(x[1:3])
+end
+\end{minted}
+\begin{minted}{julia}
+x = Vector{Float64}(undef, 1_024)
+for i in 1:10
+  x[:] = fwht(rand(1_024))
+  println(x[1:3])
+end
+\end{minted}
+\end{minipage}
+$\vspace{.1cm}$
+\item \textbf{Avoid changing} the \textbf{type} of a variable\\
+\begin{minipage}{.25\framewidth}
+$\vspace{-1.5cm}$\\
+Avoid this:
+\end{minipage}
+\begin{minipage}{.5\framewidth}
+$\vspace{-.6cm}$\\
+\begin{minted}{julia}
+x = 1
+for i in 1:10
+  x *= rand()
+end
+\end{minted}
+\end{minipage}
+\end{itemize}
+\end{frame}
+
+% Slide 27
+\begin{frame}
+\frametitle{Performance tips, cont'd}
+\begin{itemize}
+\item Write \textbf{type-stable} functions\vspace{.1cm}\\
+Instead of this:$\hspace{.5cm}$\mintinline{julia}{pos(x) = x < 0 ? 0 : x}\vspace{.1cm}\\
+Use this:$\hspace{1.49cm}$\mintinline{julia}{pos(x) = x < 0 ? zero(x) : x}
+\item Use \textbf{broadcast} operators for vectorized operations\vspace{.1cm}\\
+Instead of this:$\hspace{.5cm}$\mintinline{julia}{f(x::Vector{Float64}) = 3 * x.^2 + x}\vspace{.1cm}\\
+Use this:$\hspace{1.49cm}$\mintinline{julia}{f(x::Vector{Float64}) = 3 .* x.^2 .+ x}
+\end{itemize}
+\end{frame}
+
+% Slide 28
+\begin{frame}[fragile]
+\frametitle{Useful macros}
+\begin{itemize}
+\item Macros provide a mechanism to include generated code in the final body program.
+We've seen @distributed, but there are other examples:
+\begin{itemize}\normalsize
+\item[-] Use @time to time a command and get allocations info:
+\begin{minted}{julia}
+julia> @time fwht(rand(2^24));
+0.622758 seconds (4 allocations: 256.000 MiB, 1.34% gc time)
+\end{minted}
+\item[-] Use @elapsed to store time elapsed during command execution:
+\begin{minted}{julia}
+julia> dt = @elapsed fwht(rand(2^24));
+julia> println("$dt seconds have passed.")
+0.624587781 seconds have passed.
+\end{minted}
+\item[-] Use @which to identify the method invoked along with its signature and location in file:
+\begin{minted}{julia}
+julia> @which fwht(rand(1_024))
+fwht(a::Vector{Float64}) in MyGramSchmidt at ~/julia-gram-schmidt/GramSchmidt.jl:85
+\end{minted}
+\item[-] Use @code\_llvm to view the LLVM code used by the compiler:
+\begin{minted}{julia}
+julia> @code_llvm fwht(1_024)
+; @ ~/julia-gram-schmidt/GramSchmidt.jl:85 within 'fwht'
+define nonnull {}* @julia_fwht_819({}* nonnull align 16 dereferenceable(40) %0) #0 {
+top:
+  %gcframe167 = alloca [9 x {}*], align 16
+\end{minted}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 29
+\begin{frame}[fragile]
+\frametitle{Useful macros, cont'd}
+\begin{itemize}
+\item Use @code\_native to view the native assembly code generated by the compiler:
+\begin{minted}{julia}
+julia> @code_native fwht(rand(1_024));
+.text
+.file "fwht"
+.section    .rodata.cst8,"aM",@progbits,8
+.p2align    3     # -- Begin function julia_fwht_587
+.LCPI0_0
+  ...
+\end{minted}
+\item Use @code\_warntype to investigate type stability:
+\begin{minted}{julia}
+julia> @code_warntype fwht(rand(1_024));
+MethodInstance for fwht(::Vector{Float64})
+  from fwht(a::Vector{Float64}) in Main at REPL[16]:1
+Arguments
+  #self#::Core.Const(fwht)
+  a::Vector{Float64}
+Locals
+  z::Vector{Float64}
+  N::Int64
+  n::Int64
+    ...
+\end{minted}
+\end{itemize}
+\end{frame}
+
+% Slide 30
+\begin{frame}
+\frametitle{Ressources}
+\begin{itemize}
+\item \textbf{Documentation}: \href{docs.julialang.org}{\color{blue}{docs.julialang.org}}
+\item \textbf{Discourse board}: \href{discourse.julialang.org}{\color{blue}{discourse.julialang.org}}\\
+\hspace{3.1cm}Responsive community. Ideal for questions.
+\item \textbf{Slack}: \href{julialang.slack.com}{\color{blue}{julialang.slack.com}}\\
+\hspace{1.2cm}Good for package development, and questions.
+\item \textbf{YouTube}: \href{www.youtube.com/c/TheJuliaLanguage}{\color{blue}{www.youtube.com/c/TheJuliaLanguage}}
+\item Sengupta, Avik. \textit{\textbf{Julia High Performance: Optimizations, distributed computing,
+multithreading, and GPU programming with Julia 1.0 and beyond}}. Packt Publishing Ltd,
+2019.\vspace{.1cm}
+\begin{center}
+\raisebox{.75cm}{My favorite}\hspace{.2cm}
+\includegraphics[height=1.7cm]{Julia-High-Performance.jpg}
+\hspace{1cm}
+\includegraphics[height=1.7cm]{Darve2021.jpg}
+\hspace{.2cm}\raisebox{.75cm}{Used at Stanford}
+\end{center}
+\item Darve, Eric, and Mary Wootters. \textit{\textbf{Numerical Linear Algebra with Julia}}. Vol. 172. SIAM,
+2021.
+\item \textbf{JuliaCon 2025} @ UPitt and CMU, Pittsburgh, PA. July 21–26, 2025.
+\end{itemize}
+\end{frame}
+
+% References
+\begin{frame}[noframenumbering, plain]
+\frametitle{References}
+\scriptsize
+\begin{itemize}
+\item Balabanov, Oleg, and Laura Grigori. "Randomized block Gram-Schmidt process for solution of linear systems and eigenvalue problems." arXiv preprint arXiv:2111.14641 (2021).
+\item Balabanov, Oleg, and Laura Grigori. "Randomized Gram--Schmidt Process with Application to GMRES." SIAM Journal on Scientific Computing 44.3 (2022): A1450-A1474.
+\end{itemize}
+\end{frame}
+
+
+\section{Homework}
+\begin{frame}{Homework}
+\begin{itemize}
+\item Read chapter 10 - Julia Essentials in Darve and Wootters (2021)
+\item Watch \href{https://www.youtube.com/watch?v=37L1OMk_3FU}{\color{blue}{Julia Lightning Round on YouTube}}
+\end{itemize}
+\end{frame}
+	
+	
+	
+	
+	
+
+\end{document}

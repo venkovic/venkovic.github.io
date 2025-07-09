@@ -1,0 +1,224 @@
+\documentclass[letterpaper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[left=3cm,right=3cm,top=1.7cm,bottom=1.7cm]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{authblk}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{comment}
+\usepackage{caption}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage{environ}
+
+\setlength{\leftmargini}{1.1em}
+\setlength{\leftmarginii}{1.1em}
+\setlength{\leftmarginiii}{1.1em}
+
+% Boolean to control solutions visibility
+\newif\ifshowsolutions
+\showsolutionstrue   % Set to \showsolutionsfalse to hide solutions
+
+% Define solution environment
+\NewEnviron{solution}{%
+  \ifshowsolutions
+    \begin{tcolorbox}[colback=white!98!black,colframe=black!50!white,breakable]
+      \BODY
+    \end{tcolorbox}
+  \fi
+}
+
+% Uncomment to show solutions
+\showsolutionstrue
+% Uncomment to hide solutions
+%\showsolutionsfalse
+
+\begin{document}
+	
+\title{Numerical Linear Algebra for Computational Science and Information Engineering\vspace{.3cm}\\
+\large Extra notes}
+\author{by Nicolas Venkovic}
+\affil{School of Computation, Information and Technology (CIT), Technical University of Munich, Germany}
+\date{Summer 2025}
+\maketitle
+
+Each extra note refers to a specific lecture which we covered in class.
+Those lectures are listed as follows:
+\begin{itemize}
+\item[-] Lecture 01 -- Essentials of linear algebra\vspace{-.15cm}
+\item[-] Lecture 02 -- Essentials of the Julia language\vspace{-.15cm}
+\item[-] Lecture 03 -- Floating-point arithmetic and error analysis\vspace{-.15cm}
+\item[-] Lecture 04 -- Direct methods for dense linear systems\vspace{-.15cm}
+\item[-] Lecture 05 -- Sparse data structures and basic linear algebra subprograms\vspace{-.15cm}
+\item[-] Lecture 06 -- Introduction to direct methods for sparse linear systems\vspace{-.15cm}
+\item[-] Lecture 07 -- Orthogonalization and least-squares problems\vspace{-.15cm}
+\item[-] Lecture 08 -- Basic iterative methods for linear systems\vspace{-.15cm}
+\item[-] Lecture 09 -- Basic iterative methods for eigenvalue problems\vspace{-.15cm}
+\item[-] Lecture 10 -- Locally optimal block preconditioned conjugate gradient\vspace{-.15cm}
+\item[-] Lecture 11 -- Arnoldi and Lanczos procedures\vspace{-.15cm}
+\item[-] Lecture 12 -- Krylov subspace methods for linear systems\vspace{-.15cm}
+\item[-] Lecture 13 -- Multigrid methods\vspace{-.15cm}
+\item[-] Lecture 14 -- Preconditioned iterative methods for linear systems\vspace{-.15cm}
+\item[-] Lecture 15 -- Restarted Krylov subspace methods\vspace{-.15cm}
+\item[-] Lecture 16 -- Elements of randomized numerical linear algebra\vspace{-.15cm}
+\item[-] Lecture 17 -- Introduction to communication-avoiding algorithms\vspace{-.15cm}
+\item[-] Lecture 18 -- Matrix function evaluation
+\end{itemize}
+
+\subsection*{Lecture 01 -- Essentials of linear algebra}
+\subsubsection*{Hints for Pb.$\,$3 -- $\|xy^T\|_2=\|x\|_2\|y\|_2$}
+\begin{itemize}
+\item[-] As per slide \#47, we have $\|A\|_2=\sigma_{max}(A)=\lambda_{max}(A^TA)^{1/2}$.
+\item[-] Use this to express $\|xy^T\|_2$ in terms of $\|x\|_2$ and $yy^T$.
+\item[-] Since $yy^T$ is symmetric, its Rayleigh quotient is maximized by the eigenvector with largest eigenvalue.
+\item[-] Use this fact, with the Cauchy-Schwarz inequality, to finish-up the proof.
+\end{itemize}
+
+\subsubsection*{Hints for Pb.$\,$5 -- SVD, pseudo-inverse, and associated projections}
+\begin{itemize}
+\item[-] First, from its low-rank nature, the matrix admits a decomposition $A=U\Sigma V^T$.
+Then, as per slide \#20, the pseudo-inverse, which is unique, must satisfy 4 identities, namely $AA^\dagger A=A$, $A^\dagger AA^\dagger=A^\dagger$, $(AA^\dagger)^T=AA^\dagger$ and $(A^\dagger A)^T=A^\dagger A$.
+\item[-] To prove that a matrix $P$ is an orthogonal projector onto $\mathcal{M}$, there are three things to do:
+\begin{itemize}
+\item[1.] Show that $P$ is a projector by verifying that $P^2=P$.
+\item[2.] Show that $P$ projects onto $\mathcal{M}$, typically by verifying $\mathrm{range}(P)\subseteq \mathcal{M}$ and $\mathcal{M}\subseteq \mathrm{range}(P)$.
+\item[3.] Show that $P$ is an orthogonal projector.\vspace{.1cm}\\
+In general, this is done by showing $x-Px\perp\mathrm{range}(P)$ for all $x$.\vspace{.1cm}\\
+Alternatively, when orthogonality is stated with respect to the dot product, an orthogonal projector is Hermitian, as can be checked from the general formulation of orthogonal projectors we derived together on slide \#28.
+Actually, a stronger statement holds, namely, if orthogonality is stated through the dot product, then a projector is orthogonal if and only if it is Hermitian.
+Therefore, here, it suffices to show $P^T=P$.
+\end{itemize}
+\end{itemize}
+
+\subsubsection*{More on orthogonal projectors}
+\begin{itemize}
+\item[-] We defined orthogonal matrices as $Q\in\mathbb{R}^{m\times n}$ such that $Q^TQ=I_n$.
+\item[-] Let $P$ be a projector, orthogonal with respect to the dot product, onto a proper subspace of $\mathbb{R}^n$, i.e., $\mathrm{range}(P)\subset\mathbb{R}^n$. Is $P$ an orthogonal matrix? No.
+\begin{itemize}
+\item[-] Since the projector is orthogonal, and orthogonality is stated with respect to the dot product, we have $P^T=P$ (as previously stated), so that $P^TP=P^2$.
+\item[-] But since $P$ is a projector, we also have $P^2=P$, so that, for a projector orthogonal with respect to the dot product, we have $P^TP=P$.
+\item[-] Thus, if $P$ were an orthogonal matrix, we would have $P^TP=I_n\implies P=I_n$.
+\item[-] But since $\mathrm{range}(P)$ is a proper subspace of $\mathbb{R}^n$, the rank of $P$ must be smaller than $n$, so $P\neq I_n$.\vspace{.1cm}\\
+Therefore, a projector which is orthogonal with respect to the dot product, onto a proper subspace of $\mathbb{R}^n$, cannot be an orthogonal matrix, i.e., $P^TP\neq I_n$.
+\end{itemize}
+\end{itemize}
+
+\subsection*{Lecture 03 -- Floating-point arithmetic and error analysis}
+\subsubsection*{Slide \#12 -- Perturbation of linear systems}
+Here, the bound on $\|\delta x\|$ is obtained by applying the triangular inequality of vector norms, and assuming the matrix norm is consistent with the vector norm.\vspace{.1cm}\\
+In L01, we said a matrix norm is consistent with a vector norm if $\|Ax\|\leq \|A\|\|x\|$.\vspace{.1cm}\\
+We said that induced (matrix) norms are, by definition, consistent with the vector norm they're induced from, e.g., $\|Ax\|_2\leq \|A\|_2\|x\|_2$.\vspace{.1cm}\\
+We also said that, although the Frobenius norm is not induced by any vector norm, it is consistent with the 2-norm, i.e., $\|Ax\|_2\leq \|A\|_F\|x\|_2$.
+
+\subsubsection*{Slide \#13 -- Perturbation of linear systems, cont'd}
+\begin{itemize}
+\item[-] The conditioning number of a linear system is defined as $\kappa(A):=\|A^{-1}\|\|A\|$.
+\item[-] As we saw in L01, $\|A\|_2=\sigma_{max}(A)$.
+But since the singular values of $A^{-1}$ are the inverses of those of $A$, we have that $\sigma_{max}(A^{-1})=1/\sigma_{min}(A)$, so that $\|A^{-1}\|_2=1/\sigma_{min}(A)$.
+\item[-] Therefore, when using the 2-norm, the conditioning number of a linear system is given by $\kappa(A)=\sigma_{max}(A)/\sigma_{min}(A)$.
+\item[-] For the case of normal matrices, i.e., for matrices $A\in\mathbb{F}^{n\times n}$ such that $A^HA=AA^H$, from being diagonalizable, and assuming the eigenvalues are ordered such that $|\lambda_1(A)|\geq\dots\geq|\lambda_{n}(A)|$, we have $\kappa(A)=|\lambda_{1}(A)|/|\lambda_{n}(A)|$.
+\end{itemize}
+
+\subsubsection*{Slide \#14 -- Backward error of linear systems}
+Here, we used the reverse triangular inequality $\|x+y\|\geq\|x\|-\|y\|$, which holds for all norms, and can be derived as follows from the standard triangular inequality:
+\begin{align*}
+\|(x+y)-y\|\leq&\;\|x+y\|+\|-y\|\\
+\|x\|\leq&\;\|x+y\|+\|y\|\\
+\|x\|-\|y\|\leq&\;\|x+y\|.
+\end{align*}
+
+\subsubsection*{Slide \#18 -- Backward error of an eigenpair}
+\begin{itemize}
+\item[-] In practice, it is common to monitor the convergence of an approximate eigenpair $(\tilde{\lambda},\tilde{u})$ using the criterion
+$\displaystyle \frac{\|r\|}{|\tilde{\lambda}|\cdot\|\tilde{u}\|}\leq \varepsilon$ instead of the backward error $\displaystyle \frac{\|r\|}{\|A\|\cdot\|\tilde{u}\|}$.
+\item[-] Since, when using 2-norms, we have $|\lambda_{1}(A)|\leq \|A\|_2$, and often $|\lambda_{n}(A)|\ll |\lambda_{1}(A)|$, using the aforementioned criterion can be too conservative, and result into failure to properly diagnose convergence when trying to solve for eigenvalues with smaller magnitude.
+\item[-] However, as we saw from the equivalence of matrix norms in L01, we have $\|A\|_2\leq \|A\|_F$, so that using a criterion $\displaystyle \frac{\|r\|_2}{\|A\|_F\cdot\|\tilde{u}\|_2}\leq \varepsilon$ can be a less conservative alternative, as it often is easier to approximate $\|A\|_F$ than $\|A\|_2$.
+\end{itemize}
+\subsubsection*{Hint for Pb.$\,$7 -- Unit roundoff of floating-point number systems with given precision}
+Note that $\mathrm{fl}(1)=1$ for all floating-point number systems, irrespective of precision.
+
+\subsubsection*{Hints for Pb.$\,$9 -- Backward error of approximate solutions of linear systems}
+\begin{itemize}
+\item[-] In slides \#14-15, we defined the backward error $\eta_{A,b}(\tilde{x})$ of an approximation $\tilde{x}$ of $x$ such that $Ax=b$ as the minimal achievable norm of perturbations $\delta A$ and $\delta b$ such that $\tilde{x}$ solves exactly the perturbed system.
+That is, for all $\delta A$ and $\delta b$ such that $(A+\delta A)\tilde{x}=b+\delta b$, we have $\|\delta A\|\geq \eta_{A,b}(\tilde{x})\|A\|$ and $\|\delta b\|\geq \eta_{A,b}(\tilde{x})\|b\|$.
+\item[-] You can use the fact that $\|xy^T\|_2=\|x\|_2\|y\|_2$ for all $x,y\in\mathbb{R}^n$.
+\end{itemize}
+
+\subsection*{Lecture 04 -- Direct methods for dense linear systems}
+\subsubsection*{Slide \#24 -- Proof of existence of Cholesky factorization by inductive construction}
+On slide \#24, we show that the HPD matrix $A$ can be recast into 
+\begin{align*}
+A=
+\begin{bmatrix}
+a_{11}&a_1^H\\
+a_1&A_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+l_{11}^2&l_{11}l_1^H\\
+l_{11}l_1&L_1L_1^H+l_1l_1^H
+\end{bmatrix}
+\end{align*}
+where, by construction, we impose $l_{11}>0$.
+However, to do so, we assume that the Cholesky factorization 
+\begin{align*}
+L_1L_1^H=A_1-l_1l_1^H
+\end{align*}
+exists.
+To prove the existence of such a factorization, we need to show that $A_1-l_1l_1^H$ is HPD.
+For that, we recast $A$ into a form $XBX^H$, i.e.,
+\begin{align*}
+A=
+\begin{bmatrix}
+a_{11}&a_1^H\\
+a_1&A_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+1&0\\
+l_1/l_{11}&I_{n-1}
+\end{bmatrix}
+\begin{bmatrix}
+l_{11}^2&0\\
+0&A_1-l_1l_1^H
+\end{bmatrix}
+\begin{bmatrix}
+1&l_1^H/ l_{11}\\
+0&I_{n-1}
+\end{bmatrix}
+\end{align*}
+where $\displaystyle X=\begin{bmatrix}1&0\\l_1/l_{11}&I_{n-1}\end{bmatrix}$ and $\displaystyle B=\begin{bmatrix}
+l_{11}^2&0\\
+0&A_1-l_1l_1^H
+\end{bmatrix}$.
+We then claim that, because $X$ is non-singular ($\impliedby$ $X$ is triangular with non-zero diagonal components) and $A$ is HPD, $A_1-l_1l_1^H$ is indeed HPD.
+However, this statement should perhaps be further detailed in order to be well-understood. 
+Such explanations are
+\begin{itemize}
+\item[-] If $A=XBX^H$ is HPD and $X$ is non-singular, then $B$ is HPD. See Pb.$\,$12.b.
+Therefore, $\displaystyle \begin{bmatrix}
+l_{11}^2&0\\
+0&A_1-l_1l_1^H
+\end{bmatrix}$ is HPD.
+\item[-] Since $A_1-l_1l_1^H$ is a principal sub-matrix of an HPD matrix, it is also HPD. See Pb.$\,$12.a.
+\end{itemize}
+
+\subsubsection*{Hint for Pb.$\,$12.c -- Principal sub-matrices of non-singular matrices}
+You may disprove the statement simply by providing a counter example.
+
+\subsection*{Lecture 07 -- Orthogonalization and least-squares problems}
+\subsubsection*{Slide \#29 -- Least-squares problem with rank-deficient matrix}
+
+Let $x_0$ be the LSQ problem solution with minimal norm.
+Then, for each $\delta x\in\mathrm{null}(A)$, we have $A(x_0+\delta x)=Ax_0$ so that $x_0+\delta x$ is also an LSQ problem solution.
+Additionaly, by definition of $x_0$, we need to also have 
+\begin{align*}
+\|x_0\|_2<&\;\|x_0+\delta x\|_2\\
+0<&\;\delta x^T\delta x + 2x_0^T\delta x.
+\end{align*}
+For the above expression to be true for all $\delta x\in\mathrm{null}(A)$, we need to have $x_0^T\delta x=0$, i.e., $x_0\perp\mathrm{null}(A)$.
+
+\end{document}

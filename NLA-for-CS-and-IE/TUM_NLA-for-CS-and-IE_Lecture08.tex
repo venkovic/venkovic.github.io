@@ -1,0 +1,379 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+
+\title[NLA for CS and IE -- Lecture 08]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
+\subtitle{\vspace{.3cm}Lecture 08\\Classical Iterative Methods for Linear Systems}
+\hypersetup{pdftitle={NLA-for-CS-and-IE\_Lecture08}}
+
+\date[Summer 2025]{Summer 2025}
+
+\author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
+\institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
+
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+
+\begin{document}
+	
+\begin{frame}[noframenumbering, plain]
+	\maketitle
+\end{frame}
+	
+\myoutlineframe
+
+
+% Slide 01
+\begin{frame}{Towards iterative methods to solve linear systems}
+\begin{itemize}
+\item So far, we saw how \textbf{direct methods} can be used \textbf{to solve linear systems}:$\hspace{-1cm}$
+\begin{enumerate}
+\item \textbf{Factorize} the matrix (e.g., LU or Cholesky factorization) with cost $\mathcal{O}(n^3)$\vspace{.1cm}
+\item \textbf{Solve} the system using the computed factors with cost $\mathcal{O}(n^2)$
+\end{enumerate}
+\item \textbf{Direct methods} are {\color{green}\textbf{very stable}} and  {\color{green}\textbf{accurate}}.\vspace{.1cm}\\
+However, they can have a {\color{red}\textbf{very high computational cost}}.\vspace{.1cm}\\
+In general, direct methods are \textbf{not suitable for very large} $n$.
+\item As a potentially more efficient way to solve linear systems, we will explore \textbf{iterative methods}.\vspace{.1cm}\\
+Iterative methods are \textbf{inexact} in the sense that they rely on the generation of a sequence of approximate solutions which \textbf{converges towards the solution}, but the sequence is stopped at finite accuracy.\vspace{.1cm}\\
+In general, iterative methods \textbf{do not require explicit access to the matrix} and they \textbf{rely on} the \textbf{matrix-vector kernel} $x\mapsto Ax$.\vspace{.1cm}\\
+Iterative methods are particularly \textbf{recommended} for cases \textbf{where} the \textbf{matrix-vector product can be efficiently deployed}, e.g.,\\
+as it is the case for sparse matrices.
+\end{itemize}
+\end{frame}
+	
+\section{Splitting methods\\{\small Section 7.1 in Darve \& Wootters (2021)}}
+
+% Slide 02
+\begin{frame}{General splitting methods}
+\begin{itemize}
+\item Splitting methods are simple iterative methods to solve linear systems.
+\item Consider the $A=M-N$ splitting of a matrix $A$, where $M$ is non-singular.
+\item The linear system $Ax=b$ can be recast as follows:
+\begin{align*}
+Mx-Nx=&\;b\\
+x-M^{-1}Nx=&\;M^{-1}b\\
+x=&\;Gx+M^{-1}b
+\end{align*}
+so that $x$ is a \textbf{fixed point} of $f:x\mapsto M^{-1}Nx+M^{-1}b$, i.e., $x=f(x)$, and where $G:=M^{-1}N$ is the \textbf{iteration matrix}.
+\item To solve a fixed point problem, one can start with any point $x$, and compute $f(x)$.
+Then compute $f(f(x))$, then $f(f(f(x)))$ and so on, until the sequence converges.
+In particular, we consider the following\vspace{-.05cm}
+\begin{block}{Splitting method update rule}
+Given a matrix $A=M-N$ where $M$ is non-singular, the update rule for a general splitting method with a given $x^{(0)}$ is\vspace{-.3cm}
+\begin{align*}
+x^{(k+1)}:=Gx^{(k)}+M^{-1}b
+\;\;\text{ where }\;G:=M^{-1}N.
+\end{align*}
+\vspace{-.85cm}\\
+\end{block}
+\end{itemize}
+\end{frame}
+
+% Slide 03
+\begin{frame}{General splitting methods, cont'd\textsubscript{1}}
+\begin{itemize}
+\item The error $e^{(k+1)}:=x^{(k+1)}-x$ is such that
+\begin{align*}
+e^{(k+1)}=&\,Gx^{(k)}+M^{-1}b-Gx-M^{-1}b\\
+=&\,Gx^{(k)}-Gx\\
+=&\,Ge^{(k)}
+\end{align*}
+so that $e^{(k)}=G^ke^{(0)}$.
+\item The convergence theory depends on the iteration matrix $G=M^{-1}N$:
+\begin{theorem}[Convergence of splitting methods]
+Given $b$ and $A=M-N$ with non-singular $A$ and $M$, the iteration\vspace{-.2cm}
+\begin{align*}
+x^{(k+1)}=Gx^{(k)}+M^{-1}b
+\;\text{ where }\;
+G:=M^{-1}N
+\end{align*}\vspace{-.7cm}\\
+converges for any starting $x^{(0)}$ if and only if\vspace{-.2cm}
+\begin{align*}
+\rho(G)<1
+\end{align*}\vspace{-.7cm}\\
+where $\rho(G)$ is the spectral radius, i.e., the largest modulus of eigenvalue of the iteration matrix $G$.
+\end{theorem}
+\end{itemize}
+\end{frame}
+
+% Slide 04
+\begin{frame}{General splitting methods, cont'd\textsubscript{2}}
+\begin{itemize}
+\item Even though analyzing the spectrum of the iteration matrix $G$ is generally difficult, it is understood that, the smaller the modulus $\rho(G)$, the faster the convergence.
+\item How should we pick $M$ and $N$?\vspace{.1cm}\\
+The selection of $M$ and $N$ may be guided by two desirable properties:
+\begin{itemize}
+\item Linear systems of the form $Mz=d$ are easy to solve.\vspace{.1cm}\\
+This suggest good choices for $M$ are diagonal or triangular.\vspace{.1cm}\\
+\item The spectral radius $\rho(G)$ is less than 1.
+\end{itemize}
+\item We will see several examples of splitting methods, namely
+\begin{itemize}
+\item Jacobi method\vspace{.1cm}
+\item Gauss-Seidel method\vspace{.1cm}
+\item Over-relaxation method
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Jacobi method\\{\small Section 7.2 in Darve \& Wootters (2021)}}
+
+% Slide 05
+\begin{frame}{Jacobi method}
+\begin{itemize}
+\item Let $A=D-L-U$ where\vspace{.1cm}
+\begin{itemize}
+\item $D$ is diagonal\vspace{.1cm}
+\item $L$ is strictly lower-triangular, i.e., with zeros on the diagonal\vspace{.1cm}
+\item $U$ is strictly upper-triangular\vspace{.1cm}
+\end{itemize}
+Then, the splitting is clearly unique given $A$ as we choose $M=D$ and $N=L+U$:
+\begin{center}
+\includegraphics[height=2cm]{images/jacobi-splitting.png}\vspace{.2cm}
+\end{center}
+\item The Jacobi splitting leads to the following iteration
+\begin{block}{Jacobi iterations}
+Suppose $A=D-U-L$ as above.
+The update formula for Jacobi iteration is given by\vspace{-.4cm}
+\begin{align*}
+Dx^{(k+1)}=(L+U)x^{(k)}+b.
+\end{align*}
+\end{block}
+\end{itemize}
+\end{frame}
+
+% Slide 06
+\begin{frame}{Jacobi method, cont'd}
+\begin{itemize}
+\item The convergence of Jacobi iterations is as follows:
+\begin{theorem}[Convergence of Jacobi iterations]
+If $A$ is strictly diagonally dominant, i.e.,\vspace{-.2cm}
+\begin{align*}
+|a_{ii}|>\sum_{j\neq i}|a_{ij}|
+\end{align*}
+\vspace{-.5cm}\\
+for $i=1,2\dots,n$, then Jacobi iterations converge for any initial guess $x^{(0)}$.
+\end{theorem}
+Note that this condition is not necessary to ensure convergence.\vspace{.1cm}\\
+The necessary condition to ensure convergence remains that the iteration matrix $G_{\mathrm{Jacobi}}=D^{-1}(L+U)$ has a spectral radius smaller than one.\vspace{.1cm}
+\item The Jacobi method is especially simple to implement.\vspace{.1cm}\\
+It is also well-suited for parallel implementation as we have\vspace{-.05cm}
+\begin{align*}
+x_i^{(k+1)}=&\,\left(b_i+(L+U)[i,:]x^{(k)}\right)/d_{ii}\\
+x_i^{(k+1)}=&\,\left(b_i-(A-D)[i,:]x^{(k)}\right)/d_{ii}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\section{Gauss-Seidel method\\{\small Section 7.3 in Darve \& Wootters (2021)}}
+
+% Slide 07
+\begin{frame}{Gauss-Seidel method}
+\begin{itemize}
+\item Let $A=D-L-U$ where\vspace{.1cm}
+\begin{itemize}
+\item $D$ is diagonal\vspace{.1cm}
+\item $L$ is strictly lower-triangular, i.e., with zeros on the diagonal\vspace{.1cm}
+\item $U$ is strictly upper-triangular\vspace{.1cm}
+\end{itemize}
+Then, the splitting is clearly unique given $A$ as we choose $M=D-L$ and $N=U$:
+\begin{center}
+\includegraphics[height=2cm]{images/gauss-seidel-splitting.png}\vspace{.2cm}
+\end{center}
+\item The Gauss-Seidel splitting leads to the following iteration
+\begin{block}{Gauss-Seidel iterations}
+Suppose $A=D-U-L$ as above.
+The update formula for Gauss-Seidel iteration is given by\vspace{-.4cm}
+\begin{align*}
+(D-L)x^{(k+1)}=Ux^{(k)}+b.
+\end{align*}
+\end{block}
+\end{itemize}
+\end{frame}
+
+% Slide 08
+\begin{frame}{Gauss-Seidel method, cont'd\textsubscript{1}}
+\begin{itemize}
+\item Intuitively, "putting more information in $M$" should help with convergence of the method, and this is indeed the case, i.e., $\rho(G_{\mathrm{GS}})=\rho(G_{\mathrm{Jacobi}})^2$.
+\item On the other hand, solving triangular systems with $M=D-L$ is more involved than solving diagonal systems with $M=D$.
+\item We can compare Gauss-Seidel to Jacobi iterations as follows:
+\begin{align*}
+(D-L)x^{(k+1)}=&\,Ux^{(k)}+b\\
+Dx^{(k+1)}=&\,L{\color{blue}x^{(k+1)}}+Ux^{(k)}+b\text{ ({\color{blue}Gauss-Seidel})}\\
+Dx^{(k+1)}=&\,L{\color{red}x^{(k)}}+Ux^{(k)}+b\hspace{.39cm}\text{ ({\color{red}Jacobi})}
+\end{align*}
+and see they are very similar except for one term:\vspace{.025cm}
+\begin{center}
+\includegraphics[height=3.2cm]{images/jacobi-vs-gauss-seidel.png}
+\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 09
+\begin{frame}{Gauss-Seidel method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item The convergence of Gauss-Seidel iterations is as follows:
+\begin{theorem}[Convergence of Gauss-Seidel iterations]
+If $A$
+\begin{itemize}
+\item[-] is strictly diagonally dominant, or 
+\item[-] is symmetric positive definite (SPD)
+\end{itemize}
+then Gauss-Seidel iterations converge irrespective of the initial guess $x^{(0)}$.
+\end{theorem}
+Note that these conditions are not necessary to ensure convergence.\vspace{.1cm}\\
+The necessary condition to ensure convergence remains that the iteration matrix $G_{\mathrm{GS}}=(D-L)^{-1}U$ has a spectral radius smaller than one.
+\end{itemize}
+\end{frame}
+
+
+\section{Successive over-relaxation\\{\small Section 7.4 in Darve \& Wootters (2021)}}
+
+% Slide 10
+\begin{frame}{Successive over-relaxation}
+\begin{itemize}
+\item Successive over-relaxation (SOR) consists of introducing a parameter to a splitting method in order to get a handle of the speed of convergence.
+\item In particular, we use a parameter $\omega$ to boost convergence.\vspace{.1cm}\\
+The idea is to start with the Gauss-Seidel update step as follows:
+\begin{align*}
+Dx_{\mathrm{GS}}^{(k+1)}=&\;Lx_{\mathrm{GS}}^{(k+1)}+Ux^{(k)}+b\\
+x_{\mathrm{GS}}^{(k+1)}=&\;D^{-1}\left(Lx_{\mathrm{GS}}^{(k+1)}+Ux^{(k)}+b\right)\\
+x_{\mathrm{GS}}^{(k+1)}=&\;x^{(k)}+\left[D^{-1}\left(Lx_{\mathrm{GS}}^{(k+1)}+Ux^{(k)}+b\right)-x^{(k)}\right]
+\end{align*}
+so that $x_{\mathrm{GS}}^{(k+1)}=x^{(k)}+\Delta x_{\mathrm{GS}}^{(k)}$ where
+\begin{align*}
+\Delta x_{\mathrm{GS}}^{(k)}=&\;D^{-1}\left(Lx_{\mathrm{GS}}^{(k+1)}+Ux^{(k)}+b\right)-x^{(k)}
+\end{align*}
+is the update to $x^{(k)}$ in a Gauss-Seidel iteration.\vspace{.1cm}\\
+In SOR, the idea is to scale this correction by a parameter $0<\omega<2$:
+\begin{align*}
+x_{\mathrm{SOR}}^{(k+1)}=x^{(k)}+\omega\Delta x_{\mathrm{GS}}^{(k)}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 11
+\begin{frame}{Successive over-relaxation, cont'd}
+\begin{itemize}
+\item When $\omega\approx 0$, we are very cautious and only make small corrections to $x^{(k)}$.\vspace{.1cm}\\
+When $\omega=1$, we recover a Gauss-Seidel iteration.\vspace{.1cm}\\
+When $\omega\approx 2$, we are very confident in the Gauss-Seidel correction and apply it twice instead of once.
+\item The update formula of the SOR sequence is given as follows:
+\begin{align*}
+x_{\mathrm{SOR}}^{(k+1)}
+=&\;x_{\mathrm{SOR}}^{(k)}+\omega\left[D^{-1}\left(Lx_{\mathrm{SOR}}^{(k+1)}+Ux_{\mathrm{SOR}}^{(k)}+b\right)-x_{\mathrm{SOR}}^{(k)}\right]\\
+=&\;(1-\omega)x_{\mathrm{SOR}}^{(k)}+\omega\left[D^{-1}\left(Lx_{\mathrm{SOR}}^{(k+1)}+Ux_{\mathrm{SOR}}^{(k)}+b\right)\right]
+\end{align*}
+which yields the following iterations:
+\begin{block}{SOR iterations}
+Let $\omega\in(0,2)$, and suppose $A=D-L-U$ as above.
+The update formula for SOR iterations is
+\begin{align*}
+(D-\omega L)x_{\mathrm{SOR}}^{(k+1)}=((1-\omega)D+\omega U)x_{\mathrm{SOR}}^{(k)}+\omega b.
+\end{align*}
+\end{block}
+\end{itemize}
+\end{frame}
+
+% Slide 12
+\begin{frame}{Successive over-relaxation, cont'd}
+\begin{itemize}
+\item Since the update formula can written as
+\begin{align*}
+\left(\frac{1}{\omega}D-L\right)x_{\mathrm{SOR}}^{(k+1)}=\left(\left(\frac{1}{\omega}-1\right)D+ U\right)x_{\mathrm{SOR}}^{(k)}+ b
+\end{align*}
+and that we have
+\begin{align*}
+\left(\frac{1}{\omega}D-L\right)-\left(\left(\frac{1}{\omega}-1\right)D+ U\right)=D-L-U=A
+\end{align*}
+we can say that SOR is a splitting method with $M=\frac{1}{\omega}D-L$ and $N=(\frac{1}{\omega}-1)D+U$ such that $A=M-N$:
+\begin{center}
+\includegraphics[height=2.8cm]{images/sor-splitting.png}
+\end{center}
+\end{itemize}
+\end{frame}
+
+% Slide 13
+\begin{frame}{Successive over-relaxation, cont'd}
+\begin{itemize}
+\item Although SOR is a heuristic, it can lead to significant improvements in the convergence rate when $\omega$ is chosen appropriately.
+\begin{theorem}[Convergence of SOR iterations]
+If $A$ is symmetric positive definite (SPD), then SOR iterations converge irrespective of the initial guess $x^{(0)}$, for any $\omega\in(0,2)$.
+\end{theorem}
+Note that this condition is not necessary to ensure convergence.\vspace{.1cm}\\
+The necessary condition to ensure convergence remains that the iteration matrix 
+\begin{align*}
+G=&\;\left(\frac{1}{\omega}D-L\right)^{-1}\left((\frac{1}{\omega}-1)D+U\right)\\
+=&\;\left(D-\omega L\right)^{-1}\left((1-\omega)D+\omega U\right)
+\end{align*}
+has a spectral radius smaller than one.
+\end{itemize}
+\end{frame}
+
+\begin{comment}
+\section{Chebyshev semi-iterative method\\{\small Section 7.5 in Darve \& Wootters (2021)}}
+
+% Slide **
+\begin{frame}{Chebyshev semi-iterative method}
+\begin{itemize}
+\item Just like SOR, the Chebyshev semi-iterative method introduces a knob $\omega$ to apply a fraction of the Gauss-Seidel iteration.
+\item The knob is introduced by relaxing the iteration $x^{(k+1)}:=M^{-1}b+Gx^{(k)}$ of a splitting method with $A=M-N$.
+Namely, we write
+\begin{align*}
+x^{(k+1)}
+:=&\;x^{(k)}+\omega\Delta x^{(k)}
+\end{align*}
+where the increment is given by
+\begin{align*}
+\Delta x^{(k)}
+=&\;M^{-1}b+Gx^{(k)}-x^{(k)}\\
+=&\;M^{-1}b+M^{-1}Nx^{(k)}-M^{-1}Mx^{(k)}\\
+=&\;M^{-1}b-M^{-1}(M-N)x^{(k)}\\
+=&\;M^{-1}\left(b-Ax^{(k)}\right)
+\end{align*}
+where $M$ approximates $A$ while being easier to solve linear systems with.
+Note that if $M=A$ and $\omega=1$, then the method converges in one single iteration with $\Delta x^{(k)}=x-x^{(k)}$.
+\end{itemize}
+\end{frame}
+
+% Slide **
+\begin{frame}{Chebyshev semi-iterative method, cont'd}
+\begin{itemize}
+\item[] In general, $M\neq A$ and we don't have $\Delta x^{(k)}=x-x^{(k)}$ so that scaling the correction $\Delta x^{(k)}$ with $\omega$ may help in accelerating convergence.
+\item Although closely related to SOR, this algorithm is different.\vspace{.1cm}\\
+Indeed, the splitting $A=M-N$ used in Chebyshev relies on a $M$ matrix which is independent of $\omega$. 
+However, the splitting in SOR depends on $\omega$
+\end{itemize}
+\end{frame}
+\end{comment}
+
+\section{Homework problems}
+
+% Slide 14
+\begin{frame}{Homework problem}\vspace{.1cm}
+Turn in \textbf{your own} solution to the following problem:\vspace{.15cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$18}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Let $A=\begin{bmatrix}1&2&0\\0&1&0\\1&0&1\end{bmatrix}$.
+Analyze the spectrum of the iteration matrix\vspace{.4cm}\\
+and show whether\vspace{.4cm}\\
+(a) A Jacobi iteration would converge.\vspace{.1cm}\\
+(b) A Gauss-Seidel iteration would converge.\vspace{.1cm}\\
+(c) A SOR iteration would converge with $\omega=1/2$.
+\end{minipage}\vspace{.15cm}
+\end{frame}
+
+\section{Practice session}
+
+% Slide 15
+\begin{frame}[fragile]{Practice session}
+\begin{enumerate}
+\item Implement Jacobi, Gauss-Seidel and SOR iterations.
+\item Benchmark your implementations.
+\end{enumerate}
+\end{frame}
+
+\end{document}
+
