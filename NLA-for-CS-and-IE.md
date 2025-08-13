@@ -118,4 +118,6 @@ notebook [<a href="NLA-for-CS-and-IE/PracticeSession17.ipynb">ipynb</a>, <a href
 slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture18.tex">tex</a>, <a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture18.pdf">pdf</a>], 
 notebook [<a href="NLA-for-CS-and-IE/PracticeSession18.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession18.pdf">pdf</a>]</p>
 
-Extra notes [[tex](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.tex), [pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.pdf)].
+Extra notes [[tex](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.tex), [pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.pdf)]
+
+Final exam [[pdf](NLA-for-CS-and-IE-TUM/TUM_NLA-for-CS-and-IE_Final.pdf)]
