@@ -6,7 +6,7 @@
 
 ### *Skills and interests*
 
-Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, High Performance Computing, Parallel Algorithms, Computational Geometry, Uncertainty Quantification.
+Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, Algorithms.
 
 ### *Publications*
 
