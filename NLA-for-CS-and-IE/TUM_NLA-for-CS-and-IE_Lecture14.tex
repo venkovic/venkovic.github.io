@@ -1,6 +1,6 @@
 \documentclass[t,usepdftitle=false]{beamer}
 
-\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+\input{../../../tex-beamer-custom/preamble.tex}
 
 \title[NLA for CS and IE -- Lecture 14]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
 \subtitle{\vspace{.3cm}Lecture 14\\Preconditioned Iterative Methods for Linear Systems}
@@ -11,7 +11,7 @@
 \author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
 \institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
 
-\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{../../../logos/TUM-logo.png}}
 
 \begin{document}
 	
@@ -21,6 +21,1562 @@
 	
 \myoutlineframe
 	
+\section{Preconditioned iterations}
+
+\subsection{Introduction}
+% Slide 01
+\begin{frame}{Introduction}
+\begin{itemize}
+\item The rate of \textbf{convergence of Krylov subspace methods} applied to solving $Ax=b$ is strongly \textbf{influenced by} the \textbf{eigenvalues distribution} of the matrix $A$ and, in the case of non-symmetric matrices, by the \textbf{eigenvectors} as well.
+\item[]If the matrix $A$ is ill-conditioned, or has unfavorable spectral properties, then, \textbf{Krylov subspace methods} applied to solving $Ax=b$ are likely to \textbf{converge very slowly}.
+\item \textbf{Preconditioning}, which consists of \textit{transforming an intractable problem into a more efficiently solvable form}, is an essential component \textbf{to improve the efficiency and robustness of Krylov subspace iteration methods}.
+\item[] For the iterative solve of $Ax=b$ with $A\in\mathbb{R}^{n\times n}$, a \textbf{preconditioner}, which we denote by $M$, is, in its general form, a \textit{map}
+\begin{align*}
+x\in\mathbb{R}^n\mapsto M^{-1}x\in\mathbb{R}^n
+\end{align*}
+which can be \textbf{efficiently evaluated}, and such that $M$ is a \textbf{good approximation of} $A$, in some sense.
+The map must not be linear.
+\end{itemize}
+\end{frame}
+
+% Slide 02
+\begin{frame}{Introduction, cont'd\textsubscript{1}}
+\begin{itemize}
+\item In agreement with this loose definition of preconditioning, a preconditioner can consist of 
+\begin{itemize}\normalsize
+\item[-] A \textbf{factorization} of $M$ which allows for efficient solve of $Mz=x$,
+\item[-] A (sparse) \textbf{matrix} $M^{-1}$ which allows for efficient matrix-vector product $x\mapsto M^{-1}x$ evaluation,
+\item[-] An efficient \textbf{matrix-free linear map} $x\mapsto M^{-1}x$,
+\item[-] An \textbf{iterative linear solver} applied to $Mz=x$.\vspace{.1cm}
+\end{itemize}
+\item We denote three different ways to apply a preconditioner $M$ to a linear system $Ax=b$:\vspace{-.05cm}
+\begin{itemize}\normalsize
+\item[-] \textbf{Left-preconditioning},	
+which applies the preconditioner from the left:\vspace{-.125cm}
+\begin{align*}
+\boxed{M^{-1}Ax=M^{-1}b}\,.
+\end{align*}
+$\vspace{-.595cm}$\\
+\item[-] \textbf{Right-preconditioning},
+which applies the preconditioner from the right:\vspace{-.125cm}
+\begin{align*}
+\boxed{
+AM^{-1}u=b
+\;\text{ with }\;
+x=M^{-1}u}\,.
+\end{align*}
+$\vspace{-.595cm}$\\
+\item[-] \textbf{Split-preconditioning}, 
+which, for a given factorization $M=M_LM_R$, applies the preconditioner from both side:\vspace{-.125cm}
+\begin{align*}
+\boxed{
+M_L^{-1}AM_R^{-1}u=M_L^{-1}b
+\;\text{ with }\;
+x=M_R^{-1}u}\,.
+\end{align*}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 03
+\begin{frame}{Introduction, cont'd\textsubscript{2}}
+\begin{itemize}
+\item Here, we assume that both $A$ and $M$ are non-singular.
+\item[] The \textit{left-preconditioned} $M^{-1}A$, \textit{right-preconditioned} $AM^{-1}$ and \textit{split-preconditioned} $M_L^{-1}AM_R^{-1}$ coefficient matrices are \textbf{similar}.
+\item[] Thus, they share the \textbf{same eigenvalue distribution} although they do have \textbf{distinct eigenvector sets}.
+As a result,
+\begin{itemize}\normalsize
+\item[-] If both $A$ and $M$ are \textbf{SPD}, then the \textbf{convergence behavior of CG} applied to a preconditioned system \textbf{is the same irrespective of the type of preconditioning}, i.e., left, right, or split.
+\item[-] For \textbf{non-normal} matrices $A$ and $M$, the \textbf{Krylov subspace solver} may \textbf{behave very differently from one type of preconditioning to another}, as the convergence behavior depends on the eigenvector set.
+\end{itemize}
+Indeed, the behavior of a Krylov subspace linear iterative solver depends on both the eigenvalue distribution, and the conditioning of eigenvectors of the preconditioned coefficient matrix.
+\item[] A valid strategy for the design of a preconditioner is to make the preconditioned coefficient matrix as close to normal as possible, in the limit of which, eigenvectors are ideally conditioned.
+\end{itemize}
+\end{frame}
+
+\subsection{Preconditioned conjugate gradient (PCG) method}
+% Slide 04
+\begin{frame}{Preconditioned conjugate gradient (PCG) method}
+\begin{itemize}
+\item The \textbf{symmetry} of the coefficient matrix, i.e., $A^T=A$, an essential feature in the definition and derivation of the CG method, is \textbf{not preserved}, neither \textbf{through left-preconditioning}, \textbf{nor through right-preconditioning}, i.e.,
+\begin{align*}
+(M^{-1}A)^T\neq M^{-1}A
+\;\text{ and }\;
+(AM^{-1})^T\neq AM^{-1}
+\end{align*}
+\textbf{even if the preconditioner, $M$, is symmetric}.
+\item A priori, preserving the symmetry of the coefficient matrix is essential for the defintion and derivation of a \textbf{preconditioned conjugate gradient} (\textbf{PCG}) method.
+\item[] However, since our definition and derivation of the CG algorithm in lecture 13 relies on an \textit{abstract definition of the inner product}, it is sufficient to find an \textbf{inner product with respect to which the preconditioned coefficient matrix is self-adjoint}.
+\end{itemize}
+\end{frame}
+
+% Slide 05
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{1}}
+\begin{itemize}
+\item The $M$-inner product is such that:
+\begin{align*}
+(x,y)_M:=(Mx,y)=(x,M^Ty)
+\;\forall\;x,y\in\mathbb{R}^n
+\end{align*}
+where $(\cdot,\cdot)$ is the dot product.
+\item[] Then, the \textbf{symmetry of $M$ and $A$ implies that $M^{-1}A$ is self-adjoint for the $M$-inner product}.
+That is:
+\begin{align*}
+(M^{-1}Ax,y)_M
+=&\,(MM^{-1}Ax,y)\\
+=&\,(Ax,y)\\
+=&\,(x,A^Ty)\\
+=&\,(x,Ay)\\
+=&\,(x,MM^{-1}Ay)\\
+=&\,(M ^Tx,M^{-1}Ay)\\
+=&\,(Mx,M^{-1}Ay)
+\end{align*}
+so that $(M^{-1}Ax,y)_M=(x,M^{-1}Ay)_M$.
+\end{itemize}
+\end{frame}
+
+% Slide 06
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item We can then rewrite the CG algorithm for the left-preconditioned system $M^{-1}Ax=M^{-1}b$ using an $M$-inner product:\vspace{-.25cm}
+\begin{algorithm}[H]
+\small
+\caption{CG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:={\color{blue}{b}}-{\color{blue}{A}}x_0$}
+\STATE{$p_1:=r_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:={\color{blue}{(}}r_{j-1}{\color{blue}{,}}r_{j-1}{\color{blue}{)}}/{\color{blue}{(}}{\color{blue}{A}}p_j{\color{blue}{,}}p_j{\color{blue}{)}}$}
+\STATE{$x_j:=x_{j-1}+\alpha_jp_j$}
+\STATE{$r_j:=r_{j-1}-\alpha_j{\color{blue}{A}}p_j$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:={\color{blue}{(}}r_j{\color{blue}{,}}r_j{\color{blue}{)}}/{\color{blue}{(}}r_{j-1}{\color{blue}{,}}r_{j-1}{\color{blue}{)}}$}
+\STATE{$p_{j+1}:=r_j+\beta_jp_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 06
+\setcounter{framenumber}{5}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item We can then rewrite the CG algorithm for the left-preconditioned system $M^{-1}Ax=M^{-1}b$ using an $M$-inner product:\vspace{-.25cm}
+\setcounter{algorithm}{1}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{${\color{olive}{z_0}}:={\color{red}{M^{-1}b}}-{\color{red}{M^{-1}A}}x_0$}
+\COMMENT{$r_j\mapsto z_j$}
+\STATE{$p_1:={\color{olive}{z_0}}$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:={\color{red}{(}}{\color{olive}{z_{j-1}}}{\color{red}{,}}{\color{olive}{z_{j-1}}}{\color{red}{)_M}}/{\color{red}{(}}{\color{red}{M^{-1}A}}p_j{\color{red}{,}}p_j{\color{red}{)_M}}$}
+\STATE{$x_j:=x_{j-1}+\alpha_jp_j$}
+\STATE{${\color{olive}{z_j}}:={\color{olive}{z_{j-1}}}-\alpha_j{\color{red}{M^{-1}A}}p_j$}
+\STATE{\textbf{if} $\|{\color{red}{M^{-1}}}{\color{olive}{z_j}}\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\COMMENT{Keep criterion as $\|b-Ax_j\|<\varepsilon\|b\|_2$}
+\STATE{$\beta_j:={\color{red}{(}}{\color{olive}{z_j}}{\color{red}{,}}{\color{olive}{z_j}}{\color{red}{)_M}}/{\color{red}{(}}{\color{olive}{z_{j-1}}}{\color{red}{,}}{\color{olive}{z_{j-1}}}{\color{red}{)_M}}$}
+\STATE{$p_{j+1}:={\color{olive}{z_j}}+\beta_jp_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 06
+\setcounter{framenumber}{5}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item We can then rewrite the CG algorithm for the left-preconditioned system $M^{-1}Ax=M^{-1}b$ using an $M$-inner product:\vspace{-.25cm}
+\setcounter{algorithm}{1}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\COMMENT{Introduce $r_j:=Mz_j$}
+\STATE{$z_0:=M^{-1}r_0$}
+\STATE{$p_1:=z_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:={\color{red}{(}}z_{j-1}{\color{red}{,}}z_{j-1}{\color{red}{)_M}}/{\color{red}{(}}{\color{red}{M^{-1}A}}p_j{\color{red}{,}}p_j{\color{red}{)_M}}$}
+\STATE{$x_j:=x_{j-1}+\alpha_jp_j$}
+\COMMENT{$(z_{j-1},z_{j-1})_M=(MM^{-1}r_{j-1},z_{j-1})=(r_{j-1},z_{j-1})$}
+\STATE{$r_j:=r_{j-1}-\alpha_jAp_j$}
+\COMMENT{$(M^{-1}Ap_j,p_j)_M=(MM^{-1}Ap_j,p_j)=(Ap_j,p_j)\hspace{.52cm}$}
+\STATE{$z_j:=M^{-1}r_{j}$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:={\color{red}{(}}z_j{\color{red}{,}}z_j{\color{red}{)_M}}/{\color{red}{(}}z_{j-1}{\color{red}{,}}z_{j-1}{\color{red}{)_M}}$}
+\STATE{$p_{j+1}:=z_j+\beta_jp_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 06
+\setcounter{framenumber}{5}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item We can then rewrite the CG algorithm for the left-preconditioned system $M^{-1}Ax=M^{-1}b$ using an $M$-inner product:\vspace{-.25cm}
+\setcounter{algorithm}{1}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{$z_0:=M^{-1}r_0$}
+\STATE{$p_1:=z_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(r_{j-1},z_{j-1})/(Ap_j,p_j)$}
+\STATE{$x_j:=x_{j-1}+\alpha_jp_j$}
+\STATE{$r_j:=r_{j-1}-\alpha_jAp_j$}
+\STATE{$z_j:=M^{-1}r_{j}$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=(r_j,z_j)/(r_{j-1},z_{j-1})$}
+\STATE{$p_{j+1}:=z_j+\beta_jp_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.95cm}$\\
+\item[] The resulting PCG algorithm requires \textbf{one preconditioner application $r_j\mapsto M^{-1}r_j=:z_j$ per iteration, to the non-preconditioned residual}.
+\end{itemize}
+\end{frame}
+
+% Slide 07
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{3}}
+\begin{itemize}
+\item An alternative derivation of the PCG algorithm is possible through \textbf{split-preconditioning}.
+\item Since $M$ is SPD, it admits a Cholesky decomposition $M=LL^T$ which is used as follows to split-precondition the linear system $Ax=b$:
+\begin{align*}
+L^{-1}AL^{-T}u=L^{-1}b
+\;\text{ with }\;
+x=L^{-T}u
+\end{align*}
+where the preconditioned coefficient matrix $L^{-1}AL^{-T}$ is SPD.
+\item[] Consequently, the CG algorithm can be applied to the split-preconditioned linear system in order to generate a sequence of iterates $u_1,u_2,\dots$, with an initial guess $u_0$, to approximate $u$.
+\item[] From such a sequence, some associated iterates $x_0,x_1,x_2,\dots$ can be constructed as $x_j:=L^{-T}u_j$ for $j=0,1,2,\dots$ to approximate the solution $x$ of the original system.
+\item In what follows, we show that such a sequence of iterates $x_1,x_2,\dots$ can be formed, for any initial guess $x_0$, without requiring actual knowledge of the Cholesky factor $L$.
+\end{itemize}
+\end{frame}
+
+% Slide 08
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{4}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] We obtain the following algorithm:
+\vspace{-.25cm}
+\begin{algorithm}[H]
+\small
+\caption{CG$:(u_0,\varepsilon)\mapsto u_j$}
+\begin{algorithmic}[1]
+\STATE{$\tilde{r}_0:=L^{-1}b-L^{-1}AL^{-T}u_0$}
+\STATE{$\tilde{p}_1:=\tilde{r}_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(\tilde{r}_{j-1},\tilde{r}_{j-1})/(L^{-1}AL^{-T}\tilde{p}_j,\tilde{p}_j)$}
+\STATE{$u_j:=u_{j-1}+\alpha_j\tilde{p}_j$}
+\STATE{$\tilde{r}_j:=\tilde{r}_{j-1}-\alpha_jL^{-1}AL^{-T}\tilde{p}_j$}
+\STATE{\textbf{if} Convergence is achieved \textbf{then} Stop}
+\STATE{$\beta_j:=(\tilde{r}_j,\tilde{r}_j)/(\tilde{r}_{j-1},\tilde{r}_{j-1})$}
+\STATE{$\tilde{p}_{j+1}:=\tilde{r}_j+\beta_j\tilde{p}_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+\setcounter{framenumber}{7}
+% Slide 08
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{4}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] Instead of the iterate $u_j$, we compute ${\color{red}{x_j}}:={\color{blue}{L^{-T}u_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{2}
+\begin{algorithm}[H]
+\small
+\caption{CG$:(u_0,\varepsilon)\mapsto u_j$}
+\begin{algorithmic}[1]
+\STATE{$\tilde{r}_0:=L^{-1}b-L^{-1}A{\color{blue}{L^{-T}u_0}}$}
+\STATE{$\tilde{p}_1:=\tilde{r}_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(\tilde{r}_{j-1},\tilde{r}_{j-1})/(L^{-1}AL^{-T}\tilde{p}_j,\tilde{p}_j)$}
+\STATE{${\color{blue}{L^{-T}u_j}}:={\color{blue}{L^{-T}u_{j-1}}}+\alpha_jL^{-T}\tilde{p}_j$}
+\STATE{$\tilde{r}_j:=\tilde{r}_{j-1}-\alpha_jL^{-1}AL^{-T}\tilde{p}_j$}
+\STATE{\textbf{if} Convergence is achieved \textbf{then} Stop}
+\STATE{$\beta_j:=(\tilde{r}_j,\tilde{r}_j	)/(\tilde{r}_{j-1},\tilde{r}_{j-1})$}
+\STATE{$\tilde{p}_{j+1}:=\tilde{r}_j+\beta_j\tilde{p}_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+
+% Slide 09
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] Instead of the iterate $u_j$, we compute ${\color{red}{x_j}}:={\color{blue}{L^{-T}u_j}}$:
+\vspace{-.25cm}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$\tilde{r}_0:=L^{-1}b-L^{-1}A{\color{red}{x_0}}$}
+\STATE{$\tilde{p}_1:=\tilde{r}_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(\tilde{r}_{j-1},\tilde{r}_{j-1})/(L^{-1}AL^{-T}\tilde{p}_j,\tilde{p}_j)$}
+\STATE{${\color{red}{x_j}}:={\color{red}{x_{j-1}}}+\alpha_jL^{-T}\tilde{p}_j$}
+\STATE{$\tilde{r}_j:=\tilde{r}_{j-1}-\alpha_jL^{-1}AL^{-T}\tilde{p}_j$}
+\STATE{\textbf{if} $\|b-Ax_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=(\tilde{r}_j,\tilde{r}_j	)/(\tilde{r}_{j-1},\tilde{r}_{j-1})$}
+\STATE{$\tilde{p}_{j+1}:=\tilde{r}_j+\beta_j\tilde{p}_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 09
+\setcounter{framenumber}{8}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] We introduce the non-preconditioned residual ${\color{red}{r_j}}:={\color{blue}{L\tilde{r}_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{3}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{${\color{blue}{L\tilde{r}_0}}:=b-Ax_0$}
+\STATE{$\tilde{p}_1:=L^{-1}{\color{blue}{L\tilde{r}_0}}$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=({\color{blue}{L\tilde{r}_{j-1}}},M^{-1}{\color{blue}{L\tilde{r}_{j-1}}})/(L^{-1}AL^{-T}\tilde{p}_j,\tilde{p}_j)$}
+\STATE{$x_j:=x_{j-1}+\alpha_jL^{-T}\tilde{p}_j$}
+\STATE{${\color{blue}{L\tilde{r}_j}}:=
+{\color{blue}{L\tilde{r}_{j-1}}}-\alpha_jL^{-1}AL^{-T}\tilde{p}_j$}
+\STATE{\textbf{if} $\|b-Ax_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=({\color{blue}{L\tilde{r}_{j}}},M^{-1}{\color{blue}{L\tilde{r}_{j}}})/({\color{blue}{L\tilde{r}_{j-1}}},M^{-1}{\color{blue}{L\tilde{r}_{j-1}}})$}
+\STATE{$\tilde{p}_{j+1}:=L^{-1}{\color{blue}{L\tilde{r}_j}}+\beta_j\tilde{p}_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 09
+\setcounter{framenumber}{8}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] We introduce the non-preconditioned residual ${\color{red}{r_j}}:={\color{blue}{L\tilde{r}_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{3}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{${\color{red}{r_0}}:=b-Ax_0$}
+\STATE{$\tilde{p}_1:=L^{-1}{\color{red}{r_0}}$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=({\color{red}{r_{j-1}}},M^{-1}{\color{red}{r_{j-1}}})/(L^{-1}AL^{-T}\tilde{p}_j,\tilde{p}_j)$}
+\STATE{$x_j:=x_{j-1}+\alpha_jL^{-T}\tilde{p}_j$}
+\STATE{${\color{red}{r_j}}:={\color{red}{r_{j-1}}}-\alpha_jL^{-1}AL^{-T}\tilde{p}_j$}
+\STATE{\textbf{if} $\|{\color{red}{r_j}}\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=({\color{red}{r_{j}}},M^{-1}{\color{red}{r_j}})/({\color{red}{r_{j-1}}},M^{-1}{\color{red}{r_{j-1}}})$}
+\STATE{$\tilde{p}_{j+1}:=L^{-1}{\color{red}{r_j}}+\beta_j\tilde{p}_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 09
+\setcounter{framenumber}{8}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] Consider the transformed search direction ${\color{red}{p_j}}:={\color{blue}{L^{-T}\tilde{p}_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{3}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{${\color{blue}{L^{-T}\tilde{p}_1}}:=L^{-T}L^{-1}r_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(r_{j-1},M^{-1}r_{j-1})/(A{\color{blue}{L^{-T}\tilde{p}_j}},{\color{blue}{L^{-T}\tilde{p}_j}})$}
+\STATE{$x_j:=x_{j-1}+\alpha_j{\color{blue}{L^{-T}\tilde{p}_j}}$}
+\STATE{$r_j:=r_{j-1}-\alpha_jL^{-1}A{\color{blue}{L^{-T}\tilde{p}_j}}$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=(r_{j},M^{-1}r_j)/(r_{j-1},M^{-1}r_{j-1})$}
+\STATE{${\color{blue}{L^{-T}\tilde{p}_{j+1}}}:=L^{-T}L^{-1}r_j+\beta_j{\color{blue}{L^{-T}\tilde{p}_j}}$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 09
+\setcounter{framenumber}{8}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] Consider the transformed search direction ${\color{red}{p_j}}:={\color{blue}{L^{-T}\tilde{p}_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{3}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{${\color{red}{p_1}}:=M^{-1}r_0$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(r_{j-1},M^{-1}r_{j-1})/(A{\color{red}{p_j}},{\color{red}{p_j}})$}
+\STATE{$x_j:=x_{j-1}+\alpha_j{\color{red}{p_j}}$}
+\STATE{$r_j:=r_{j-1}-\alpha_jL^{-1}A{\color{red}{p_j}}$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=(r_{j},M^{-1}r_j)/(r_{j-1},M^{-1}r_{j-1})$}
+\STATE{${\color{red}{p_{j+1}}}:=M^{-1}r_j+\beta_j{\color{red}{p_j}}$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 09
+\setcounter{framenumber}{8}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] Finally, let ${\color{red}{z_j}}:={\color{blue}{M^{-1}r_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{3}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{$p_1:={\color{blue}{M^{-1}r_0}}$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(r_{j-1},{\color{blue}{M^{-1}r_{j-1}}})/(Ap_j,p_j)$}
+\STATE{$x_j:=x_{j-1}+\alpha_jp_j$}
+\STATE{$r_j:=r_{j-1}-\alpha_jL^{-1}Ap_j$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=(r_{j},{\color{blue}{M^{-1}r_j}})/(r_{j-1},{\color{blue}{M^{-1}r_{j-1}}})$}
+\STATE{$p_{j+1}:={\color{blue}{M^{-1}r_j}}+\beta_jp_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+% Slide 09
+\setcounter{framenumber}{8}
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item We apply the CG algorithm to form iterates denoted by $u_j$ and approximate the solution of the split-preconditioned system $L^{-1}AL^{-T}u=L^{-1}b$.
+\item[] We denote the associated search directions by $\tilde{p}_j$.
+\item[] Finally, let ${\color{red}{z_j}}:={\color{blue}{M^{-1}r_j}}$:
+\vspace{-.25cm}
+\setcounter{algorithm}{3}
+\begin{algorithm}[H]
+\small
+\caption{PCG$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{${\color{red}{z_0}}:=M^{-1}r_0$}
+\STATE{$p_1:={\color{red}{z_0}}$}
+\FOR{$j=1,2\dots$}
+\STATE{$\alpha_j:=(r_{j-1},{\color{red}{z_{j-1}}})/(Ap_j,p_j)$}
+\STATE{$x_j:=x_{j-1}+\alpha_jp_j$}
+\STATE{$r_j:=r_{j-1}-\alpha_jL^{-1}Ap_j$}
+\STATE{${\color{red}{z_j}}:=M^{-1}r_j$}
+\STATE{\textbf{if} $\|r_j\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$\beta_j:=(r_{j},{\color{red}{z_j}})/(r_{j-1},{\color{red}{z_{j-1}}})$}
+\STATE{$p_{j+1}:={\color{red}{z_j}}+\beta_jp_j$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Preconditioned conjugate gradient (PCG) method, cont'd\textsubscript{6}}
+\begin{itemize}
+\item As previously mentioned, we now see that left- and split-preconditioning CG are equivalent methods.
+\item Analogously, the right-preconditioned coefficient matrix $AM^{-1}$ is self-adjoint with respect to the $M^{-1}$-inner product, which can be leveraged into another derivation on an equivalent form of the PCG algorithm.
+\end{itemize}
+\end{frame}
+
+\subsection{Preconditioned GMRES}
+% Slide 11
+\begin{frame}{Preconditioned GMRES method}
+\begin{itemize}
+\item For the GMRES method, \textbf{left-}, \textbf{right-} and \textbf{split-preconditioning} exhibit \textbf{fundamental differences}.
+\item GMRES applied to the \textbf{left-preconditioned} system $M^{-1}\!Ax=M^{-1}\!x$ yields:$\!\!\!$\vspace{-.25cm}
+\begin{algorithm}[H]
+\small
+\caption{Left-preconditioned GMRES$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$z_0:=M^{-1}b-M^{-1}Ax_0$}
+\STATE{$\beta:=\|z_0\|_2$}
+\STATE{$v_1:=z_0/\beta$}
+\FOR{$j=1,2\dots$}
+\STATE{$w:=M^{-1}Av_j$}
+\STATE{$w:=\Pi^{(j)}w$}
+\COMMENT{$\Pi^{(j)}$ is a projector onto $\text{span}\{v_1,\dots,v_j\}^\perp$}
+\STATE{Compute $h_{1:j+1,j}$}
+\STATE{Solve for $\tilde{y}=\arg\min_{y\in\mathbb{R}^j}\|\beta e_1^{(j+1)}-\underline{H_j}y\|$}
+\COMMENT{Still using Givens rotations}
+\STATE{\textbf{if} $\|\beta e_1^{(j+1)}-\underline{H_j}\tilde{y}\|_2<\varepsilon\|M^{-1}b\|_2$ \textbf{then} Stop}
+\STATE{$v_{j+1}:=w/h_{j+1,j}$}
+\ENDFOR
+\STATE{$x_j:=x_0+V_j\tilde{y}$\vspace{-.1cm}}
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.85cm}$\\
+The residual $z_j=V_{j+1}(\beta e_1^{(j+1)}\!-\!\underline{H_j}\tilde{y})$ with norm $\|z_j\|_2=\|\beta e_1^{(j+1)}\!-\!\underline{H_j}\tilde{y}\|_2\!\!\!$ is that of the left-preconditioned system, i.e., $z_j=M^{-1}b-M^{-1}Ax_j$.
+\end{itemize}
+\end{frame}
+
+% Slide 12
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{1}}
+\begin{itemize}
+\item Besides \textbf{evaluating} $z_j\mapsto Mz_j$, which is \textbf{not} even \textbf{always possible}, there is \textbf{no practical way to access the non-preconditioned residual} $b-Ax_j$ and its norm.
+\item[] Consequently, \textbf{convergence} has to be \textbf{monitored in terms of} the norm of the \textbf{preconditioned residual}, i.e., $\|z_j\|_2<\varepsilon\|M^{-1}b\|_2$.
+\item The \textbf{basis $v_1,\dots,v_j$ generated by left-preconditioned GMRES} spans the Krylov subspace of $M^{-1}A$ generated by $z_0:=M^{-1}(b-Ax_0)$, i.e.,
+\begin{align*}
+\text{span}\{v_1,\dots,v_j\}=\mathcal{K}_j(M^{-1}A,z_0)
+\end{align*}
+and the computed Hessenberg matrix $\underline{H_j}$ is the projection of $M^{-1}A$ in this subspace, i.e.,
+\begin{align*}
+\underline{H_j}=V_{j+1}^TM^{-1}AV_j.
+\end{align*}
+\item The iterates of \textbf{left-preconditioned GMRES iterations} are given by
+\begin{align*}
+\hspace{-.4cm}
+\text{Find }
+x_j\in x_0+\mathcal{K}_j(M^{-1}A,z_0)
+\text{ s.t. }
+x_j=\hspace{.4cm}\arg\hspace{-1cm}\min_{x\in x_0+\mathcal{K}_j(M^{-1}A, z_0)}\|M^{-1}(b-Ax)\|_2.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 13
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{2}}
+\begin{itemize}
+\item A \textbf{right-preconditioned} variant is obtained by applying GMRES to $AM^{-1}u=b$, from which an iterate is formed through $x_j:=M^{-1}u_j$:\vspace{-.35cm}
+\begin{algorithm}[H]
+\small
+\caption{Right-preconditioned GMRES$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{$\beta:=\|r_0\|_2$}
+\STATE{$v_1:=r_0/\beta$}
+\FOR{$j=1,2\dots$}
+\STATE{$w:=AM^{-1}v_j$}
+\STATE{$w:=\Pi^{(j)}w$}
+\COMMENT{$\Pi^{(j)}$ is a projector onto $\text{span}\{v_1,\dots,v_j\}^\perp$}
+\STATE{Compute $h_{1:j+1,j}$}
+\STATE{Solve for $\tilde{y}=\arg\min_{y\in\mathbb{R}^j}\|\beta e_1^{(j+1)}-\underline{H_j}y\|$}
+\COMMENT{Still using Givens rotations}
+\STATE{\textbf{if} $\|\beta e_1^{(j+1)}-\underline{H_j}\tilde{y}\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$v_{j+1}:=w/h_{j+1,j}$}
+\ENDFOR
+\STATE{$x_j:=x_0+M^{-1}V_j\tilde{y}$}
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.85cm}$\\
+The residual $r_j=V_{j+1}(\beta e_1^{(j+1)}\!-\!\underline{H_j}\tilde{y})$ with norm $\|r_j\|_2=\|\beta e_1^{(j+1)}\!-\!\underline{H_j}\tilde{y}\|_2\!\!\!$ is that of the non-preconditioned system, i.e., $r_j=b-Ax_j$.
+\end{itemize}
+\end{frame}
+
+% Slide 14
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{3}}
+\begin{itemize}
+\item The \textbf{basis $v_1,\dots,v_j$ generated by right-preconditioned GMRES} spans the Krylov subspace of $AM^{-1}$ generated by $r_0:=b-Ax_0$, i.e.,
+\begin{align*}
+\text{span}\{v_1,\dots,v_j\}=\mathcal{K}_j(AM^{-1},r_0)
+\end{align*}
+and the computed Hessenberg matrix $\underline{H_j}$ is the projection of $AM^{-1}$ in this subspace, i.e.,
+\begin{align*}
+\underline{H_j}=V_{j+1}^TAM^{-1}V_j.
+\end{align*}
+\item The iterates of \textbf{right-preconditioned GMRES iterations} are given by
+\begin{align*}
+\hspace{-.4cm}
+\text{Find }
+x_j\in x_0+M^{-1}\mathcal{K}_j(AM^{-1},r_0)
+\text{ s.t. }
+\hspace{.5cm}\arg\hspace{-1.32cm}\min_{x\in x_0+M^{-1}\mathcal{K}_j(AM^{-1}, r_0)}\|b-Ax\|_2.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 15
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{4}}
+\begin{itemize}
+\item A \textbf{split-preconditioned} variant is obtained by combining both left- and right-preconditioning, this yields\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{Split-preconditioned GMRES$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$z_0:=M_L^{-1}b-M_L^{-1}Ax_0$}
+\STATE{$\beta:=\|z_0\|_2$}
+\STATE{$v_1:=z_0/\beta$}
+\FOR{$j=1,2\dots$}
+\STATE{$w:=M_L^{-1}AM_R^{-1}v_j$}
+\STATE{$w:=\Pi^{(j)}w$}
+\COMMENT{$\Pi^{(j)}$ is a projector onto $\text{span}\{v_1,\dots,v_j\}^\perp$}
+\STATE{Compute $h_{1:j+1,j}$}
+\STATE{Solve for $\tilde{y}=\arg\min_{y\in\mathbb{R}^j}\|\beta e_1^{(j+1)}-\underline{H_j}y\|$}
+\COMMENT{Still using Givens rotations}
+\STATE{\textbf{if} $\|\beta e_1^{(j+1)}-\underline{H_j}\tilde{y}\|_2<\varepsilon\|M_L^{-1}b\|_2$ \textbf{then} Stop}
+\STATE{$v_{j+1}:=w/h_{j+1,j}$}
+\ENDFOR
+\STATE{$x_j:=x_0+M_R^{-1}V_j\tilde{y}$}
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.85cm}$\\
+The residual $z_j=V_{j+1}(\beta e_1^{(j+1)}\!-\!\underline{H_j}\tilde{y})$ with norm $\|z_j\|_2=\|\beta e_1^{(j+1)}\!-\!\underline{H_j}\tilde{y}\|_2\!\!\!$ is that of the left-preconditioned system, i.e., $z_j=M_L^{-1}b-M_L^{-1}Ax_j$.
+\end{itemize}
+\end{frame}
+
+% Slide 16
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{5}}
+\begin{itemize}
+\item Just like for the split-preconditioned variant, besides \textbf{evaluating} $z_j\mapsto M_Lz_j$, which is \textbf{not} even \textbf{always possible}, there is \textbf{no practical way to access the non-preconditioned residual} $b-Ax_j$ and its norm.
+\item[] Consequently, \textbf{convergence} has to be \textbf{monitored in terms of} the norm of the \textbf{left-preconditioned residual}, i.e., $\|z_j\|_2<\varepsilon\|M_L^{-1}b\|_2$.
+\item The \textbf{basis $v_1,\dots,v_j$ generated by split-preconditioned GMRES} spans the Krylov subspace of $M_L^{-1}AM_R^{-1}$ generated by $z_0:=M_L^{-1}(b-Ax_0)$, i.e.,$\hspace{-1cm}$
+\begin{align*}
+\text{span}\{v_1,\dots,v_j\}=\mathcal{K}_j(M_L^{-1}AM_R^{-1},z_0)
+\end{align*}
+and the computed Hessenberg matrix $\underline{H_j}$ is the projection of $M_L^{-1}AM_R^{-1}$ in this subspace, i.e.,\vspace{-.075cm}
+\begin{align*}
+\underline{H_j}=V_{j+1}^TM_L^{-1}AM_R^{-1}V_j.
+\end{align*}
+\item The iterates of \textbf{split-preconditioned GMRES iterations} are given by
+\begin{align*}
+\hspace{-.65cm}
+\text{Find }&\;
+x_j\in x_0+M_R^{-1}\mathcal{K}_j(M_L^{-1}AM_R^{-1},z_0)\\
+\text{ s.t.}&\;
+x_j=\arg\hspace{-1.32cm}\min_{x\in x_0+M_R^{-1}\mathcal{K}_j(M_L^{-1}AM_R^{-1},z_0)}
+\|M_L^{-1}(b-Ax)\|_2.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 17
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{6}}
+\begin{itemize}
+\item In summary, each variant of preconditioned of the GMRES method grants access to a different form of residual:
+\begin{itemize}\normalsize
+\item[-] Left-preconditioning: $\hspace{.1cm}M^{-1}(b-Ax_j)$,\vspace{.1cm}
+\item[-] Right-preconditioning: $\hspace{.83cm}b-Ax_j$,\vspace{.1cm}
+\item[-] Split-preconditioning: $M_L^{-1}(b-Ax_j)$.
+\end{itemize}
+\item Monitoring convergence through the norm of these different forms of residuals \textbf{affects the stopping criterion}.
+\item In the case of the \textbf{left-} and \textbf{split-preconditioned variants}, \textbf{the iteration may stop either prematurely} or, \textbf{with delay}.
+\item[]This phenomenon is \textbf{more likely to happen when} $M$ (for left-preconditioning) or $M_L$ (for split-preconditioning) \textbf{is very ill-conditioned}.
+\end{itemize}
+\end{frame}
+
+% Slide 18
+\begin{frame}{Preconditioned GMRES method, cont'd\textsubscript{7}}
+\begin{itemize}
+\item The search space of the left- and right-preconditioned variants are related as follows:
+\begin{align*}
+\hspace{-.525cm}
+M^{-1}\mathcal{K}_j(AM^{-1},r_0)
+=&\,M^{-1}\text{span}\{r_0,AM^{-1}r_0,\dots,(AM^{-1})^{j-1}r_0\}\\
+=&\,\text{span}\{M^{-1}r_0,M^{-1}AM^{-1}r_0,\dots,M^{-1}(AM^{-1})^{j-1}r_0\}\\
+=&\,\text{span}\{M^{-1}r_0,(M^{-1}A)M^{-1}r_0,\dots,(M^{-1}A)^{j-1}M^{-1}r_0\}\\
+=&\,\text{span}\{z_0,(M^{-1}A)z_0,\dots,(M^{-1}A)^{j-1}z_0\}\\
+=&\,\mathcal{K}_j(M^{-1}A,z_0).
+\end{align*}
+Thus, the left- and right-preconditioned GMRES iterates are in the \textbf{same Krylov subspace}.
+\item[] The only difference is that the \textbf{left-preconditioned} variant \textbf{minimizes} the \textbf{left-preconditioned residual}, while the \textbf{right-preconditioned} variant \textbf{minimizes} the \textbf{actual residual}, but \textbf{both over the same subspace}.
+\end{itemize}
+\end{frame}
+
+\subsection{Other methods}
+% Slide 19
+\begin{frame}{Other methods}
+\begin{itemize}
+\item \textbf{All} the \textbf{linear iterative solvers} we presented in class \textbf{can be preconditioned}.
+\item[] This is the case for both \textbf{stationary} and \textbf{Krylov-based} solvers:
+\begin{itemize}\normalsize
+\item[-] See Jacobi (1845) for a \textbf{preconditioned Jacobi} iteration.
+\item[-] See Algo.~4P in Greenbaum (1997) for a \textbf{preconditioned MINRES}.
+\end{itemize}
+\item We already saw that the concept of \textbf{preconditioning} can be extended to \textbf{eigenvalue problems}.
+E.g., preconditioning plays an important role in:
+\begin{itemize}\normalsize
+\item[-] \textbf{LOBPCG} (Lecture 10),
+\item[-] \textbf{Jacobi-Davidson} method (Lecture 12).
+\end{itemize}
+\item \textbf{Most problems} which are solved approximately by an iterative method \textbf{can be preconditioned}.
+E.g., 
+\begin{itemize}\normalsize
+\item[-] \textbf{Least-squares} problems (Lecture 7), 
+\item[-] \textbf{Matrix function} evaluation (Lecture 18),
+\item[-] ...
+\end{itemize}
+\end{itemize}\smallskip
+\tiny{Jacobi, C. G. J. (1845). Ueber eine neue Auflösungsart der bei der Methode der kleinsten Quadrate vorkom-
+menden lineären Gleichungen. Astronomische Nachrichten, 22(20):297–306.}\tinyskip\\
+\tiny{Greenbaum, A. (1997). Iterative methods for solving linear systems. Society for Industrial and Applied Mathematics.}
+\end{frame}
+
+\subsection{Flexible variants}
+% Slide 20
+\begin{frame}{Flexible variants}
+\begin{itemize}
+\item Until now, we have assumed $x\mapsto M^{-1}x$ is a \textbf{linear map}, that is, $M$ is \textbf{constant}, i.e., it does not vary depending on what it's applied to.
+\item[] Formally, this reads $M^{-1}(\alpha x+y)=\alpha M^{-1} x+M^{-1}y$ for all $\alpha\in\mathbb{R}$ and $x,y\in\mathbb{R}^n$.
+\item As an alternative, we mentioned that \textbf{preconditioning} is sometimes \textbf{achieved by applying an iterative solver}, or any other procedure \textbf{that can approximate the solution of} $Mz=x$.
+\item[] Typically, such procedures are \textit{not} linear maps, in a way, that is, $M$ is not constant, it \textit{varies}, i.e., we have $x\mapsto M^{-1}(x)x$.
+\item The preconditioned variants of iterative linear solvers we presented until now cannot accommodate for such \textit{varying} preconditioners.
+\item[] Instead, \textbf{flexible variants} of those solvers need be deployed to allow for the use of such \textit{varying} preconditioners while still guaranteeing convergence.
+\end{itemize}
+\end{frame}
+
+% Slide 21
+\begin{frame}{Flexible GMRES}
+\begin{itemize}
+\item A \textbf{flexible} variant of the right-\textbf{preconditioned GMRES} method was proposed by Saad (1993).
+We present this method here.
+\item The \textbf{right-preconditioned GMRES} iterates are given by\vspace{-.15cm}
+\begin{align*}
+x_j
+=x_0+M^{-1}V_j\tilde{y}
+=x_0+\sum_{i=1}^j\tilde{y}_iM^{-1}v_i
+\;\text{ where }\;
+\tilde{y}=:\begin{bmatrix}\tilde{y}_1\\\vdots\\\tilde{y}_j\end{bmatrix}
+\end{align*}
+so that $x_j-x_0=\sum_{i=1}^j\tilde{y}_iM^{-1}v_i$, i.e., $x_j-x_0$ is a \textbf{linear combination of} the \textbf{preconditioned Krylov basis vectors} $M^{-1}v_1$ through $M^{-1}v_j$.
+\item[] If $M$ is a fixed precodnitioner, then we have\vspace{-.15cm}
+\begin{align*}
+\sum_{i=1}^j\tilde{y}_iM^{-1}v_i=M^{-1}\sum_{i=1}^j\tilde{y}_iv_i,
+\end{align*}
+so that the vectors $M^{-1}v_1, \dots,M^{-1}v_j$ \textbf{need not be stored} to form $x_j$.
+\item[] Standard implementations store $v_1,\dots,v_j$, then form $\sum_{i=1}^j\tilde{y}_iv_i$, and, eventually, apply the preconditioner to the resulting vector, i.e., $M^{-1}(V_j\tilde{y})$.
+\end{itemize}\smallskip
+\tiny{Saad, Y. (1993). A flexible inner-outer preconditioned GMRES algorithm. SIAM Journal on Scientific Computing, 14, 461–469.}
+\end{frame}
+
+% Slide 22
+\begin{frame}{Flexible GMRES, cont'd\textsubscript{1}}
+\begin{itemize}
+\item Now, let us consider the case of a \textbf{varying preconditioner}, so that the mapping $x\mapsto M^{-1}(x)x$ is not linear, i.e., $M^{-1}(x)$ is not fixed.
+\item[] Then, the right-preconditioned GMRES iterate is given by
+\begin{align*}
+x_j=x_0+\sum_{i=1}^j\tilde{y}_iM_i^{-1}v_i=x_0+Z_j\tilde{y}
+\;\text{ where }\;
+\tilde{y}=:\begin{bmatrix}\tilde{y}_1\\\vdots\\\tilde{y}_j\end{bmatrix}
+\end{align*}
+in which $\tilde{y}$ is computed as before, and $Z\!=[z_1,\dots,z_j]$, where $z_i\!:=M_i^{-1}v_i\hspace{-1cm}$\\ 
+for $i=1,\dots,j$.
+\item[] In this case, the \textit{preconditioner cannot be factored out}, and the vectors $z_1:=M_1^{-1}v_1,\dots,z_j:=M_j^{-1}v_j$ \textbf{must all be stored to form} $x_j$.
+\end{itemize}
+\end{frame}
+
+% Slide 23
+\begin{frame}{Flexible GMRES, cont'd\textsubscript{2}}
+\begin{itemize}
+\item Thus, a natural modification of the right-preconditioned GMRES algorithm to allow for the use of varying preconditioners is as follows:\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{Flexible (right-preconditioned) GMRES$:(x_0,\varepsilon)\mapsto x_j$}
+\begin{algorithmic}[1]
+\STATE{$r_0:=b-Ax_0$}
+\STATE{$\beta:=\|r_0\|_2$}
+\STATE{$v_1:=r_0/\beta$}
+\FOR{$j=1,2\dots$}
+\STATE{$z_j:=M^{-1}v_j$}
+\STATE{$w:=Az_j$}
+\STATE{$w:=\Pi^{(j)}w$}
+\COMMENT{$\Pi^{(j)}$ is a projector onto $\text{span}\{v_1,\dots,v_j\}^\perp$}
+\STATE{Compute $h_{1:j+1,j}$}
+\STATE{Solve for $\tilde{y}=\arg\min_{y\in\mathbb{R}^j}\|\beta e_1^{(j+1)}-\underline{H_j}y\|$}
+\COMMENT{Still using Givens rotations}
+\STATE{\textbf{if} $\|\beta e_1^{(j+1)}-\underline{H_j}\tilde{y}\|_2<\varepsilon\|b\|_2$ \textbf{then} Stop}
+\STATE{$v_{j+1}:=w/h_{j+1,j}$}
+\ENDFOR
+\STATE{$x_j:=x_0+Z_j\tilde{y}$}
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.85cm}$\\
+The main difference with the standard right-preconditioned GMRES is that $Z_j$ \textbf{must be stored in addition to} $V_j$.
+\end{itemize}
+\end{frame}
+
+% Slide 24
+\begin{frame}{Flexible GMRES, cont'd\textsubscript{3}}
+\begin{itemize}
+\item Clearly, the flexible GMRES (FGMRES) method is equivalent to the standard right-preconditioned variant when the preconditioned is constant, i.e., when $M_1=\dots=M_j=M$.
+\item In practice, the choice of the $z_1,\dots,z_j$ vectors is important, to the point that, a "\textbf{poor selection}" of those vectors can go as far as causing the procedure to \textbf{breakdown}.
+\item In the standard right-preconditioned variant, the Arnoldi relation is given by
+\begin{align*}
+AM^{-1}V_{j}=V_{j+1}\underline{H_j}.
+\end{align*}
+This relation does not hold anymore with FGMRES.
+Instead, we have
+\begin{align*}
+AZ_j=V_{j+1}\underline{H_j}.
+\end{align*}
+It follows from our definition of the iterate in FGMRES that 
+\begin{align*}
+x_j\in x_0+\text{span}\{z_1,\dots,z_j\}.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 25
+\begin{frame}{Flexible GMRES, cont'd\textsubscript{4}}
+\begin{itemize}
+\item Analogously to the case of the standard right-preconditioned variant, the FGMRES residual is recast as follows using the Arnoldi relation:
+\begin{align*}
+r_j
+:=b-Ax_j
+=&\,b-Ax_0-AZ_j\tilde{y}\\
+=&\,r_0-V_{j+1}\underline{H_j}\tilde{y}\\
+=&\,V_{j+1}(\beta e_1^{(j+1)}-\underline{H_j}\tilde{y})
+\end{align*}
+where $\tilde{y}=\arg\min_{y\in\mathbb{R}^j}\|\beta e_1^{(j+1)}-\underline{H_j}y\|_2$.
+\item[] That is, the FGMRES iterate still minimizes the non-preconditioned residual $b-Ax_j$.
+The difference is that it does it over a different subspace:
+\begin{theorem}[Optimality of FGMRES iterates]
+Let $x_j$ be the FGMRES iterate after $j$ iterations started with an initial guess $x_0$.
+Then,\vspace{-.15cm}
+\begin{align*}
+x_j=\arg\min_{x\in x_0+\text{range}(Z_j)}\|b-Ax\|_2.
+\end{align*}
+\end{theorem}
+\end{itemize}
+\end{frame}
+
+% Slide 26
+\begin{frame}{Flexible GMRES, cont'd\textsubscript{5}}
+\begin{itemize}
+\item The \textbf{search space of FGMRES}, that is
+\begin{align*}
+(x_0+)\text{span}\{z_1,\dots,z_j\}
+\end{align*}
+is, in general, \textbf{not Krylov} anymore.
+\item[] Besides the extra memory requirement to store $Z_j$, \textbf{FGMRES requires no additional computation} with respect to the standard right-preconditioned variant.
+\item[]Actually, FGMRES even removes the need for a final preconditioner application to construct the last iterate.
+\item As mentioned earlier, the varying preconditioner applications, denoted by 
+\begin{align*}
+v_1\mapsto M_1^{-1}v_1,\dots,v_j\mapsto M_1^{-1}v_j,
+\end{align*}
+can consist of any approximation procedure, that is, for example, any of the previously presented iterative solvers, i.e., stationary and Krylov-based.
+\item[] It is also \textbf{possible to combine several approximation procedures with complementary effects}, alternating from one iteration to another.
+\end{itemize}
+\end{frame}
+
+\section{Preconditioners}
+
+\subsection{Introduction}
+% Slide 27
+\begin{frame}{Introduction}
+\begin{itemize}
+\item The \textbf{first documented effort to precondition a linear system} was \textbf{by Jacobi} (1845), where the Jacobi iterative method was invented, and for which a preconditioner was introduced so as to accelerate the convergence of the Jacobi iteration.
+\item A \textbf{good preconditioner accelerates convergence}, i.e., it reduces the iteration count to reach convergence, while only \textbf{entailing a limited additional computational cost} per solver iteration.
+\item[] \textbf{Finding a good preconditioner can be difficult}.
+\item[] The \textbf{performance} of preconditioners is \textbf{highly problem-dependent}, and an \textbf{optimal general-purpose preconditioner} is \textbf{unlikely to exist}.
+\item[] \textbf{Preconditioner design} is sometimes described as a combination of art and science, often relies on heuristics with \textbf{limited theoretical insight}, and \textbf{significant input from domain expert knowledge}.
+\item[] In practice, \textbf{preconditioner design} is often the \textbf{source of significant efforts}, especially when multiple linear systems need be solved with one, or multiple similar coefficient matrices.
+\end{itemize}\smallskip
+\tiny{Jacobi, C. G. J. (1845). Ueber eine neue Auflösungsart der bei der Methode der kleinsten Quadrate vorkom-
+menden lineären Gleichungen. Astronomische Nachrichten, 22(20):297–306.}
+\end{frame}
+
+\subsection{Stationary iterative methods}
+% Slide 28
+\begin{frame}{Stationary iterative methods as preconditioners}
+\begin{itemize}
+\item In Lecture 8, we saw that \textbf{stationary}, i.e., basic, \textbf{iterative methods} are induced by splittings $A=M-N$ of the coefficient matrix, where $M$ is \textbf{non-singular}.
+\item[] Then, we know that the \textbf{solution} $A^{-1}b$ \textbf{of} $Ax=b$ is a \textbf{fixed-point} of\vspace{-.05cm}
+\begin{align*}
+x\mapsto M^{-1}Nx+M^{-1}b
+\end{align*}
+so that a \textbf{stationary iteration} is given by\vspace{-.05cm}
+\begin{align*}
+x_{j+1}=M^{-1}Nx_j+M^{-1}b.
+\end{align*}
+This iteration \textbf{attempts to solve}\vspace{-.05cm}
+\begin{align*}
+(I_n-M^{-1}N)x=M^{-1}b,
+\end{align*}
+in which using the splitting leads to\vspace{-.05cm}
+\begin{align*}
+(I_n-M^{-1}(M-A))x=M^{-1}b\\
+(I_n-I_n+M^{-1}A)x=M^{-1}b
+\end{align*}
+so that we iterate to solve the \textbf{left-preconditioned linear system}:\vspace{-.05cm}
+\begin{align*}
+M^{-1}Ax=M^{-1}b.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 29
+\begin{frame}{Stationary iterative methods as preconditioners, cont'd\textsubscript{1}}
+\begin{itemize}
+\item \textbf{Any splitting} $M-N$ of the coefficient matrix $A$ with a \textbf{non-singular} $M$ \textbf{leads to a preconditioner} $M$:
+\begin{definition}[Jacobi preconditioner]
+\begin{itemize}\normalsize
+\item[-] The \textbf{Jacobi iteration} induces a so-called \textbf{Jacobi preconditioner} with $M:=D_A$, where $D_A$ denotes the \textbf{diagonal part of} $A$.
+\item[-] \textbf{Applying the Jacobi preconditioner} to the coefficient matrix, i.e., the map $A\mapsto D_A^{-1}A$ is \textbf{equivalent to scaling all rows of} $A$ to make the diagonal entries equal to one. 
+This is also known as \textbf{diagonal scaling}.
+\end{itemize}
+\end{definition}
+\begin{definition}[Gauss-Seidel preconditioner]
+\begin{itemize}\normalsize
+\item[-] The \textbf{Gauss-Seidel iteration} induces a \textbf{Gauss-Seidel preconditioner} with $M:=D_A-L_A$, which is the \textbf{lower-triangular part of} $A$.
+\item[-] \textbf{Applying the Gauss-Seidel preconditioner}, i.e., evaluating $x\mapsto M^{-1}x$, \textbf{amounts to} complete \textbf{a triangular solve}, i.e., a forward substitution.
+\end{itemize}
+\end{definition}
+\end{itemize}
+\end{frame}
+
+% Slide 30
+\begin{frame}{Stationary iterative methods as preconditioners, cont'd\textsubscript{2}}
+\begin{itemize}
+\item []\vspace{-.15cm}
+\begin{definition}[Successive over-relaxation (SOR) preconditioner]
+\begin{itemize}\normalsize
+\item[-] The \textbf{successive over-relaxation} (\textbf{SOR}) iteration induces a \textbf{SOR preconditioner} with $M:=D_A-\omega L_A$, which is also a \textbf{lower-triangular} matrix, and where $\omega$ is a relaxation parameter such that $0<\omega<2$.
+\item[-] \textbf{Applying the SOR preconditioner}, i.e., evaluating $x\mapsto M^{-1}x$, also \textbf{amounts to} complete \textbf{a triangular solve}, i.e., a forward substitution.
+\end{itemize}
+\end{definition}
+$\vspace{-.6cm}$\\
+\item There exist more matrix splittings leading to stationary methods and associated preconditioners than what we covered in Lecture 8.
+E.g.,
+\begin{itemize}\normalsize
+\item[-]\!\textbf{Symmetric Gauss-Seidel} (\textbf{SGS}) splitting (Saad, 2003),
+\item[-]\!\textbf{Symmetric successive over-relaxation} (\textbf{SSOR}) splitting (Saad, 2003),$\hspace{-1cm}$
+\item[-]\!\textbf{Hermitian and skew-Hermitian} (\textbf{HSS}) splitting (Bai \& Pan, 2021),
+\item[-]\!\textbf{Normal and skew-Hermitian} (\textbf{NSS}) splitting (Bai \& Pan, 2021),
+\item[-]\!\textbf{Positive-definite and skew-Hermitian} (\textbf{PSS}) splitting \!(Bai \& Pan,'21),$\hspace{-1cm}$
+\item[-]\!\textbf{Richardson} splitting (Ciaramella \& Gander, 2022).
+\end{itemize} 
+\end{itemize}\smallskip
+\tiny{Saad, Y. (2003). Iterative methods for sparse linear systems. Society for Industrial and Applied Mathematics.}\tinyskip\\
+\tiny{Bai, Z. Z., \& Pan, J. Y. (2021). Matrix analysis and computations. Society for Industrial and Applied Mathematics.}\tinyskip\\
+\tiny{Ciaramella, G. \& Gander, M. J., (2022). Iterative methods and preconditioners for systems of linear equations. Society for Industrial and Applied Mathematics.}
+\end{frame}
+
+\subsection{Incomplete factorizations}
+% sLide 31
+\begin{frame}{Incomplete factorizations}
+\begin{itemize}
+\item A common type of preconditioner, denoted by $M_LM_R$, and referred to as \textbf{incomplete factorization}, decomposes the coefficient matrix as follows:
+\begin{align*}
+\boxed{A=M_LM_R+E}
+\end{align*}
+where $M_L$ and $M_R$ are known, at least in the sense that \textbf{one can efficiently evaluate}
+\begin{align*}
+\boxed{x\mapsto(M_LM_R)^{-1}x}\,,
+\end{align*}
+and the \textbf{error} term denoted by $E$ is sufficiently \textbf{small in some sense}.
+\item[] Several types of incomplete factorizations exist, e.g.,
+\begin{itemize}\normalsize
+\item[-] Incomplete \textbf{LU}: 
+$M_L$ and $M_R$ are sparse lower- and upper-triangular.\vspace{.1cm}
+\item[-] Incomplete \textbf{Cholesky}:
+$M_L$ is sparse lower-triangular, and $M_R=M_L^T$.\vspace{.1cm}
+\item[-] Incomplete \textbf{QR}: 
+$M_L$ is general sparse, and $M_R$ is sparse upper-triangular.$\hspace{-1cm}$\vspace{.1cm}
+\item[-] Incomplete \textbf{Givens}: 
+$M_L$ is general sparse, and $M_R$ is sparse upper-triangular. 
+Both $M_L$ and $M_R$ are obtained using Givens rotations.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 32
+\begin{frame}{Incomplete LU (ILU) factorizations}
+\begin{itemize}
+\item The incomplete LU (ILU) factorization was first introduced by Buleev (1960) and, independently, by Varga (1960).
+\item Given a sparse matrix $A\in\mathbb{R}^{n\times n}$, we denote its \textbf{sparsity pattern} as
+\begin{align*}
+\mathcal{S}(A)\subset\{(i,j),\,i,j\in\{1,2,\dots,n\}\}
+\end{align*}
+such that $(i,j)\in\mathcal{S}(A)$ iff $a_{ij}\neq 0$.
+\item \textbf{Fill-ins} are usually unavoidable when constructing the \textbf{LU factorization} of a \textbf{sparse matrix} by \textbf{Gaussian elimination}.
+\item[] That is, the \textbf{triangular factors} $L$ and $U$ of a "complete" LU factorization, i.e., $A=LU$, are usually \textbf{much less sparse} than the matrix $A$.
+\item An \textbf{ILU} factorization is obtained by \textbf{dropping} some of these \textbf{fill-ins}.
+Following prescribed sparsity patterns, we obtain
+\begin{align*}
+A=LU-E
+\end{align*}
+where $E$ is the error induced by the dropped fill-ins.
+\end{itemize}\smallskip
+\tiny{Buleev, N. I. (1960). A numerical method for solving two-dimensional diffusion equations. Atomic Energy, 6, 222–224. (In Russian).}\tinyskip\\
+\tiny{Buleev, N. I. (1960). A numerical method for solving two- and three-dimensional diffusion equations. Matematicheskii Sbornik, 51, 227–238. (In Russian).}\tinyskip\\
+\tiny{Varga, R. S. (1960). Factorization and normalized iterative methods. In Boundary Problems in Differential
+Equations, Langer, R. E. (Editor), University Wisconsin Press, Madison, 1960, pp. 121–142.}
+\end{frame}
+
+% Slide 33
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{1}}
+\begin{itemize}
+\item \textbf{Different ILU preconditioners} $M=LU$ are obtained \textbf{depending on} the \textbf{dropping strategy} and \textbf{induced sparsity} $\mathcal{S}(M)$.
+\item[] In practice, \textbf{fill-ins} can be \textbf{dropped based on} different criteria, such as \textbf{position}, \textbf{value}, or combination of these factors.
+\item[] For a given sparsity pattern $\mathcal{S}:=\mathcal{S}(L)\cup\mathcal{S}(U)$, an ILU factorization is computed as follows, in-place, within $A$:
+\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{General ILU factorization$:\mathcal{S}\mapsto (L,U)$}
+\begin{algorithmic}[1]\label{algo:ILU}
+\FOR{$k=1,\dots,n-1$}
+\FOR{$i=k+1,\dots,n$ \textbf{ and } $(i,k)\in\mathcal{S}$}
+\STATE{$a_{ik}:=a_{ik}/a_{kk}$}
+\FOR{$j=k+1,\dots,n$ \textbf{ and } $(i,j)\in\mathcal{S}$}
+\STATE{$a_{ij}:=a_{ij}-a_{ik}*a_{kj}$}
+\ENDFOR
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.9cm}$\\
+\item In theory, the prescribed sparsity pattern $\mathcal{S}$ is arbitrary.
+\item[] In practice, it is customary to, at least, include \textbf{all diagonal entries}, and \textbf{all non-zero entries of $A$}.
+Such a bare-minimum strategy with \textbf{no fill-ins} is referred to as the \textbf{ILU(0)} factorization.
+\end{itemize}
+\end{frame}
+
+% Slide 34
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{2}}
+\begin{itemize}
+\item In practice, Algo.~\ref{algo:ILU} is not recommended because, at the $k$-th step, all rows from $k+1$ to $n$ are modified.
+To circumvent this unfavorable data movement, an IKJ version of the algorithm is introduced: 
+\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{General ILU factorization$:\mathcal{S}\mapsto (L,U)$}
+\begin{algorithmic}[1]\label{algo:IKJ-ILU}
+\STATE{For $(i,j)\not\in \mathcal{S}$, set $a_{ij}:=0$}
+\FOR{$i=2,\dots,n$}
+\FOR{$k=1,\dots,i-1$ \textbf{ and } $(i,k)\in\mathcal{S}$}
+\STATE{$a_{ik}:=a_{ik}/a_{kk}$}
+\FOR{$j=k+1,\dots,n$ \textbf{ and } $(i,j)\in\mathcal{S}$}
+\STATE{$a_{ij}:=a_{ij}-a_{ik}*a_{kj}$}
+\ENDFOR
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.9cm}$\\
+\item Algos.~\ref{algo:ILU} and \ref{algo:IKJ-ILU} are equivalent, but the latter is more cache-friendly.
+\item If $\mathcal{S}(A)\subseteq\mathcal{S}$, then Step~1 of Algo.~\ref{algo:IKJ-ILU} can be skipped.
+\item From the decomposition $A=LU-E$, we have
+\begin{align*}
+a_{ij}=\sum_{k=1}^i\ell_{ik}u_{kj}-e_{ij}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 35
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{3}}
+\begin{itemize}
+\item[] where
+\begin{align*}
+\hspace*{-1.5cm}
+u_{kj}=
+\begin{cases}
+a_{kj}-\sum_{i=1}^{k-1}\ell_{ki}u_{ij}
+&\text{for }k\leq j\leq n\text{ and }(k,j)\in\mathcal{S},\\
+0
+&\text{for }k\leq j\leq n\text{ and }(k,j)\not\in\mathcal{S},
+\end{cases}
+\end{align*}
+\begin{align*}
+\ell_{ik}=
+\begin{cases}
+\left.\left(a_{ik}-\sum_{j=1}^{k-1}\ell_{ij}u_{jk}\right)\right/u_{kk}
+&\text{for }k<i\leq n\text{ and }(i,k)\in\mathcal{S},\\
+0
+&\text{for }k<i\leq n\text{ and }(i,k)\not\in\mathcal{S}
+\end{cases}
+\end{align*}
+for $k=1,\dots,n$ so that
+\begin{align*}
+e_{ij}=
+\begin{cases}
+0
+&\text{ for }(i,j)\in\mathcal{S},\\
+\sum_{k=1}^i\ell_{ik}u_{kj}
+&\text{ for }(i,j)\not\in\mathcal{S}.
+\end{cases}
+\end{align*}
+\item Clearly, defining ILU(0) by specifying $\mathcal{S}(LU)=\mathcal{S}(A)$ does not yield a unique factorization.
+\item[] Instead, the ILU(0) factorization is uniquely defined by construction through Algos.~\ref{algo:ILU} and \ref{algo:IKJ-ILU} and such that $\mathcal{S}(L)\cup\mathcal{S}(U)=\mathcal{S}(A)$.
+\end{itemize}
+\end{frame}
+
+% Slide 36
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{4}}
+\begin{itemize}\item If the matrix $A$ is \textbf{SPD}, then the approach of Algos.~\ref{algo:ILU} and \ref{algo:IKJ-ILU} is analogously applied to construct \textbf{incomplete Cholesky} (\textbf{IC}) factorizations.
+\item[] The \textbf{IC factorization} was popularized by the \textbf{analysis} of Meijerink \& van der Vorst (1977).
+\item The \textbf{ILU(0)} and \textbf{IC(0)} factorizations, which are relatively \textbf{easy to implement}, \textbf{work well for} some problems.
+\item[] In particular, this is the case for \textbf{low-order discretizations of constant-coefficient elliptic PDEs}, which often leads to \textbf{diagonally dominant matrices}.
+\item \textbf{For more challenging problems, ILU(0)/IC(0) do not approximate $A$ sufficiently well to constitute good preconditioners}.
+\item[] For such problems, \textbf{more accurate incomplete factorizations} need be \textbf{developed}, which is done \textbf{by incorporating some level of fill-ins} in the prescribed sparsity pattern.
+\end{itemize}\smallskip
+\tiny{Meijerink, J. A. \& van der Vorst, H. A. (1977). An iterative solution method for linear systems of which the coefficient matrix is a symmetric M-matrix, Math. Comp., 31.}
+\end{frame}
+
+% Slide 37
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{5}}
+\begin{itemize}
+\item A \textbf{level-of-fill} is a \textbf{non-negative integer attributed to each entry of $A$} during the construction of an incomplete factorization.
+\item[] The \textbf{level-of-fill} of $a_{ij}$, which we denote by $lev_{ij}$, is \textbf{initialized} as follows:
+\begin{align}\label{eq:lev-init}
+lev_{ij}:=
+\begin{cases}
+0&\text{if }i=j\text{ or }a_{ij}\neq 0,\\
+\infty&\text{otherwise}.
+\end{cases}
+\end{align}
+When $a_{ij}$ is updated by \textbf{Gaussian elimination}, i.e., after
+\begin{align*}
+a_{ij}:=a_{ij}-a_{ik}*a_{kj},
+\end{align*}
+the \textbf{level-of-fill} needs be \textbf{updated too}.
+Different approaches exist:
+\begin{itemize}\normalsize
+\item[-] A basic \textbf{updating rule} for the \textbf{level-of-fill} is 
+\begin{align*}
+lev_{ij}:=\min\{lev_{ij},lev_{ik}+lev_{kj}\}.
+\end{align*}
+Then, the level-of-fill never increases, and its final value is either 0 (keep the fill-in), or $\infty$ (drop the fill-in).
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 38
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{6}}
+\begin{itemize}
+\item[]
+\begin{itemize}\normalsize
+\item[-] A \textbf{more nuanced and practical updating rule} is given by
+\begin{align}\label{eq:lev-update}
+lev_{ij}:=\min\{lev_{ij},lev_{ik}+lev_{kj}+1\}.
+\end{align}
+Then, if $a_{ij}$ changes from zero to non-zero, its level-of-fill changes from $\infty$ to a finite non-zero integer.
+\end{itemize}
+\item Different \textbf{ILU preconditioners} are \textbf{defined based on different dropping strategies using} a criterion based on \textbf{the level-of-fill} $lev_{ij}$.
+\item The \textbf{ILU factorization of level $p$}, denoted by ILU($p$), defines a sparsity pattern given by
+\begin{align*}
+\mathcal{S}_p:=\{(i,j)\text{ such that }lev_{ij}\leq p,\,i,j=1,\dots,n\}
+\end{align*}
+where $lev_{ij}$ is the \textbf{final value of the level-of-fill} after all updates have been made.
+\item[] The ILU factorization of level $p=0$ is consistent with our previous definition of ILU(0).
+\end{itemize}
+\end{frame}
+
+% Slide 39
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{7}}
+\begin{itemize}
+\item Although different updating rule of the level-of-fill exist, using the update formula of Eq.~\eqref{eq:lev-update} with an initialization by Eq.~\eqref{eq:lev-init}, the algorithm used to construct the ILU($p$) factorization is as follows:
+\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{ILU($p$) factorization$:p\mapsto (L,U)$}
+\begin{algorithmic}[1]\label{algo:ILU-p}
+\STATE{Set initial value of $lev_{ij}$ with Eq.~\eqref{eq:lev-init}}
+\FOR{$i=2,\dots,n$}
+\FOR{$k=1,\dots,i-1$ \textbf{ and } $lev_{ik}\leq p$}
+\STATE{$a_{ik}:=a_{ik}/a_{kk}$}
+\FOR{$j=k+1,\dots,n$}
+\STATE{$a_{ij}:=a_{ij}-a_{ik}*a_{kj}$}
+\STATE{$lev_{ij}:=\min\{lev_{ij},lev_{ik}+lev_{kj}+1\}$}
+\ENDFOR
+\ENDFOR
+\FOR{$j=1,\dots,n$ \textbf{ and } $lev_{ij}>p$}
+\STATE{$a_{ij}:=0$}
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+$\vspace{-.9cm}$\\
+\item For most problems, ILU(1) provides considerably improved preconditioning performance compared to ILU(0).
+\item Higher levels ILU($p$) are rarely used in practice due to rapid increases of memory requirement and computational cost.
+\end{itemize}
+\end{frame}
+
+% Slide 40
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{8}}
+\begin{itemize}
+\item The ILU($p$) algorithms have several drawbacks:
+\begin{itemize}\normalsize
+\item[-] The \textbf{amount of fill-ins} and computational costs are \textbf{not predictable} for $p>0$.
+\item[-] The cost of \textbf{updating} the \textbf{levels can be expensive}.
+\item[-] \textbf{Level-of-fills} can be \textbf{poor indicators of entry sizes for indefinite matrices}, ultimately \textbf{leading to inaccurate factorizations}, that is, large error matrices $E$, and degraded convergence behaviors.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 41
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{9}}
+\begin{itemize}
+\item \textbf{For indefinite} or \textbf{strongly non-diagonally dominant matrices}, \textbf{ILU($p$)} may only \textbf{lead to poor approximations} of the coefficient matrix.
+\item[] This is caused by entries having high values of level-of-fill, despite having a large magnitude.
+\item An alternative strategy exists where \textbf{fill-ins} are \textbf{dropped according to their absolute values} rather than their positions.
+\item[] For this, a \textbf{drop tolerance} $\tau$ is introduced and \textbf{used in the dropping rule}.
+\item[] That is, only fill-ins that are greater than $\tau$ in absolute value are stored and used, which indicates that the sparsity pattern is determined dynamically.
+\item To remedy the case of badly scaled matrices, it is suggested to use a \textbf{relative drop tolerance}.
+\item[] That is, a fill-in is dropped if it is less than the product of $\tau$ with the norm of either the row or the column in which the fill-in is located.
+\item[] A drawback of this approach is that it is difficult to predict the amount of storage needed to store the ILU factors.
+\end{itemize}
+\end{frame}
+
+% Slide 42
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{10}}
+\begin{itemize}
+\item Saad~(1994) proposed the \textbf{dual threshold ILU} factorization, denoted by \textbf{ILUT($p$, $\tau$)} in which the following two dropping strategies are used:
+\begin{itemize}\normalsize
+\item[-] \textbf{DS1}. The fill-in is dropped if it is less than the relative tolerance obtained by multiplying $\tau$ with the norm of the original row or column.
+\item[-] \textbf{DS2}. Keep at most the $p$ largest entries in each of the $L$ and $U$ parts of the row or column, in addition to the diagonal entry, which is always kept.
+\end{itemize}
+In the resulting ILUT($p$, $\tau$) procedure, $\tau$ is a parameter that helps reducing the computational cost, while $p$ helps control the memory requirement.
+\item[] The ILUT($p$, $\tau$) algorithm is derived from Gaussian elimination employing the threshold strategies \textbf{DS1} and \textbf{DS2}.
+\end{itemize}\smallskip
+\tiny{Saad, Y. (1994). ILUT: A dual threshold incomplete LU factorization, Numerical Linear Algebra with Applications, 1, 387–402.}
+\end{frame}
+
+% Slide 43
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{11}}
+\begin{itemize}
+\item[] In the resulting ILUT($p$, $\tau$) algorithm, $w$ is a full-length working row vector with $w_k$ being its $k$-th entry, and $\|\cdot\|$ is a suitably chosen norm.
+\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{ILUT($p$, $\tau$) factorization$:(p,\tau)\mapsto (L,U)$}
+\begin{algorithmic}[1]\label{algo:ILUT}
+\FOR{$i=1,\dots,n$}
+\FOR{$k=1,\dots,n$}
+\STATE{$w_k:=a_{ik}$}\COMMENT{Copy the $i$-th row of $A$ to $w$}
+\ENDFOR
+\STATE{$\tau_i:=\tau\|w\|$}\COMMENT{Relative drop tolerance}
+\FOR{$k=1,\dots,i-1$ \textbf{ and } $w_k\neq 0$}
+\STATE{$w_k:=w_k/a_{kk}$}
+\STATE{\textbf{if} $|w_k|<\tau_i$ \textbf{then} \hfill{\color{gray}{$\triangleright$ Apply \textbf{DS1} on $w_k$}}}
+\STATE{\hspace{\algorithmicindent}$w_k:=0$}
+\STATE{\textbf{else}}
+\STATE{\hspace{\algorithmicindent}\textbf{for} $j=k+1,\dots,n$ \textbf{do}}
+\STATE{\hspace{2\algorithmicindent}$w_j:=w_j-w_ku_{kj}$}
+\ENDFOR
+\STATE{\textbf{for} $k=i+1,\dots,n$ \textbf{and} $|w_k|<\tau_i$ \textbf{do} 
+\hfill{\color{gray}{$\triangleright$ Apply \textbf{DS1} on $w$}}}
+\STATE{\hspace{\algorithmicindent} $w_k:=0$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+
+% Slide 44
+\begin{frame}{Incomplete LU (ILU) factorizations, cont'd\textsubscript{11}}
+\begin{itemize}
+\item[] In the resulting ILUT($p$, $\tau$) algorithm, $w$ is a full-length working row vector with $w_k$ being its $k$-th entry, $\|\cdot\|$ is a suitably chosen norm.
+\vspace{-.3cm}
+\setcounter{algorithm}{11}
+\begin{algorithm}[H]
+\small
+\caption{\textbf{cont'd} ILUT($p$, $\tau$) factorization$:(p,\tau)\mapsto (L,U)$}
+\begin{algorithmic}[1]
+\setcounter{ALC@line}{13}
+\STATE{\hspace{\algorithmicindent}{\color{gray}{$\triangleright$ Apply \textbf{DS2} on $w$}}}
+\STATE{\hspace{\algorithmicindent}Find the largest $p$ entries of $w[1:i-1]$ and drop the others}
+\STATE{\hspace{\algorithmicindent}Find the largest $p$ entries of $w[i+1:n]$ and drop the others}
+\STATE{\hspace{\algorithmicindent}\textbf{for} $k=1,\dots,i-1$ \textbf{do}}
+\STATE{\hspace{2\algorithmicindent}$\ell_{ik}:=w_k$}
+\STATE{\hspace{\algorithmicindent}\textbf{for} $k=i,\dots,n$ \textbf{do}}
+\STATE{\hspace{2\algorithmicindent}$u_{ik}:=w_k$}
+%\STATE{\hspace{\algorithmicindent}set $w:=0$}
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+
+% Slide 45
+\begin{frame}{Incomplete QR factorizations}
+\begin{itemize}
+\item The \textbf{existence of} an \textbf{ILU} factorization is \textbf{not guaranteed for general matrices}, its \textbf{computation} is \textbf{prone to breakdown}, and \textbf{instabilities} can occur \textbf{in} the \textbf{sparse triangular solves}.
+\item[] These drawbacks motivate the consideration of other types of incomplete factorizations.
+\item \textbf{Incomplete QR} (\textbf{IQR}) factorizations of the form $A=QR-E$, where $Q$ is a \textbf{general matrix}, \textbf{more or less sparse}, such that $E$ and $Q^TQ-I_n$ are \textbf{small in some sense}, and $R$ is \textbf{upper-triangular sparse}.
+\item[] Saad (1988) constructed \textbf{IQR} factorizations using \textbf{incomplete modified Gram-Schmidt} (\textbf{IMGS}) procedures incorporating dropping rules.
+\item[] \textbf{Existence} and \textbf{stability} of \textbf{IQR} factorizations obtained by \textbf{only dropping entries of the upper-triangular factor} were proved by Wang et al.~$\!$(1997).$\hspace{-1cm}$
+\item[] As observed by Saad~(1988), the \textbf{incomplete factor} $Q$ is \textbf{only} guaranteed to be \textbf{non-singular for} very \textbf{low sparsity levels}.
+\end{itemize}\smallskip
+\tiny{Saad, Y. (1988). Preconditioning techniques for nonsymmetric and indefinite linear systems, Journal of Computational and Applied Mathematics, 24, 89–105.}\tinyskip\\
+\tiny{Wang, X.-G., Gallivan, K. A. \& Bramley, R. B. (1997). CIMGS: An incomplete orthogonal factorization
+preconditioner, SIAM Journal on Scientific Computing, 18, 516–536.}
+\end{frame}
+
+% Slide 46
+\begin{frame}{Incomplete QR factorizations, cont’d}
+\begin{itemize}
+\item An alternative to Gram-Schmidt procedures for the construction of incomplete QR factorizations is the use of \textbf{Givens rotations}.
+\item[] For this, the \textbf{incomplete Givens orthogonalization} (\textbf{IGO}) was proposed by Zai et al.~(2001).
+For each column, the IGO method does three things:
+\begin{itemize}\normalsize
+\item[(a)] \textbf{Annihilate}, using Givens rotations, the \textbf{non-zero entries located in the strictly lower-triangular
+part} of $A$ from the bottom up to the first sub-diagonal;\vspace{.08cm}
+\item[(b)] \textbf{Update the incomplete orthogonal matrix} $Q$ by \textbf{post-multiplying by the transpose of the Givens rotation using some dropping rule};\vspace{.08cm}
+\item[(c)] After Steps (a) and (b) have been done for all non-zeros in the current column, \textbf{form the corresponding row of the incomplete upper-triangular matrix $R$ using some dropping rule}.
+\end{itemize}
+\item Detailed implementations of the IMGS and IGO methods can be found in Bai \& Pan (2021).
+\end{itemize}\smallskip
+\tiny{Bai, Z.-Z., Duff, I. S. \& Wathen, A. J. (2001). A class of incomplete orthogonal factorization methods. I: Methods and theories, BIT, 41 53–70.}\tinyskip\\
+\tiny{Bai, Z. Z., \& Pan, J. Y. (2021). Matrix analysis and computations. Society for Industrial and Applied Mathematics.}
+\end{frame}
+
+
+\subsection{Sparse approximate inverses (SPAI)} 
+% Slide 47
+\begin{frame}{Sparse approximate inverses (SPAI)}
+\begin{itemize}
+\item \textbf{Sparse approximate inverse} (\textbf{SPAI}) preconditioning, which consists of building a sparse matrix $M^{-1}$ which is close to $A^{-1}$ in some sense, \textbf{offers considerable advantages} over incomplete factorizations \textbf{for parallel processing}.
+\item[] The main advantages of the SPAI approach are
+\begin{itemize}\normalsize
+\item[-] \textbf{Inherently parallel construction}, because each column (or row) of $M^{-1}$ can be processed independently;
+\item[-] \textbf{Autonomous identification of non-zero entries};
+\item[-] \textbf{Preconditioner application} done by \textbf{sparse matrix-vector} (\textbf{SpMV}) product, which is also \textbf{parallelizable}.
+\end{itemize}
+\item The \textbf{inverse of a sparse matrix} being \textbf{generally dense}, there is, a priori, \textbf{no guarantee} that a sparse approximate inverse $\!M^{-1}\!$ \textbf{will be close to} $\!A^{-1}\!\!.\hspace{-1cm}$
+\item[] But, as the \textbf{matrix inverse} $A^{-1}$ often \textbf{contains numerous entries of small magnitude}, SPAI matrices often can reasonably approximate $A^{-1}$.
+\item An SPAI matrix $M^{-1}$ can be expressed either as a single matrix, or as the product of two or more matrices.
+\end{itemize}
+\end{frame}
+
+% Slide 48
+\begin{frame}{Sparse approximate inverses (SPAI), cont'd\textsubscript{1}}
+\begin{itemize}
+\item Designing an \textbf{SPAI} preconditioner amounts to \textbf{minimize the Frobenius norm of the residual matrix}:
+\begin{align*}
+F(M^{-1}):=\|I_n-AM^{-1}\|_F^2.
+\end{align*} 
+A matrix $M^{-1}$ for which the value of $F(M^{-1})$ is small is an accurate \textbf{right-approximat}e inverse of $A$.
+\item[] Alternatively, setting the objective function to
+\begin{align*}
+F(M^{-1}):=\|I_n-M^{-1}A\|_F^2
+\;\text{ and }\;
+F(M_L^{-1},M_R^{-1}):=\|I_n-M_L^{-1}AM_R^{-1}\|_F^2
+\end{align*}
+enables the design of \textbf{left-} and \textbf{split-approximate} inverses.
+\item The objective function for the \textbf{right-approximate} inverse can be recast into
+\begin{align*}
+F(M^{-1})=\sum_{j=1}^n\left\|e_j^{(n)}-Am_j^{-1}\right\|_2^2
+\;\text{ where }\;
+m_j^{-1}:=M^{-1}e_j^{(n)}
+\end{align*}
+is the $j$-th column of $M^{-1}$.
+This makes the \textbf{minimization of $F(M^{-1})$ embarrassingly parallelizable}.
+\end{itemize}
+\end{frame}
+
+% Slide 49
+\begin{frame}{Sparse approximate inverses (SPAI), cont'd\textsubscript{2}}
+\begin{itemize}
+\item To minimize the objective function $F$, we can use a \textbf{global iteration} where$\hspace{-1cm}$\\ 
+$M^{-1}$ is \textbf{unknown}, and which we solve for by a \textbf{descent-type method}.
+\item[] Using the \textbf{inner-product} $(X,Y)\in\mathbb{R}^{n\times n}\times\mathbb{R}^{n\times n}\mapsto\text{tr}(Y^TX)$, for a given \textbf{iterate $M_i^{-1}\!\!$ of right-approximate inverse} of $A\in\mathbb{R}^{n\times n}$, a new iterate is obtained as follows:
+\begin{align*}
+\text{Find }\;&
+M_{i+1}^{-1}\in M_i^{-1}+\text{span}\{G_i\}\\
+\;\text{ such that }\;&
+R_{i+1}:=I_n-AM_{i+1}^{-1}\perp A\,\text{span}\{G_i\},
+\end{align*}
+where $G_i\in\mathbb{R}^{n\times n}$ is a given \textbf{search direction}, and so that
+\begin{align*}
+M_{i+1}^{-1}=M_i^{-1}+\alpha_i G_i
+\;\text{ where }\;
+\alpha_i
+=\frac{(R_i,AG_i)}{(AG_i,AG_i)}
+=\frac{\text{tr}(R_i^TAG_i)}{\|AG_i\|_F^2}.
+\end{align*}
+Since $X\in\mathbb{R}^{n\times n}\mapsto\|X\|_F$ is a norm induced by the inner-product, we can show that $M_{i+1}^{-1}$ is \textbf{optimal} in the sense that:
+\begin{align*}
+\|R_{i+1}\|_F
+=\|I_n-AM_{i+1}^{-1}\|_F
+=\min_{M^{-1}\in M_i^{-1}+\text{span}\{G_i\}}\|I_n-AM^{-1}\|_F.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+% Slide 50
+\begin{frame}{Sparse approximate inverses (SPAI), cont'd\textsubscript{3}}
+\begin{itemize}
+\item The simplest choice of \textbf{search direction} is $G_i:=R_i=I_n-AM_{i}^{-1}$.
+\item[] The resulting approach is analogous to the \textbf{minimal residual} method (see Section~5.3.2 in Saad, 2003), but applied to the system $AM^{-1}\!=I_n$.$\hspace{-1cm}$
+\item[] Similarly as with the \textbf{minimal residual} method, we have a \textbf{monotonic decrease of residual norm}, that is, $\|R_{i+1}\|_F\leq \|R_i\|_F$.
+\item[] In practice, with this approach, \textbf{the iterate} $M^{-1}_i$ tends to \textbf{become denser} and denser from one iteration to another.
+\item[] In order to \textbf{contain} the amount of \textbf{non-zero components} in $M^{-1}$, \textbf{numerical droppings} are applied, which leads to the following algorithm:
+\vspace{-.2cm}
+\begin{algorithm}[H]
+\small
+\caption{Global minimal residual descent}
+\begin{algorithmic}[1]
+\STATE{Set an initial $M^{-1}\in\mathbb{R}^{n\times n}$}
+\WHILE{Not converged}
+\STATE{$C:=AM^{-1}$}
+\STATE{$G:=I_n-C$}
+\STATE{$\alpha:=\text{tr}(G^TAG)/\|C\|_F^2$}
+\COMMENT{$G:=R\implies (R,AG)=(G,AG)=\text{tr}(G^TAG)$}
+\STATE{$M^{-1}:=M^{-1}+\alpha G$}
+\STATE{Apply numerical droppings to $M^{-1}$}
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+
+% Slide 51
+\begin{frame}{Sparse approximate inverses (SPAI), cont'd\textsubscript{4}}
+\begin{itemize}
+\item An alternative to the global minimal residual descent is by \textbf{setting the search direction to} the \textbf{opposite of the gradient of the residual norm}.
+\item[] One way to reveal this gradient is through Taylor expansion, i.e., the perturbed objective function reads
+\begin{align*}
+F(M^{-1}+E)=F(M^{-1})+(\nabla_{M^{-1}}F,E)+o(\|E\|_F)
+\end{align*}
+where $E$ is a small perturbation.
+Then, as we let $R:=I_n-AM^{-1}$, we get
+{\small\begin{align*}
+\hspace{-.45cm}
+F(M^{-1}\!\!+\!E)-F(M^{-1})
+=&\,\|I_n-A(M^{-1}+E)\|_F-\|I_n-AM^{-1}\|_F\\
+=&\,\|R-AE\|_F-\|R\|_F\\
+=&\,\text{tr}\left((R-AE)^T(R-AE)\right)-\text{tr}(R^TR)\\
+=&\,\text{tr}\left(RR^T\!-R^TAE-(AE)^TR+(AE)^TAE\right)-\text{tr}(R^TR)\\
+=&\,-\text{tr}(R^TAE)-\text{tr}((AE)^TR)+\text{tr}((AE)^TAE)\\
+=&\,-(R,AE)-(AE,R)+\|AE\|_F^2\\
+=&\,-2(R,AE)+\|AE\|_F^2
+=-2(A^TR,E)+\|AE\|_F^2
+\end{align*}}
+which indicates that the gradient is given by $-2A^TR$.
+\end{itemize}
+\end{frame}
+
+% Slide 52
+\begin{frame}{Sparse approximate inverses (SPAI), cont'd\textsubscript{5}}
+\begin{itemize}
+\item A \textbf{steepest descent} method is obtained by setting the search direction to the opposite of the gradient of the residual norm, i.e., $G_i:=A^TR_i$.
+\item[] The resulting algorithm is given by:\vspace{-.3cm}
+\begin{algorithm}[H]
+\small
+\caption{Global steepest descent}
+\begin{algorithmic}[1]
+\STATE{Set an initial $M^{-1}\in\mathbb{R}^{n\times n}$}
+\WHILE{Not converged}
+\STATE{$R:=I_n-AM^{-1}$}
+\STATE{$G:=A^TR$}
+\STATE{$\alpha:=\|G\|_F^2/\|AG\|_F^2$}
+\COMMENT{$G:=R^TA\implies(R,AG)=(A^TR,A^TR)=\|G\|_F^2$}
+\STATE{$M^{-1}:=M^{-1}+\alpha G$}
+\STATE{Apply numerical droppings to $M^{-1}$}
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+\end{itemize}
+\end{frame}
+
+% Slide 53
+\begin{frame}{Sparse approximate inverses (SPAI), cont'd\textsubscript{6}}
+\begin{itemize}
+\item Remember that the residual norm of a right-approximate inverse can be decomposed into
+\begin{align*}
+\hspace{-.5cm}
+F(M^{-1})
+=\|I_n-AM^{-1}\|_F
+=\sum_{j=1}^n\left\|e_j^{(n)}-Am_j^{-1}\right\|_2^2
+\;\text{ where }\;
+m_j^{-1}:=M^{-1}e_j^{(n)}
+\end{align*}
+is the $j$-th column of $M^{-1}$.\\
+This suggests a column-oriented approach where $n$ independent linear systems
+\begin{align*}
+Am_j^{-1}=e_j^{(n)}
+\;\text{ for }\;
+j=1,2,\dots,n
+\end{align*}
+are approximately solved using a \textbf{sparse iterative solver}.
+\item[] That is, the \textbf{initial guess} is \textbf{sparse}, and the \textbf{subsequent iterates remain sparse}.
+\item[] For the case of Arnoldi-based approaches, the Arnolid basis vectors are also sparse.
+\end{itemize}
+\end{frame}
+
+% Slide 54
+\subsection{Other preconditioners}
+\begin{frame}{Other preconditioners}
+\begin{itemize}
+\item Besides what we covered here, there are numerous other types of preconditioners.
+Some of these are
+\begin{itemize}\normalsize
+\item[-] \textbf{Multigrid methods}:
+Class of iterative solvers that rely on the application of stationary methods (e.g., Gauss-Seidel, Jacobi, ...) at different resolution scales, from fine grids to coarser, lower-dimensional ones, all the way down to the coarsest level, where a more accurate solve is conducted.
+\item[-] \textbf{Domain decomposition methods}:
+Techniques that partition the computational domain into smaller subdomains, solve subproblems on each subdomain (possibly in parallel), and combine the solutions using appropriate interface conditions to reconstruct the global solution.
+\item[-] \textbf{Block preconditioners}:
+Methods that exploit the block structure of matrices by constructing preconditioners based on approximations of diagonal blocks, Schur complements, or block factorizations, often leading to more efficient preconditioning for structured problems.
+\item[-] \textbf{Hierarchical preconditioners}:
+Matrices based on the approximation of certain blocks of a matrix by low-rank decompositions.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Homework problems}
+% Slide 55
+\begin{frame}{Homework problems}\vspace{.1cm}
+Turn in \textbf{your own} solution to \textbf{Pb.$\,$31}:\vspace{.15cm}\\
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$31}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Let $A\in\mathbb{R}^{n\times n}$ be a non-singular coefficient matrix for the linear system $Ax=b$, and $M\in\mathbb{R}^{n\times n}$ be a non-singular preconditioner which admits a decomposition $M=M_LM_R$.
+\begin{itemize}\normalsize
+\item[a.] Show that $M^{-1}A$, $AM^{-1}$ and $M_L^{-1}AM_R^{-1}$ are similar.
+\item[b.] Given a right-eigenvector $y$ of $M^{-1}A$, find an associated right-eigenvector for $AM^{-1}$, and another one for $M_L^{-1}AM_R^{-1}$.
+\end{itemize}
+\end{minipage}\vspace{.15cm}
+\begin{minipage}[t]{0.1\textwidth}
+\textbf{Pb.$\,$32}
+\end{minipage}
+\begin{minipage}[t]{0.89\textwidth}
+Let $A\in\mathbb{R}^{n\times n}$ be any matrix. 
+Then, show that
+\begin{itemize}\normalsize
+\item[a.] $\|I_n-AM^{-1}\|_F$ is minimized by $M^{-1}\in\mathbb{R}^{n\times n}$ if $A^TAM^{-1}=A^T$.
+\item[b.] $\|I_n-M^{-1}A\|_F$ is minimized by $M^{-1}\in\mathbb{R}^{n\times n}$ if $M^{-1}AA^T=A^T$.
+\end{itemize}
+\end{minipage}
+\end{frame}
+
+\section{Practice session}
+% Slide 56
+\begin{frame}{Practice session}
+\begin{enumerate}
+\item Implement the PCG method.
+\item Implement the split-preconditioned GMRES method.
+\end{enumerate}
+\end{frame}
+
+\section{References}
+% Slide 57
+\begin{frame}{References}
+\begin{itemize}
+\item Bai, Z. Z., \& Pan, J. Y. (2021). Matrix analysis and computations. Society for Industrial and Applied Mathematics.
+\item Saad, Y. (2003). Iterative methods for sparse linear systems. Society for Industrial and Applied Mathematics.
+\end{itemize}
+\end{frame}
 
 \end{document}
 
