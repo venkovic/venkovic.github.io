@@ -1,6 +1,6 @@
 \documentclass[t,usepdftitle=false]{beamer}
 
-\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+\input{../../../tex-beamer-custom/preamble.tex}
 
 \title[NLA for CS and IE -- Lecture 12]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
 \subtitle{\vspace{.3cm}Lecture 12\\
@@ -12,7 +12,7 @@ Jacobi-Davidson method\vspace{-.47cm}}
 \author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
 \institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
 
-\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{../../../logos/TUM-logo.png}}
 
 \begin{document}
 	
@@ -200,29 +200,23 @@ $\!$behaviors when \textbf{letting $M$ be the tridiagonal form of} $A$ and $\var
 % Slide 08
 \begin{frame}{Generalized Davidson method, cont'd\textsubscript{2}}
 \begin{itemize}
-\item For a \textbf{harmonic Ritz} pair $(\lambda,y)$ with respect to a search space $\text{range}(Q_k)$, there exists $\hat{y}\in\mathbb{F}^k$ such that $y=Q_k\hat{y}$ and\vspace{-.1cm}
-\begin{align*}
-G_1\hat{y}=\lambda G_2^H\hat{y}
-\end{align*}
-$\vspace{-.55cm}$\\
-where $G_1:=((A-\sigma I_n)Q_k)^H(A-\sigma I_n)Q_k$ and
-$G_2:=Q_k^H(A-\sigma I_n)Q_k$.
-\item[] If $A$ is non-Hermitian, the harmonic GD method is as follows:
+\item The computation of Rayleigh-Ritz pairs after the generalized Davidson $\!$(GD)$\hspace{-1cm}$\\
+method is as follows:
 \end{itemize}\vspace{-.25cm}
 \begin{algorithm}[H]
 \small
-\caption{Harmonic GD$:(A,q,\sigma,k)\mapsto (\lambda,y)$}
+\caption{GD$:(A,q,k)\mapsto (\lambda,y)$}
 \begin{algorithmic}[1]
-\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $G_1,G_2\in\mathbb{F}^{k\times k}$}
+\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $B_k\in\mathbb{F}^{k\times k}$}
 \STATE{$q_{1}:=q/\|q\|_2$}
 \FOR{$j=1,\dots,k$}
-\STATE{$w_j:=(A-\sigma I_n)q_j$}
-\STATE{$G_1[1:j,j]:=W_j^Hw_j$}
-\COMMENT{$G_1[j,1:j-1]:=G_1[1:j-1,j]^H$}
-\STATE{$G_2[1:j,j]:=Q_j^Hw_j$, $G_2:=[j, 1:j-1]:=q_j^HW_{j-1}$}
-\STATE{Solve for eigenpair $(\lambda,\hat{y})$ of $(G_1[1:j,1:j],G_2[1:j,1:j]^H)$ closest to $\sigma$}
-\STATE{$y:=Q_j\hat{y}$, $\rho:=\sigma+\hat{y}^HG_2\hat{y}$, $r:=Ay-\rho y$}
-\STATE{Solve for $t$ such that $(M-\rho I_n)t=r$}
+\STATE{$w_j:=Aq_j$}
+\STATE{$B_k[1:j,j]:=Q_j^Hw_j$, $B_k[j,1:j-1]:=q_j^HW_{j-1}$}
+\STATE{Solve for an exterior eigenpair $(\lambda,\hat{y})$ of $B_j$}
+\COMMENT{$B_j:=B_{k}[1:j,1:j]$}
+\STATE{$y:=Q_j\hat{y}$}
+\STATE{$r:=Ay-\lambda y$}
+\STATE{Solve for $t$ such that $(M-\lambda I_n)t=r$}
 \STATE{$t:=\Pi^{(j)}t$}
 \COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
 \STATE{$q_{j+1}:=t/\|t\|_2$}
@@ -231,8 +225,41 @@ $G_2:=Q_k^H(A-\sigma I_n)Q_k$.
 \end{algorithm}	
 \end{frame}
 
-\section{Jacobi methods}
 % Slide 09
+\begin{frame}{Generalized Davidson method, cont'd\textsubscript{3}}
+\begin{itemize}
+\item For a \textbf{harmonic Ritz} pair $(\lambda,y)$ with respect to a search space $\text{range}(Q_k)$, there exists $\hat{y}\in\mathbb{F}^k$ such that $y=Q_k\hat{y}$ and\vspace{-.1cm}
+\begin{align*}
+G_1\hat{y}=\lambda G_2^H\hat{y}
+\end{align*}
+$\vspace{-.55cm}$\\
+where $G_1:=((A-\sigma I_n)Q_k)^H(A-\sigma I_n)Q_k$ and
+$G_2:=Q_k^H(A-\sigma I_n)Q_k$.
+\item[] If $A$ is non-Hermitian, a \textbf{basic implementation} of the harmonic GD method is as follows:
+\end{itemize}\vspace{-.25cm}
+\begin{algorithm}[H]
+\small
+\caption{Basic harmonic GD$:(A,q,\sigma,k)\mapsto (\lambda,y)$}
+\begin{algorithmic}[1]
+\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $G_1,G_2\in\mathbb{F}^{k\times k}$}
+\STATE{$q_{1}:=q/\|q\|_2$}
+\FOR{$j=1,\dots,k$}
+\STATE{$w_j:=(A-\sigma I_n)q_j$}
+\STATE{$G_1[1:j,j]:=W_j^Hw_j$}
+\COMMENT{$G_1[j,1:j-1]:=G_1[1:j-1,j]^H$}
+\STATE{$G_2[1:j,j]:=Q_j^Hw_j$, $G_2:=[j, 1:j-1]:=q_j^HW_{j-1}$}
+\STATE{Solve for eigenpair $(\lambda,\hat{y})$ of $G_2[1:j,1:j]^{-H}G_1[1:j,1:j]$ closest to 0}
+\STATE{$y:=Q_j\hat{y}$, $\delta_\rho:=\hat{y}^HG_2\hat{y}$, $\rho:=\sigma+\delta_\rho$, $r:=W_j\hat{y}-\delta_\rho y$}
+\STATE{Solve for $t$ such that $(M-\rho I_n)t=r$}
+\STATE{$t:=\Pi^{(j)}t$, $q_{j+1}:=t/\|t\|_2$}
+\COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}	
+\end{frame}
+
+\section{Jacobi methods}
+% Slide 10
 \begin{frame}{Orthogonal complement corrections}
 \begin{itemize}
 \item \textbf{Jacobi orthogonal complement correction} (\textbf{JOCC}):
@@ -267,7 +294,7 @@ where $[0\,w^T]^T$ is an \textbf{orthogonal complement correction} to the approx
 \tiny{Jacobi, C.G.J. (1845), Ueber eine neue Auflosungsart der bei der Methode der kleinsten Quadrate vorkommende linearen Gleichungen, Astronom Nachr, 297-306.}
 \end{frame}
 
-% Slide 10
+% Slide 11
 \begin{frame}{Orthogonal complement corrections, cont'd}
 \begin{itemize}
 \item[]
@@ -294,11 +321,11 @@ with $w_1:=0$.
 
 \section{Jacobi-Davidson method}
 
-% Slide 11
+% Slide 12
 \begin{frame}{JOCC by Sleijpen and van der Vorst (1996)}
 \begin{itemize}
 \item Sleijpen and van der Vorst (1996) revisited the JOCC approach in the more general setting where an arbitrary iterate $y_j\in\mathbb{F}^n$ is known as an approximate eigenvector of $A\in\mathbb{F}^{n\times n}$.
-\item[] JOCC's adaptation to this more general context lies in setting a correction $\delta\in\mathbb{F}^n$ to $y_j$ such that
+\item[] JOCC's adaptation to this more general context lies in setting a correction $\delta\in\mathbb{F}^n$ to $y_j$ with unit norm such that
 \begin{align}\label{eq:corr}
 A(y_j+\delta)=\theta(y_j+\delta),\;\;
 \delta\perp y_j
@@ -316,7 +343,7 @@ is such that $\boxed{\vartheta_j+y_j^HA\delta=\theta}$ where $\boxed{\vartheta_j
 \tiny{Sleijpen, G. L., \& Van der Vorst, H. A. (1996). A Jacobi--Davidson iteration method for linear eigenvalue problems. SIAM review, 42(2), 267-293.}
 \end{frame}
 
-% Slide 12
+% Slide 13
 \begin{frame}{JOCC by Sleijpen and van der Vorst (1996), cont'd}
 \begin{itemize}
 \item[]
@@ -325,8 +352,9 @@ is such that $\boxed{\vartheta_j+y_j^HA\delta=\theta}$ where $\boxed{\vartheta_j
 \begin{align*}
 (I_n-y_jy_j^H)A(y_j+\delta)=\theta (I_n-y_jy_j^H)(y_j+\delta)
 \end{align*}
-is such that 
+is such that\vspace{-.65cm}
 \begin{align*}
+\hspace{.9cm}
 (I_n-y_jy_j^H)(A-\theta I_n)\delta
 =&\,(I_n-y_jy_j^H)(-Ay_j+\theta y_j)\\
 =&\,-(I_n-y_jy_j^H)Ay_j\\
@@ -342,18 +370,120 @@ where $\theta$, which \textbf{is unknown}, is replaced by $\vartheta_j$ to yield
 (I_n-y_jy_j^H)(A-\vartheta_j I_n)(I_n-y_jy_j^H)\delta=-r_j
 }\,.
 \end{align*}
-
+Note that $r_j^Hy_j=y_j^HAy_j-\vartheta_j=0\implies r_j\perp y_j$ so that \textbf{this equation is consistent as long as $A-\vartheta_j I_n$ is not singular}.
 \end{itemize}
 \end{itemize}\smallskip
 \tiny{Sleijpen, G. L., \& Van der Vorst, H. A. (1996). A Jacobi--Davidson iteration method for linear eigenvalue problems. SIAM review, 42(2), 267-293.}
 \end{frame}
 
+% Slide 14
+\begin{frame}{Exact solution of the Jacobi-Davidson correction equation}
+\begin{itemize}
+\item The Jacobi-Davidson correction equation is such that
+\begin{align*}
+(I_n-y_jy_j^H)(A-\vartheta_j I_n)\delta &\,=-r_j,\;\;\delta\perp y_j\\
+(A-\vartheta_j I_n)\delta-y_jy_j^H(A-\vartheta_j I_n)\delta &\,=-r_j
+\end{align*}
+so that $(A-\vartheta_j I_n)\delta=\alpha y_j -r_j$ where $\alpha:=y_j^H(A-\vartheta_jI_n)\delta$.
+If $\vartheta_j$ is not an exact eigenvalue of $A$, then we get
+\begin{align*}
+\delta=\alpha(A-\vartheta_jI_n)^{-1}y_j-(A-\vartheta_j I_n)^{-1}r_j.
+\end{align*}
+And from the orthogonality condition $y_j\perp\delta$, we get
+\begin{align*}
+\alpha=\frac{y_j^H(A-\vartheta_j I_n)^{-1}r_j}{y^H_j(A-\vartheta_jI_n)^{-1}y_j}.
+\end{align*}
+Then, we set:\vspace{-.65cm}
+\begin{align*}
+\hspace{2cm}
+y_{j+1}
+:=&\,y_j+\delta\\
+=&\,y_j+\alpha(A-\vartheta_jI_n)^{-1}y_j-(A-\vartheta_j I_n)^{-1}r_j\\
+=&\,\alpha(A-\vartheta_j I_n)^{-1}y_j
+\end{align*}
+which corresponds to a \textbf{Rayleigh quotient iteration}.
+\end{itemize}
+\end{frame}
 
+% Slide 15
+\begin{frame}{Iterative solve of the Jacobi-Davidson equation}
+\begin{itemize}
+\item In practice, the \textbf{J-D correction equation} is only \textbf{solved approximately}, typically using either MINRES (Paige \& Saunders, 1975) when $A$ is symmetric/Hermitian, or GMRES (Saad \& Schultz, 1986) or even BiCGSTAB (Van der Vorst, 1992), when $A$ is non-Hermitian.
+\item \textbf{At every step} $j$ of the iteration, one has to \textbf{solve a linear system with a varying shift}.
+\item Based on the decomposition of the orthogonal correction $\delta$ presented by Sleijpen and van der Vorst (1996), a preconditioning of the following form is proposed:
+\begin{align*}
+r\mapsto\alpha M^{-1}y_j+M^{-1}r
+\text{ where }
+\alpha:=\frac{y_j^HM^{-1}r}{y_j^HM^{-1}y_j},
+\end{align*}
+in which $M$ serves as an approximation of $A-\vartheta_j I_n$.
+\end{itemize}\smallskip
+\tiny{Paige, C.C. \& M.A. Saunder (1975). Solution of sparse indefinite systems of linear equations. SIAM, J Numer Anal 12, 617-629.}\tiny\\
+\tiny{Saad, Y. \& Schultz M.H. (1986). GMRES: a generalized minimal residual algorithm for solving nonsymmetric linear systems, SIAM J Sci Statist Comput 7, 856-869.}\tiny\\
+\tiny{van der Vorst, H. A. (1992). Bi-CGSTAB: A fast and smoothly converging variant of Bi-CG
+for the solution of nonsymmetric linear systems. SIAM Journal on scientific and Statistical Computing, 13(2):631–644.}\tiny\\
+\tiny{Sleijpen, G. L. G. and van der Vorst, H. A. (1996). A Jacobi–Davidson iteration method
+for linear eigenvalue problems, SIAM J. Matrix Anal. Appl., 17 (1996), pp. 401–425.}
+\end{frame}
 
+% Slide 16
+\begin{frame}{Jacobi-Davidson algorithm with Rayleigh-Ritz projections}
+\begin{itemize}
+\item Applying the Jacobi-Davidson (J-D) method to Rayleigh-Ritz projections, we obtain the following algorithm:\vspace{-.4cm}
+\end{itemize}
+\small
+\begin{algorithm}[H]
+\caption{J-D$:(A,q,k)\mapsto (\lambda,y)$}
+\begin{algorithmic}[1]
+\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $B_k\in\mathbb{F}^{k\times k}$}
+\STATE{$\tilde{t}:=q$}
+\FOR{$j=1,\dots,k$}
+\STATE{$\tilde{t}:=\Pi^{(j-1)}\tilde{t}$}
+\COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
+\STATE{$q_j:=\tilde{t}/\|\tilde{t}\|_2$}
+\STATE{$w_j:=Aq_j$}
+\STATE{$B_k[1:j,j]:=Q_j^Hw_j$, $B_k[j,1:j-1]:=q_j^HW_{j-1}$}
+\STATE{Solve for eigenpair $(\lambda,\hat{y})$ of $B_j$}
+\STATE{$y:=Q_j\hat{y}$}
+\STATE{$r:=W_j\hat{y}_j-\lambda y$}
+\STATE{Solve for $\tilde{t}\approx t$ such that $(I_n-y_jy_j^H)(A-\lambda I_n)(I_n-y_jy_j^H)t=r$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}	
+\end{frame}
 
-\section{Homework problems}
+% Slide 17
+\begin{frame}{Jacobi-Davidson algorithm with harmonic Ritz projections}
+\begin{itemize}
+\item Similarly as we previously saw for the GD method, the use of harmonic Ritz projections is recommended when trying to approximate interior eigenpair:\vspace{-.25cm}
+\end{itemize}
+\small
+\begin{algorithm}[H]
+\caption{Basic harmonic J-D$:(A,q,\sigma,k)\mapsto (\lambda,y)$}
+\begin{algorithmic}[1]
+\STATE{Allocate memory for $Q_k,W_k\in\mathbb{F}^{n\times k}$ and $G_1,G_2\in\mathbb{F}^{k\times k}$}
+\STATE{$\tilde{t}:=q$}
+\FOR{$j=1,\dots,k$}
+\STATE{$\tilde{t}:=\Pi^{(j-1)}\tilde{t}$}
+\COMMENT{$\Pi^{(j)}\text{ is a projector onto range}(Q_j)^\perp$}
+\STATE{$q_j:=\tilde{t}/\|\tilde{t}\|_2$}
+\STATE{$w_j:=(A-\sigma I_n)q_j$}
+\STATE{$G_1[1:j,j]:=W_j^Hw_j$}
+\COMMENT{$G_1[j,1:j-1]:=G_1[1:j-1,j]^H$}
+\STATE{$G_2[1:j,j]:=Q_j^Hw_j$, $G_2[j,1:j-1]:=q_j^HW_{j-1}$}
+\STATE{Solve for eigenpair $(\lambda,\hat{y})$ of $G_2[1\!:\!j,1\!:\!j]^{-H}G_1[1\!:\!j,1\!:\!j]$ closest to 0}
+\STATE{$y:=Q_j\hat{y}$}
+\STATE{$\delta_\rho:=\hat{y}^HG_2\hat{y}$, $\rho:=\sigma+\delta_\rho$}
+\STATE{$r:=W_j\hat{y}_j-\delta_\rho y$}
+\STATE{Solve for $\tilde{t}\approx t$ such that $(I_n-y_jy_j^H)(A-\rho I_n)(I_n-y_jy_j^H)t=r$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}	
+\end{frame}
 
-% Slide ++
+\section{Homework problem}
+
+% Slide 18
 \begin{frame}{Homework problem}\vspace{.1cm}
 Turn in \textbf{your own} solution to \textbf{Pb.$\,$25}:\vspace{.15cm}\\
 \begin{minipage}[t]{0.1\textwidth}
@@ -361,15 +491,30 @@ Turn in \textbf{your own} solution to \textbf{Pb.$\,$25}:\vspace{.15cm}\\
 \end{minipage}
 \begin{minipage}[t]{0.89\textwidth}
 Show that if a matrix $A\in\mathbb{F}^{n\times n}$ has constant diagonal components, i.e., $D_A\propto I_n$, then, assuming exact arithmetic, the Davidson method is equivalent to applying a Rayleigh-Ritz projection to a Krylov subspace generated by a Arnoldi procedure with the same starting vector $q$.
-\end{minipage}\vspace{.15cm}
-\begin{minipage}[t]{0.1\textwidth}
-\textbf{Pb.$\,$26}
 \end{minipage}
-\begin{minipage}[t]{0.89\textwidth}
-***.
-\end{minipage}\vspace{.15cm}
 \end{frame}
 
+\section{Practice session}
+% Slide 19
+\begin{frame}[fragile]{Practice session}
+\begin{enumerate}
+\item Implement the MGS-based Davidson method with Rayleigh-Ritz projection to compute the most dominant eigenvalue of a matrix of your choice.
+\item Implement the MGS-based generalized Davidson method with Rayleigh-Ritz projection to compute the most dominant eigenvalue of a matrix and the preconditioner of your choice.
+\item Implement our basic MGS-based Davidson method with harmonic Ritz projection to compute an interior eigenpair of a matrix of your choice close to an arbitrary shift.
+What do you observe?
+\item Implement the MGS-based generalized Davidson method with harmonic Ritz projection to compute an interior eigenpair of a matrix of your choice close to an arbitrary shift with a preconditioner of your choosing.
+What do you observe?
+\item Implement an MGS-based Jacobi-Davidson method with Rayleigh-Ritz projection to compute a dominant eigenpair of a matrix of your choice using different numbers of solver iteration for the orthogonal correction equation.
+\end{enumerate}
+\end{frame}
+
+% Slide 20
+\begin{frame}[fragile]{Practice session, cont'd}
+\begin{enumerate}
+\item Implement an MGS-based Jacobi-Davidson method with harmonic Ritz projection to compute a dominant eigenpair of a matrix of your choice using different numbers of solver iteration for the orthogonal correction equation.
+What do you observe?
+\end{enumerate}
+\end{frame}
 
 
 \end{document}
