@@ -1,6 +1,6 @@
 \documentclass[t,usepdftitle=false]{beamer}
 
-\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+\input{../../../tex-beamer-custom/preamble.tex}
 
 \title[NLA for CS and IE -- Lecture 11]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
 \subtitle{\vspace{.3cm}Lecture 11\\Arnoldi and Lanczos Procedures}
@@ -11,7 +11,7 @@
 \author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
 \institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
 
-\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{../../../logos/TUM-logo.png}}
 
 \begin{document}
 	
@@ -33,7 +33,7 @@
 \item \textbf{Krylov subspace methods} are another set of iterative methods to compute a few eigenpairs of a large matrix $A$
 \begin{itemize}\normalsize
 \item We assume that the mapping $x\mapsto Ax$ can be operated efficiently, possibly because $A$ is sparse\vspace{.1cm}
-\item We denote two mehods in particular:
+\item We denote two methods in particular:
 \begin{itemize}\normalsize
 \item[-] The \textbf{Arnoldi} process is meant for non-symmetric matrices, and\vspace{.1cm}
 \item[-] The \textbf{Lanczos} process, which was introduced later for symmetric matrices.
@@ -146,10 +146,11 @@ This is what we wanted to know, and we can now proceed to the step to obtain $q_
 	\fbox{\begin{varwidth}{10cm}
 	Suppose we have $q_1,\dots,q_k$ and $h_{:,j}$ for $j<k$. 
 	Then we can find $q_{k+1}$ and $h_{:,k}$ as follows:\tinyskip\\
-	$\hspace*{1cm}h_{ik}:=q_i^TAq_k$, for $i\leq k$\tinyskip\\
-	$\hspace*{1cm}r_k:=Aq_k-\sum_{i=1}^kh_{ik}q_i$\tinyskip\\
-	$\hspace*{1cm}h_{k+1,k}:=\|r_k\|_2$\tinyskip\\
-	$\hspace*{1cm}q_{k+1}:=\frac{r_k}{h_{k+1,k}}$
+	$\hspace*{.5cm}$for $i\leq k:$\tinyskip\\
+	$\hspace*{1cm}h_{ik}:=q_i^TAq_k$\tinyskip\\
+	$\hspace*{.5cm}r_k:=Aq_k-\sum_{i=1}^kh_{ik}q_i$\tinyskip\\
+	$\hspace*{.5cm}h_{k+1,k}:=\|r_k\|_2$\tinyskip\\
+	$\hspace*{.5cm}q_{k+1}:=\frac{r_k}{h_{k+1,k}}$
 	\end{varwidth}}\end{center}
 	\medskip
 \item Performing this iteration starting from a given vector $q_1$, we get a method to calculate the columns of the matrices $H$ and $Q$ that satisfy $Q^TAQ=H$. This is, in a nuttshell, the Arnoldi process.
@@ -641,12 +642,12 @@ which does not require any application of the shift-and-invert operator.
 		\text{ and }
 		G_2:=P^T(A-\sigma I_n)P
 	\end{align*}
-	so that the reduced eigenpair $(\lambda,\hat{y})$ is such that $G_1\hat{y}=\lambda G_2^H\hat{y}$.
+	so that, assuming $\sigma$ is not an eigenvalue of $A$, the reduced eigenpair $(\lambda,\hat{y})$ is such that $G_2^{-H}G_1\hat{y}=\lambda \hat{y}$.
 	\item It is well established that the Rayleigh quotient $\rho$ of $y$ with respect to $A$ is a better approximation of the eigenvalue of $A$ near $\sigma$ than $\sigma+\lambda$. The Rayleigh quotient can be efficiently computed as
 	\begin{align*}
-		\rho=\frac{y^HAy}{y^Hy}=\frac{\hat{y}^HP^TAP\hat{y}}{\hat{y}P^TPy}
-		=\sigma+\frac{\hat{y}^HP^T(A-\sigma I_n)P\hat{y}}{\hat{y}P^TPy}
-		=\sigma+\frac{\hat{y}^HG_2\hat{y}}{\hat{y}P^TPy}
+		\rho=\frac{y^HAy}{y^Hy}=\frac{\hat{y}^HP^TAP\hat{y}}{\hat{y}P^TP\hat{y}}
+		=\sigma+\frac{\hat{y}^HP^T(A-\sigma I_n)P\hat{y}}{\hat{y}P^TP\hat{y}}
+		=\sigma+\frac{\hat{y}^HG_2\hat{y}}{\hat{y}P^TP\hat{y}}
 	\end{align*}
 	so that, if $P^TP=I_k$ and $\hat{y}^H\hat{y}=1$, then we have $\boxed{\rho=\sigma+\hat{y}^HG_2\hat{y}}$.
 	\item It is also common to monitor convergence through stopping criteria defined with respect to the residual
@@ -708,6 +709,36 @@ which does not require any application of the shift-and-invert operator.
 	\end{align*}
 	\end{itemize}
 	\end{itemize}
+\end{frame}
+
+% Slide 28
+\begin{frame}{Harmonic Ritz approximation of interior eigenpairs, cont'd\textsubscript{6}}
+\begin{itemize}
+\item Alternatively, the harmonic Ritz pairs may be formed from non-shifted procedures.
+That is, let 
+\begin{align*}
+G_1:=(AP)^HAP
+\;\text{ and }\;
+G_2:=P^ TAP,
+\end{align*}
+then, the reduced eigenvalue problem of the shifted approximation 
+\begin{align*}
+y\in\text{range}(P)
+\;\text{ such that }\;
+(A-\sigma I_n)y-\lambda y
+\perp
+(A-\sigma I_n)\text{range}(P)
+\end{align*}
+is obtained as follows:
+\begin{align*}
+((A-\sigma I_n)P)^HAP\hat{y}=&\,(\sigma+\lambda)((A-\sigma I_n)P)^HP\hat{y}\\
+[(AP)^HAP-\overline{\sigma}P^TAP]\hat{y}=&\,(\sigma+\lambda)(P^TA^HP-\overline{\sigma}I_k)\hat{y}\\
+(G_1-\overline{\sigma}G_2)\hat{y}=&\,(\sigma+\lambda)(G_2^H-\overline{\sigma}I_k)\hat{y}\\
+(G_1-\overline{\sigma}G_2)\hat{y}=&\,(\sigma+\lambda)(G_2-\sigma I_k)^H\hat{y}\\
+(G_2-\sigma I_k)^{-H}(G_1-\overline{\sigma}G_2)\hat{y}=&\,(\sigma+\lambda)\hat{y}
+\end{align*}
+in which case we have $\rho=\hat{y}^HG_2\hat{y}$.
+\end{itemize}
 \end{frame}
 
 % Slide 28
