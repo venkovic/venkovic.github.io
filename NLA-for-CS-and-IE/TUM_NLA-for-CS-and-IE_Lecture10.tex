@@ -1,6 +1,6 @@
 \documentclass[t,usepdftitle=false]{beamer}
 
-\input{~/Dropbox/Git/tex-beamer-custom/preamble.tex}
+\input{../../../tex-beamer-custom/preamble.tex}
 
 \title[NLA for CS and IE -- Lecture 10]{Numerical Linear Algebra\\for Computational Science and Information Engineering}
 \subtitle{\vspace{.3cm}Lecture 10\\Locally Optimal Block Preconditioned Conjugate Gradient\vspace{-.47cm}}
@@ -11,7 +11,7 @@
 \author[nicolas.venkovic@tum.de]{Nicolas Venkovic\\{\small nicolas.venkovic@tum.de}}
 \institute[]{Group of Computational Mathematics\\School of Computation, Information and Technology\\Technical University of Munich}
 
-\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{~/Dropbox/Git/logos/TUM-logo.png}}
+\titlegraphic{\vspace{0cm}\includegraphics[height=1.1cm]{../../../logos/TUM-logo.png}}
 
 \begin{document}
 	
@@ -133,12 +133,12 @@ where $p_i$ is a search direction, $A$-conjugate to the previous direction $p_{i
 \begin{frame}{Rayleigh-Ritz projection of generalized eigenvalue problems}
 \begin{itemize}
 \item Rayleigh-Ritz projections are a means to find an optimal iterate in a given search space, e.g., $\mathrm{span}\{x_i,x_{i-1},Tr_i\}$ in the case of LOPCG.
-\item Rayleigh-Ritz projection of the generalized eigenvalue problem in a search space $\mathcal{R}(V)$ for some full rank $V\in\mathbb{R}^{n\times m}$ with $m\leq n$:
+\item Rayleigh-Ritz projection of the generalized eigenvalue problem in a search space $\text{range}(V)$ for some full rank $V\in\mathbb{R}^{n\times m}$ with $m\leq n$:
 	\begin{align*}
 	\text{Find }
-	(x_{i+1},\lambda)\in\mathcal{R}(V)\times \mathbb{R}
+	(x_{i+1},\lambda)\in\text{range}(V)\times \mathbb{R}
 	\text{ s.t. }
-	(Ax_{i+1}-\lambda Bx_{i+1})\perp\mathcal{R}(V).
+	(Ax_{i+1}-\lambda Bx_{i+1})\perp\text{range}(V).
 	\end{align*}
 	\end{itemize}
 	\vspace{-.25cm}
@@ -157,7 +157,7 @@ where $p_i$ is a search direction, $A$-conjugate to the previous direction $p_{i
 		\smallskip
 		Then, the Rayleigh-Ritz vector is formed by $x_{i+1}:=V\hat{x}$.\\
 		\smallskip
-		By convention, $\hat{x}^TV^TBV\hat{x}=1$ so that $x_{i+1}^TBx_{i+1}=1$ and $x_{i+1}^TAx_{i+1}=\theta$.
+		By convention, $\hat{x}^TV^TBV\hat{x}=1$ so that $x_{i+1}^TBx_{i+1}=1$ and $x_{i+1}^TAx_{i+1}=\lambda$.
 	\end{block}
 \end{frame}		
 	
@@ -194,7 +194,7 @@ $x_0:=x_{-1}\hat{x}_0$ ; $r_{0}:=Ax_{0}-Bx_{0}\lambda_{0}\,$\tinyskip\\
 	\item When $k\ll n$ and $n$ is very large  and/or the application of the operators $A$ and $B$ is matrix-free, it is customary to resort to iterative eigensolvers.\\
 	\item The least dominant generalized eigenvectors in the columns of $X$ such that $AX=BX\Lambda$ can be defined as the minimizer of the $\text{trace}(X^TAX)$ subjected to the constraint $X^TBX=I_k$.
 	\item Knyazev~(2001) introduced LOBPCG by extending LOPCG to a block version, which simultaneously produces iterates for the approximation of multiple dominant eigen-pairs.
-	\item Given an initial iterate $X_0$, LOBPCG generates a sequence of iterates $X_1,X_2,\dots$ which, in their earliest form, are obtained by Rayleigh-Ritz projection in locally optimal subspaces $\mathcal{R}([X_{i},TR_i,X_{i-1}])$, where the columns of $R_i$ are eigen-residuals, and $T$ is a preconditioner.
+	\item Given an initial iterate $X_0$, LOBPCG generates a sequence of iterates $X_1,X_2,\dots$ which, in their earliest form, are obtained by Rayleigh-Ritz projection in locally optimal subspaces $\text{range}([X_{i},TR_i,X_{i-1}])$, where the columns of $R_i$ are eigen-residuals, and $T$ is a preconditioner.
 	\end{itemize}
 	\medskip
 	\tiny{Knyazev, A. V. (2001). Toward the optimal preconditioned eigensolver: Locally optimal block preconditioned conjugate gradient method. SIAM journal on scientific computing, 23(2), 517-541.}
@@ -203,12 +203,12 @@ $x_0:=x_{-1}\hat{x}_0$ ; $r_{0}:=Ax_{0}-Bx_{0}\lambda_{0}\,$\tinyskip\\
 % Slide 08
 \begin{frame}{Rayleigh-Ritz projection of generalized eigenvalue problems}
 	\begin{itemize}
-	\item Rayleigh-Ritz projection of the generalized eigenvalue problem in $\mathcal{R}(V)$ for some full rank $V\in\mathbb{R}^{n\times m}_*$ with $m\leq n$:
+	\item Rayleigh-Ritz projection of the generalized eigenvalue problem in $\text{range}(V)$ for some full rank $V\in\mathbb{R}^{n\times m}_*$ with $m\leq n$:
 	\begin{align*}
 	\text{Find }
 	(X_{i+1},\Lambda)\in\mathcal{R}(V)\times \mathbb{R}_*^{k\times k}
 	\text{ s.t. }
-	(AX_{i+1}-BX_{i+1}\Lambda)\perp\mathcal{R}(V)
+	(AX_{i+1}-BX_{i+1}\Lambda)\perp\text{range}(V)
 	\end{align*}
 	where $k\leq m\leq n$ and $\Lambda$ is diagonal.
 	\end{itemize}
@@ -235,7 +235,7 @@ $x_0:=x_{-1}\hat{x}_0$ ; $r_{0}:=Ax_{0}-Bx_{0}\lambda_{0}\,$\tinyskip\\
 % Slide 09
 \begin{frame}{Definition of Early\_LOBPCG iterations}
 	\begin{itemize}
-	\item In their earliest form, LOBPCG iterations are defined by Knyazev (2001) as Rayleigh-Ritz projections w.r.t. $\mathcal{R}([X_{i},Z_i,X_{i-1}])$. We refer to these as
+	\item In their earliest form, LOBPCG iterations are defined by Knyazev (2001) as Rayleigh-Ritz projections w.r.t. $\text{range}([X_{i},Z_i,X_{i-1}])$. We refer to these as\\
 	\smallskip
 	\vspace{.1cm}
 	\begin{center}

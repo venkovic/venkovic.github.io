@@ -348,7 +348,7 @@ Essentially, that is, the shifted QR iterations \textit{implicitly} apply polyno
 \item[-] If the shifts $\mu_1,\dots,\mu_p$ are exact eigenvalues of $A$, then the induced restart polynomial deflates the components of $v_1$ in the direction of the corresponding eigenvectors.
 This motivates setting the shifts to the Ritz values which are the most remote from the targeted part of the spectrum.
 \item[-] In practice, the shifts are not exact eigenvalues of $A$.
-But if a shift $\mu_i$ is close to an eigenvalue of $A$, then the corresponding monomial of the restart polynomial removes small components of $v_1$ in the direction of nearby eigenvectors, thus relatively amplifying $v_1$'s components in the direction of the targeted eigenvectors, thus making the restarted subspace a better candidate for their approximation.
+But if a shift $\mu_i$ is close to an eigenvalue of $A$, then the corresponding monomial of the restart polynomial removes small components of $v_1$ in the direction of nearby eigenvectors, thus relatively amplifying $v_1$'s components in the direction of the targeted eigenvectors, making the restarted subspace a better candidate for their approximation.
 \item[-] Morgan (1996) shows that the implicitly restarted subspace of degree $k+i$ is Krylov, and given by\vspace{-.15cm}
 \begin{align*}
 \text{span}\{y_1,\dots,y_k,Ay_j,\dots,A^{i}y_j\}
@@ -751,7 +751,7 @@ multiplicity. Linear algebra and its applications, 415(1), 96-113.}
 \begin{align*}
 AV_m^{(r)}=V_m^{(r)}H_m^{(r)}+h^{(r)}_{m+1,m}v_{m+1}^{(r)}e_m^{(m)T}
 \end{align*}
-so that new Rayleigh-Ritz pairs $(\lambda,y)$ with respect to $\text{range}(V_m^{(r)})$, i.e., so that there exists a non-zero $\hat{y}$ such that 
+so that new Rayleigh-Ritz pairs $(\lambda,y)$ with respect to $\text{range}(V_m^{(r)})$, i.e., so that there exist non-zero $\hat{y}$ such that 
 \begin{align*}
 H_m^{(r)}\hat{y}=\lambda\hat{y}
 \;\text{ with }\;
