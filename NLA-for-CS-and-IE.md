@@ -120,4 +120,4 @@ notebook [<a href="NLA-for-CS-and-IE/PracticeSession18.ipynb">ipynb</a>, <a href
 
 Extra notes [[tex](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.tex), [pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.pdf)]
 
-Final exam [[pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final.pdf)]
+Final exams: Summer 2025 [[pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final.pdf)]

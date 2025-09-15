@@ -10,7 +10,7 @@
 
 ### *Course taught*
 
-[__NLA for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Winter 2024-25, Summer 2025)
+[__NLA for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Winter 2024-25, Summer 2025, Winter 2025-26)
 
 \*: developed and taught.
 
