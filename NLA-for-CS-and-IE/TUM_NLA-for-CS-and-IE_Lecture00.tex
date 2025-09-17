@@ -144,19 +144,21 @@ Associated challenges are
 \begin{center}\includegraphics[height=2cm]{images/2024-Venkovic-headshot.jpeg}\end{center}\vspace{.15cm}
 \textbf{Nicolas Venkovic}, Postdoc. in COMA @ TUM%\vspace{.3cm}
 \begin{itemize}
-\item[-] Postdoctoral Researcher @ TUM since 07/2024\vspace{.07cm}
-\item[-] Software Developer @ NXP Semiconductors (09/2022 - 04/2024)\vspace{.07cm}
-\item[-] PhD in Applied Mathematics \& Scientific Computing @ Cerfacs (09/2023)\vspace{.07cm}
-\item[-] MSE in Applied Mathematics \& Statistics @ Johns Hopkins University (2018)\vspace{.07cm}
+\item[-] Postdoctoral Researcher @ TUM since 07/2024\vspace{.05cm}
+%\item[-] Software Developer @ NXP Semiconductors (09/2022 - 04/2024)\vspace{.07cm}
+\item[-] PhD in Applied Mathematics \& Scientific Computing @ Cerfacs (09/2023)\vspace{.05cm}
+\item[-] MSE in Applied Mathematics \& Statistics @ Johns Hopkins University (2018)\vspace{.05cm}
 \end{itemize}
-\item Recent and ongoing research efforts:
-\item[] Randomized Short-Recurrence Iterative Methods for the Approximation of:\\
+%\item Recent and ongoing research efforts (see {\color{blue}{\underline{\href{https://venkovic.github.io/research}{venkovic.github.io/research}}}}):%
+\item Recent and ongoing research efforts (see \href{https://venkovic.github.io/research}{\color{blue}{\underline{venkovic.github.io/research}}}):
+\item[$\bullet$] \textbf{Fast Convolution Kernels} (\textbf{Fourier}, \textbf{Walsh-Hadamard}, ...).
+\item[$\bullet$] \textbf{Randomized Short-Recurrence Iterative Methods to Approximate}:\\
 \begin{itemize}\normalsize
-\item[-] Matrix Inverses, Eigenpairs, Low-rank and Non-Negative Factorizations.\vspace{.07cm}
+\item[-] \textbf{Matrix Inverses}, \textbf{Eigenpairs}, \textbf{Low-rank} and \textbf{Non-Negative Factorizations}.\vspace{.05cm}
 \end{itemize}
-\item[] With applications to:
+\item[$\bullet$] \textbf{Applications}:
 \begin{itemize}\normalsize
-\item[-] Stochastic Preconditioning, Matrix Recovery, Parallelization, \dots
+\item[-] \textbf{Stochastic Preconditioning}, \textbf{Matrix Recovery}, \textbf{Parallelization}, \dots
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -228,7 +230,7 @@ Upon completion of the class, students should:
 \item The duration of a lecture is not tied to a single class period.
 Some lectures will span less than one class, while others will cover multiple meetings.
 Several lectures can be covered within one meeting.
-\item Most lectures will begin by establishing formal foundations, and some will be followed by practice sessions using \textbf{Julia notebooks} or \textbf{exercise sheets} to test, visualize, and deepen your understanding of the methods and concepts introduced.
+\item Most lectures will begin by establishing formal foundations, and some will be followed by practice sessions using \textbf{Julia notebooks} and/or \textbf{problem sets} to test, visualize, and deepen your understanding of the methods and concepts introduced.
 \end{itemize}
 \end{frame}
 
@@ -237,27 +239,27 @@ Several lectures can be covered within one meeting.
 \begin{itemize}
 \item \textbf{Main references}:
 \begin{itemize}
-\item[-] \textbf{Lecture slides} and \textbf{Julia notebooks} uploaded gradually on {\color{blue}{\underline{\href{https://www.moodle.tum.de/}{Moodle}}}}, throughout the semester.\\
-Content also uploaded at {\color{blue}{\underline{\href{https://venkovic.github.io/NLA-for-CS-and-IE}{venkovic.github.io/NLA-for-CS-and-IE}}}}.
+\item[-] \textbf{Lecture slides}, \textbf{Julia notebooks} and \textbf{problem sets} uploaded gradually on \href{https://www.moodle.tum.de/}{\color{blue}{\underline{Moodle}}}, throughout the semester.\\
+Content also uploaded at \href{https://venkovic.github.io/NLA-for-CS-and-IE}{\color{blue}{\underline{venkovic.github.io/NLA-for-CS-and-IE}}}.
 \item[-]\begin{minipage}{0.2\textwidth}\vspace{.15cm}
 \includegraphics[height=1.8cm]{images/Darve2021.jpg}
 \end{minipage}
 \hspace{-.8cm}
 \begin{minipage}{0.75\textwidth}
-Darve, E., \& Wootters, M. (2021). Numerical linear algebra with Julia.
+Darve, E., \& Wootters, M. (2021). Numerical Linear Algebra with Julia.
 Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}\vspace{.3cm}
 \item[-] GitHub repository: 
 \begin{center}\url{https://github.com/EricDarve/numerical_linear_algebra}\end{center}\vspace{.3cm}
 \end{itemize}
-\item \textbf{Most used supplemental reference}:
+\item \textbf{Most used supplemental reference \#1}:
 \begin{itemize}
 \item[-]\begin{minipage}{0.2\textwidth}\vspace{.15cm}
 \includegraphics[height=1.8cm]{images/Saad2003.jpg}
 \end{minipage}
 \hspace{-.8cm}
 \begin{minipage}{0.75\textwidth}
-Saad, Y. (2003). Iterative methods for sparse linear systems. 
+Saad, Y. (2003). Iterative Methods for Sparse Linear Systems. 
 Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}\vspace{.3cm}
 \end{itemize}
@@ -269,6 +271,17 @@ Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 % Slide 10
 \begin{frame}{Reading material, cont'd\textsubscript{1}}
 \begin{itemize}
+\item \textbf{Most used supplemental reference \#2}
+\begin{itemize}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.8cm]{images/Bai2021.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Bai, Z. Z., \& Pan, J.-Y. (2021). Matrix Analysis and Computations. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\end{itemize}
 \item \textbf{Other useful supplemental references}:
 \begin{itemize}
 \item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
@@ -276,7 +289,7 @@ Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}
 \hspace{-.8cm}
 \begin{minipage}{0.75\textwidth}
-Demmel, J. W. (1997). Applied numerical linear algebra. 
+Demmel, J. W. (1997). Applied Numerical Linear Algebra. 
 Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}\vspace{.3cm}
 \item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
@@ -284,17 +297,9 @@ Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}
 \hspace{-.8cm}
 \begin{minipage}{0.75\textwidth}
-Golub, G. H., \& Van Loan, C. F. (2013). Matrix computations. 
+Golub, G. H., \& Van Loan, C. F. (2013). Matrix Computations. 
 JHU press.
-\end{minipage}\vspace{.3cm}
-\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
-\includegraphics[height=1.8cm]{images/Greenbaum1997.jpg}
-\end{minipage}
-\hspace{-.8cm}
-\begin{minipage}{0.75\textwidth}
-Greenbaum, A. (1997). Iterative methods for solving linear systems. 
-Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
-\end{minipage}\vspace{.3cm}
+\end{minipage}\vspace{.1cm}
 \end{itemize}
 \end{itemize}
 \vfill
@@ -307,11 +312,19 @@ Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \item[]
 \begin{itemize}
 \item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
-\includegraphics[height=1.8cm]{images/Higham2002.jpg}
+\includegraphics[height=1.8cm]{images/Greenbaum1997.jpg}
 \end{minipage}
 \hspace{-.8cm}
 \begin{minipage}{0.75\textwidth}
-Higham, N. J. (2002). Accuracy and stability of numerical algorithms. 
+Greenbaum, A. (1997). Iterative Methods for Solving Linear Systems. 
+Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
+\end{minipage}\vspace{.3cm}
+\item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
+\includegraphics[height=1.65cm]{images/Higham2002.jpg}
+\end{minipage}
+\hspace{-.8cm}
+\begin{minipage}{0.75\textwidth}
+Higham, N. J. (2002). Accuracy and Stability of Numerical Algorithms. 
 Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}\vspace{.3cm}
 \item[-]\begin{minipage}{0.2\textwidth}\vspace{.3cm}
@@ -319,12 +332,12 @@ Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}
 \hspace{-.8cm}
 \begin{minipage}{0.75\textwidth}
-Trefethen, L. N., \& Bau, D. (2022). Numerical linear algebra. 
+Trefethen, L. N., \& Bau, D. (2022). Numerical Linear Algebra. 
 Society for Industrial and Applied Mathematics (SIAM).${}^\dagger$
 \end{minipage}
 \end{itemize}
-\end{itemize}
-\vspace{3.3cm}
+\end{itemize}\vspace{.1cm}
+\vfill
 \tiny{${}^\dagger$ SIAM members get 30\% off book prices. SIAM membership is free for students.}
 \end{frame}
 
