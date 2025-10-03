@@ -38,7 +38,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [6] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
 
-[5] <ins>N. Venkovic</ins> (October 4, 2017) __Research Summary__. Group Meeting of Prof. Lori Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
+[5] <ins>N. Venkovic</ins> (October 4, 2017) __Research Summary__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
 
 [4] <ins>N. Venkovic</ins> and L. Graham-Brady (July 17, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.  [<a href="Talks/Venkovic2017_Homogenization-based-on-realization-dependent-Hashin-Shtrikman-functionals-of-piecewise-polynomial-trial-polarization-fields.pdf">pdf</a>]
 
@@ -46,7 +46,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [2] <ins>N. Venkovic</ins>, L. Graham-Brady and K. Teferra (June 18, 2015) __Stochastic morphological simulation based on partial statistical description of polycrystals__. EMI 2015, ASCE Engineering Mechanics Institute Conference, Stanford University, Palo Alto, CA, USA.  
                   
-[1] <ins>N. Venkovic</ins> (November 7, 2014) __Stochastic simulation of growth tessellation models based on limited microstructure data__. Group Meeting of Prof. Lori Graham-Brady, Johns Hopkins University, USA. [<a href="Talks/Venkovic2014_Stochastic-simulation-of-growth-tessellation-models-based-on-limited-microstructure-data.pdf">pdf</a>]   
+[1] <ins>N. Venkovic</ins> (November 7, 2014) __Stochastic simulation of growth tessellation models based on limited microstructure data__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, USA. [<a href="Talks/Venkovic2014_Stochastic-simulation-of-growth-tessellation-models-based-on-limited-microstructure-data.pdf">pdf</a>]   
 
 <ins>Speaker</ins>
 
