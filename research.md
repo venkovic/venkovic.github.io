@@ -32,13 +32,13 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [14] <ins>N. Venkovic</ins> and H. Anzt (October 16-17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
 
-[13] <ins>N. Venkovic</ins> and H. Anzt (Avril 16, 2025) __Implementations of locally optimal block preconditioned conjugate gradient (LOBPCG) eigensolvers__. Group Seminar in Chair of Computational Mathematics, Technical University of Munich, Heilbronn, Germany. [<a href="Talks/Venkovic2025_Implementations-of-locally-optimal-block-preconditioned-conjugate-gradient-(LOBPCG)-eigensolvers.pdf">pdf</a>]
+[13] <ins>N. Venkovic</ins> and H. Anzt (Avril 16, 2025) __Implementations of locally optimal block preconditioned conjugate gradient (LOBPCG) eigensolvers__. Group Seminar in Computational Mathematics, Technical University of Munich, Heilbronn, Germany. [<a href="Talks/Venkovic2025_Implementations-of-locally-optimal-block-preconditioned-conjugate-gradient-(LOBPCG)-eigensolvers.pdf">pdf</a>]
 
 [12] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2023_Preconditioners-based-on-Voronoi-quantizers-of-random-coefficient-fields-for-the-iterative-solves-of-stochastic-elliptic-partial-differential-equations.pdf">pdf</a>]
 
 [11] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (March 18, 2019) __Recycling Krylov subspace strategies to solve stochastic elliptic equations__. Uncertainty Quantification and OPtimization (UQOP2019), Sorbonne University, Paris, France. [<a href="Talks/Venkovic2019_Recycling-Krylov-subspace-strategies-to-solve-stochastic-elliptic-equations.pdf">pdf</a>]
 
-[10] <ins>N. Venkovic</ins> (December 10, 2018) __1D problems with recycling Krylov subspaces__. Group Meeting in Parallel Algorithms Team, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2018_1D-recycling-Krylov.pdf">pdf</a>]
+[10] <ins>N. Venkovic</ins> (December 10, 2018) __1D problems with recycling Krylov subspaces__. Group Meeting in Parallel Algorithms, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2018_1D-recycling-Krylov.pdf">pdf</a>]
 
 [09] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
 
