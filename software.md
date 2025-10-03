@@ -6,7 +6,7 @@
 
 ### *Contributed repositories*
 
-[17] <ins>__c-permutation-avoiding-convolution__</ins> (C) [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]<br />Permutation-avoiding convolution kernels.
+[17] <ins>__c-permutation-avoiding-convolution__</ins> (C) [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permutation-avoiding convolution kernels.
 
 [16] <ins>__cpp-green__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-green)]<br />Dynamic programming algorithms for high order derivatives of anisotropic Green's functions. 
 
