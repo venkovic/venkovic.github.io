@@ -18,7 +18,7 @@
 
 [12] <ins>__fortran-get-vol-omp__</ins> (Fortran) [[GitHub](https://github.com/venkovic/fortran-get-vol-omp)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multithreaded subroutines to solve non-convex tessellations and associated statistics.
 
-[11] __Ginkgo__ (C++) [[GitHub](https://github.com/ginkgo-project/ginkgo/pull/1930>html)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized Gram-Schmidt orthogonalization for GMRES. 
+[11] __Ginkgo__ (C++) [[GitHub](https://github.com/ginkgo-project/ginkgo/pull/1930)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized Gram-Schmidt orthogonalization for GMRES. 
 
 [10] <ins>__julia-global-spd-spai__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-global-spd-spai)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Global iterative methods for the computation of sparse approximate inverses of symmetric positive-definite matrices.
 
