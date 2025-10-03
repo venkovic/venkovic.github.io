@@ -6,9 +6,13 @@
 
 ### *Contributed repositories*
 
-[15] <ins>__c-permutation-avoiding-convolution__</ins> (C) Permutation-avoiding convolution kernels. [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]
+[17] <ins>__c-permutation-avoiding-convolution__</ins> (C) Permutation-avoiding convolution kernels. [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]
 
-[14] <ins>__cpp-green__</ins> (C++) Dynamic programming algorithms for high order derivatives of anisotropic Green's functions. [[GitHub](https://github.com/venkovic/cpp-green)]
+[16] <ins>__cpp-green__</ins> (C++) Dynamic programming algorithms for high order derivatives of anisotropic Green's functions. [[GitHub](https://github.com/venkovic/cpp-green)]
+
+[15] <ins>__cpp-hashin-shtrikman__</ins> (C++, Python) A piecewise polynomial approximation scheme based on the Hashin­-Shtrikman variational principle of polycrystals. [[GitHub](https://github.com/venkovic/cpp-hashin-shtrikman)]
+
+[14] <ins>__cpp-minkowski__</ins> (C++) Semi analytical boundary solve of non-convex tessellation and computation of high order Minkowski tensors. [[GitHub](https://github.com/venkovic/cpp-minkowski)]
 
 [13] <ins>__cpp-n-pcf__</ins> (C++) Algorithms for the computation of n-points correlation functions. [[GitHub](https://github.com/venkovic/cpp-n-pcf)]
 
