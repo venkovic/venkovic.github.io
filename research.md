@@ -32,7 +32,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [14] <ins>N. Venkovic</ins> and H. Anzt (October 16-17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
 
-[13] <ins>N. Venkovic</ins> and H. Anzt (Avril 16, 2025) __Implementations of locally optimal block preconditioned conjugate gradient (LOBPCG) eigensolvers__. Group Seminar in Computational Mathematics, Technical University of Munich, Heilbronn, Germany. [<a href="Talks/Venkovic2025_Implementations-of-locally-optimal-block-preconditioned-conjugate-gradient-(LOBPCG)-eigensolvers.pdf">pdf</a>]
+[13] <ins>N. Venkovic</ins> (Avril 16, 2025) __Implementations of locally optimal block preconditioned conjugate gradient (LOBPCG) eigensolvers__. Group Seminar in Computational Mathematics, Technical University of Munich, Heilbronn, Germany. [<a href="Talks/Venkovic2025_Implementations-of-locally-optimal-block-preconditioned-conjugate-gradient-(LOBPCG)-eigensolvers.pdf">pdf</a>]
 
 [12] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2023_Preconditioners-based-on-Voronoi-quantizers-of-random-coefficient-fields-for-the-iterative-solves-of-stochastic-elliptic-partial-differential-equations.pdf">pdf</a>]
 
