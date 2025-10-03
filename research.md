@@ -38,7 +38,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [6] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
 
-[5] <ins>N. Venkovic</ins> (December 11, 2017) __Research Summary__. Group Meeting of Prof. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
+[5] <ins>N. Venkovic</ins> (October 4, 2017) __Research Summary__. Group Meeting of Prof. Lori Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
 
 [4] <ins>N. Venkovic</ins> and L. Graham-Brady (July 17, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.  [<a href="Talks/Venkovic2017_Homogenization-based-on-realization-dependent-Hashin-Shtrikman-functionals-of-piecewise-polynomial-trial-polarization-fields.pdf">pdf</a>]
 
