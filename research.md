@@ -28,25 +28,25 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 ### *Talks* 
 
-[9] <ins>N. Venkovic</ins> and H. Anzt (October 23-24, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Iterative-methods-for-sparse-approximate-inverses-of-symmetric-positive-definite-matrices.pdf">pdf</a>]
+[10] <ins>N. Venkovic</ins> and H. Anzt (October 23-24, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Iterative-methods-for-sparse-approximate-inverses-of-symmetric-positive-definite-matrices.pdf">pdf</a>]
 
-[8] <ins>N. Venkovic</ins> and H. Anzt (October 16-17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
+[9] <ins>N. Venkovic</ins> and H. Anzt (October 16-17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
 
-[7] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2023_Preconditioners-based-on-Voronoi-quantizers-of-random-coefficient-fields-for-the-iterative-solves-of-stochastic-elliptic-partial-differential-equations.pdf">pdf</a>]
+[8] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2023_Preconditioners-based-on-Voronoi-quantizers-of-random-coefficient-fields-for-the-iterative-solves-of-stochastic-elliptic-partial-differential-equations.pdf">pdf</a>]
 
-[6] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (March 18, 2019) __Recycling Krylov subspace strategies to solve stochastic elliptic equations__. Uncertainty Quantification and OPtimization (UQOP2019), Sorbonne University, Paris, France. [<a href="Talks/Venkovic2019_Recycling-Krylov-subspace-strategies-to-solve-stochastic-elliptic-equations.pdf">pdf</a>]
+[7] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (March 18, 2019) __Recycling Krylov subspace strategies to solve stochastic elliptic equations__. Uncertainty Quantification and OPtimization (UQOP2019), Sorbonne University, Paris, France. [<a href="Talks/Venkovic2019_Recycling-Krylov-subspace-strategies-to-solve-stochastic-elliptic-equations.pdf">pdf</a>]
 
-[5] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
+[6] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
 
-[4] <ins>N. Venkovic</ins> (December 11, 2017) __Research Summary__. Group Meeting of Prof. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
+[5] <ins>N. Venkovic</ins> (December 11, 2017) __Research Summary__. Group Meeting of Prof. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
 
-[3] <ins>N. Venkovic</ins> and L. Graham-Brady (July 17, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.  [<a href="Talks/Venkovic2017_Homogenization-based-on-realization-dependent-Hashin-Shtrikman-functionals-of-piecewise-polynomial-trial-polarization-fields.pdf">pdf</a>]
+[4] <ins>N. Venkovic</ins> and L. Graham-Brady (July 17, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.  [<a href="Talks/Venkovic2017_Homogenization-based-on-realization-dependent-Hashin-Shtrikman-functionals-of-piecewise-polynomial-trial-polarization-fields.pdf">pdf</a>]
 
-[2] <ins>N. Venkovic</ins> and L. Graham-Brady (May 25, 2016) __Stochastic simulation of random material microstructures using ellipsoidal growth structures__. PMC 2016, ASCE Probabilistic Mechanics & Reliability Conference, Vanderbilt University, Nashville, TN, USA. [<a href="Talks/Venkovic2016_Stochastic-simulation of-random-material-microstructures-using-ellipsoidal-growth-structures.pdf">pdf</a>]
+[3] <ins>N. Venkovic</ins> and L. Graham-Brady (May 25, 2016) __Stochastic simulation of random material microstructures using ellipsoidal growth structures__. PMC 2016, ASCE Probabilistic Mechanics & Reliability Conference, Vanderbilt University, Nashville, TN, USA. [<a href="Talks/Venkovic2016_Stochastic-simulation of-random-material-microstructures-using-ellipsoidal-growth-structures.pdf">pdf</a>]
 
-[1] <ins>N. Venkovic</ins>, L. Graham-Brady and K. Teferra (June 18, 2015) __Stochastic morphological simulation based on partial statistical description of polycrystals__. EMI 2015, ASCE Engineering Mechanics Institute Conference, Stanford University, Palo Alto, CA, USA.  
+[2] <ins>N. Venkovic</ins>, L. Graham-Brady and K. Teferra (June 18, 2015) __Stochastic morphological simulation based on partial statistical description of polycrystals__. EMI 2015, ASCE Engineering Mechanics Institute Conference, Stanford University, Palo Alto, CA, USA.  
                   
-
+[1] <ins>N. Venkovic</ins> (November 7, 2014) __Stochastic simulation of growth tessellation models based on limited microstructure data__. Group Meeting of Prof. Lori Graham-Brady, Johns Hopkins University, USA. [<a href="Talks/Venkovic2014_Stochastic-simulation-of-growth-tessellation-models-based-on-limited-microstructure-data.pdf">pdf</a>]   
 
 <ins>Speaker</ins>
 
