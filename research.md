@@ -52,7 +52,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [05] <ins>N. Venkovic</ins> (May 11, 2016) __Effect of morphological idealization on mean­-field self­-consistent homogenization of polycrystals__. Group Meeting of Prof. L: Graham-Brady, Johns Hopkins University, Baltimore, MD, USA. [<a href="Talks/Venkovic2016_Effect-of-morphological-idealization-on-mean­-field-self­-consistent-homogenization-of-polycrystals.pdf">pdf</a>]
 
-[04] <ins>N. Venkovic</ins> (February 24, 2016) __Parametric representation, morphological characterization and Eshelby tensor field analysis of planar ellipsoidal growth structures (EGS)__. Group Meeting of Prof. L: Graham-Brady, Johns Hopkins University, Baltimore, MD, USA. [<a href="Talks/Venkovic2016_Parametric-representation-morphological-characterization-and-Eshelby-tensor-field-analysis-of-planar-ellipsoidal-growth-structures.pdf">pdf</a>]
+[04] <ins>N. Venkovic</ins> (February 24, 2016) __Parametric representation, morphological characterization and Eshelby tensor field analysis of planar ellipsoidal growth structures (EGS)__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA. [<a href="Talks/Venkovic2016_Parametric-representation-morphological-characterization-and-Eshelby-tensor-field-analysis-of-planar-ellipsoidal-growth-structures.pdf">pdf</a>]
 
 [03] <ins>N. Venkovic</ins>, L. Graham-Brady and K. Teferra (June 18, 2015) __Stochastic morphological simulation based on partial statistical description of polycrystals__. EMI 2015, ASCE Engineering Mechanics Institute Conference, Stanford University, Palo Alto, CA, USA. [<a href="Talks/Venkovic2015_Stochastic-morphological-simulation-based-on-partial-statistical-description-of-polycrystals.pdf">pdf</a>]
 
