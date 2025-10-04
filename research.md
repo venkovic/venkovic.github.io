@@ -10,15 +10,17 @@ Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, Algorithms.
 
 ### *Publications*
 
-Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 3.
+Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 4.
 
 [P1] N. Venkovic and H. Anzt (2025) __Permutation-avoiding FFT-based convolution__. arXiv preprint, arXiv:2506.12718.
 
 [PhD] N. Venkovic (2023) __Preconditioning strategies for stochastic elliptic partial differential equations__. PhD thesis, Université de Bordeaux.
 
-[R3] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2021) __Recycling Krylov subspace strategies for sequences of sampled stochastic elliptic equations__. RR-9425, Inria Bordeaux-Sud Ouest. hal-03366966.
+[R4] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2021) __Recycling Krylov subspace strategies for sequences of sampled stochastic elliptic equations__. RR-9425, Inria Bordeaux-Sud Ouest. hal-03366966.
 
-[R2] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2020) __Comparative study of harmonic and Rayleigh-Ritz procedures with application to deflated conjugate gradients__. Cerfacs Technical Report, TR-PA-20-3.
+[R3] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2020) __Comparative study of harmonic and Rayleigh-Ritz procedures with application to deflated conjugate gradients__. Cerfacs Technical Report, TR-PA-20-3.
+
+[R2] N. Venkovic and L. Graham-Brady (2018) __Parallel FFT-based solver for periodic Lippmann-Schwinger equations discretized on structured grids__. Research Report. Johns Hopkins University.
 
 [R1] N. Venkovic (2017) __Computation of 2D anisotropic elastic Green's functions and their gradients__. Research Report. Johns Hopkins University.
 
