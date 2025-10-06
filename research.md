@@ -34,7 +34,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 [17] <ins>N. Venkovic</ins> and H. Anzt (October 23-24, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Iterative-methods-for-sparse-approximate-inverses-of-symmetric-positive-definite-matrices.pdf">pdf</a>]
 
-[16] <ins>N. Venkovic</ins> and H. Anzt (October 16-17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
+[16] <ins>N. Venkovic</ins> and H. Anzt (October 17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
 
 [15] <ins>N. Venkovic</ins> (Avril 16, 2025) __Implementations of locally optimal block preconditioned conjugate gradient (LOBPCG) eigensolvers__. Group Seminar in Computational Mathematics, Technical University of Munich, Heilbronn, Germany. [<a href="Talks/Venkovic2025_Implementations-of-locally-optimal-block-preconditioned-conjugate-gradient-(LOBPCG)-eigensolvers.pdf">pdf</a>]
 
