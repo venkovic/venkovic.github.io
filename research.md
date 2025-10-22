@@ -10,19 +10,15 @@ Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, Algorithms.
 
 ### *Publications*
 
-Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 4.
+Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 2.
 
 [P1] N. Venkovic and H. Anzt (2025) __Permutation-avoiding FFT-based convolution__. arXiv preprint, arXiv:2506.12718.
 
 [PhD] N. Venkovic (2023) __Preconditioning strategies for stochastic elliptic partial differential equations__. PhD thesis, Université de Bordeaux.
 
-[R4] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2021) __Recycling Krylov subspace strategies for sequences of sampled stochastic elliptic equations__. RR-9425, Inria Bordeaux-Sud Ouest. hal-03366966.
+[R2] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2021) __Recycling Krylov subspace strategies for sequences of sampled stochastic elliptic equations__. RR-9425, Inria Bordeaux-Sud Ouest. hal-03366966.
 
-[R3] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2020) __Comparative study of harmonic and Rayleigh-Ritz procedures with application to deflated conjugate gradients__. Cerfacs Technical Report, TR-PA-20-3.
-
-[R2] N. Venkovic and L. Graham-Brady (2018) __Parallel FFT-based solver for periodic Lippmann-Schwinger equations discretized on structured grids__. Research Report. Johns Hopkins University.
-
-[R1] N. Venkovic (2017) __Computation of 2D anisotropic elastic Green's functions and their gradients__. Research Report. Johns Hopkins University.
+[R1] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2020) __Comparative study of harmonic and Rayleigh-Ritz procedures with application to deflated conjugate gradients__. Cerfacs Technical Report, TR-PA-20-3.
 
 [J2] N. Venkovic, L. Sorelli and F. Martirena (2014) __Nanoindentation study of calcium silicate hydrates in concrete produced with effective microorganisms-based bioplasticizer__. Cement and Concrete Composites 49, 127-139.
 
@@ -32,39 +28,21 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 ### *Talks* 
 
-[17] <ins>N. Venkovic</ins> and H. Anzt (October 23-24, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Iterative-methods-for-sparse-approximate-inverses-of-symmetric-positive-definite-matrices.pdf">pdf</a>]
+[08] <ins>N. Venkovic</ins> and H. Anzt (October 23-24, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Slides_Global-iterative-methods-for-approximate-matrix-inverses-and-factorizations_handout.pdf">pdf</a>]
 
-[16] <ins>N. Venkovic</ins> and H. Anzt (October 17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations.pdf">pdf</a>]
+[07] <ins>N. Venkovic</ins> and H. Anzt (October 17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Slides_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations_handout.pdf">pdf</a>]
 
-[15] <ins>N. Venkovic</ins> (Avril 16, 2025) __Implementations of locally optimal block preconditioned conjugate gradient (LOBPCG) eigensolvers__. Group Seminar in Computational Mathematics, Technical University of Munich, Heilbronn, Germany. [<a href="Talks/Venkovic2025_Implementations-of-locally-optimal-block-preconditioned-conjugate-gradient-(LOBPCG)-eigensolvers.pdf">pdf</a>]
+[06] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2023_Preconditioners-based-on-Voronoi-quantizers-of-random-coefficient-fields-for-the-iterative-solves-of-stochastic-elliptic-partial-differential-equations.pdf">pdf</a>]
 
-[14] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (June 20, 2023) __Preconditioners based on Voronoi quantizers of random coefficient fields for the iterative solves of stochastic elliptic partial differential equations__. Sparse Days 2023, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2023_Preconditioners-based-on-Voronoi-quantizers-of-random-coefficient-fields-for-the-iterative-solves-of-stochastic-elliptic-partial-differential-equations.pdf">pdf</a>]
+[05] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (March 18, 2019) __Recycling Krylov subspace strategies to solve stochastic elliptic equations__. Uncertainty Quantification and OPtimization (UQOP2019), Sorbonne University, Paris, France. [<a href="Talks/Venkovic2019_Recycling-Krylov-subspace-strategies-to-solve-stochastic-elliptic-equations.pdf">pdf</a>]
 
-[13] <ins>N. Venkovic</ins>, P. Mycek, L. Giraud and O.P. Le Maître (March 18, 2019) __Recycling Krylov subspace strategies to solve stochastic elliptic equations__. Uncertainty Quantification and OPtimization (UQOP2019), Sorbonne University, Paris, France. [<a href="Talks/Venkovic2019_Recycling-Krylov-subspace-strategies-to-solve-stochastic-elliptic-equations.pdf">pdf</a>]
+[04] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
 
-[12] <ins>N. Venkovic</ins> (December 10, 2018) __1D problems with recycling Krylov subspaces__. Group Meeting in Parallel Algorithms, Cerfacs, Toulouse, France. [<a href="Talks/Venkovic2018_1D-recycling-Krylov.pdf">pdf</a>]
+[03] <ins>N. Venkovic</ins> and L. Graham-Brady (July 17, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.  [<a href="Talks/Venkovic2017_Homogenization-based-on-realization-dependent-Hashin-Shtrikman-functionals-of-piecewise-polynomial-trial-polarization-fields.pdf">pdf</a>]
 
-[11] <ins>N. Venkovic</ins> (December 11, 2017) __Computational mechanics and stochastic simulation of random polycrystals__. Graduate Board Examination, Whiting School of Engineering, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GBO_slides.pdf">pdf</a>]
+[02] <ins>N. Venkovic</ins> and L. Graham-Brady (May 25, 2016) __Stochastic simulation of random material microstructures using ellipsoidal growth structures__. PMC 2016, ASCE Probabilistic Mechanics & Reliability Conference, Vanderbilt University, Nashville, TN, USA. [<a href="Talks/Venkovic2016_Stochastic-simulation-of-random-material-microstructures-using-ellipsoidal-growth-structures.pdf">pdf</a>]
 
-[10] <ins>N. Venkovic</ins> (October 28, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_Group-Meeting-2.pdf">pdf</a>]
-
-[09] <ins>N. Venkovic</ins> (October 4, 2017) __Research Summary__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA.  [<a href="Talks/Venkovic2017_GroupMeeting.pdf">pdf</a>]
-
-[08] <ins>N. Venkovic</ins> and L. Graham-Brady (July 17, 2017) __Homogenization based on realization-dependent Hashin-Shtrikman functionals of piecewise polynomial trial polarization fields__. 14th US National Congress on Computational Mechanics (USNCCM14), Montreal, QC, Canada.  [<a href="Talks/Venkovic2017_Homogenization-based-on-realization-dependent-Hashin-Shtrikman-functionals-of-piecewise-polynomial-trial-polarization-fields.pdf">pdf</a>]
-
-[07] <ins>N. Venkovic</ins> and L. Graham-Brady (May 25, 2016) __Stochastic simulation of random material microstructures using ellipsoidal growth structures__. PMC 2016, ASCE Probabilistic Mechanics & Reliability Conference, Vanderbilt University, Nashville, TN, USA. [<a href="Talks/Venkovic2016_Stochastic-simulation of-random-material-microstructures-using-ellipsoidal-growth-structures.pdf">pdf</a>]
-
-[06] <ins>N. Venkovic</ins> (May 11, 2016) __Effect of morphological idealization on mean­-field self­-consistent homogenization of polycrystals__. Group Meeting of Prof. L: Graham-Brady, Johns Hopkins University, Baltimore, MD, USA. [<a href="Talks/Venkovic2016_Effect-of-morphological-idealization-on-mean­-field-self­-consistent-homogenization-of-polycrystals.pdf">pdf</a>]
-
-[05] <ins>N. Venkovic</ins> (February 24, 2016) __Parametric representation, morphological characterization and Eshelby tensor field analysis of planar ellipsoidal growth structures (EGS)__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, Baltimore, MD, USA. [<a href="Talks/Venkovic2016_Parametric-representation-morphological-characterization-and-Eshelby-tensor-field-analysis-of-planar-ellipsoidal-growth-structures.pdf">pdf</a>]
-
-[04] <ins>N. Venkovic</ins>, L. Graham-Brady and K. Teferra (June 18, 2015) __Stochastic morphological simulation based on partial statistical description of polycrystals__. EMI 2015, ASCE Engineering Mechanics Institute Conference, Stanford University, Palo Alto, CA, USA. [<a href="Talks/Venkovic2015_Stochastic-morphological-simulation-based-on-partial-statistical-description-of-polycrystals.pdf">pdf</a>]
-
-[03] <ins>N. Venkovic</ins> (February 6, 2015) __Stochastic simulation of spherical growth tessellation (SGT) models based on limited microstructure data__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, USA. [<a href="Talks/Venkovic2015_Stochastic-simulation-of-spherical-growth-tessellation-(SGT)-models-based-on-limited-microstructure-data.pdf">pdf</a>]
-
-[02] <ins>N. Venkovic</ins> (January 18, 2015) __Stochastic simulation of spherical growth tessellation (SGT) models: Approach using a collective rearrangement algorithm__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, USA. [<a href="Talks/Venkovic2015_Stochastic-simulation-of-spherical-growth-tessellation-models_Approach-using-a-collective-rearrangement-algorithm.pdf">pdf</a>]
-
-[01] <ins>N. Venkovic</ins> (November 7, 2014) __Stochastic simulation of growth tessellation models based on limited microstructure data__. Group Meeting of Prof. L. Graham-Brady, Johns Hopkins University, USA. [<a href="Talks/Venkovic2014_Stochastic-simulation-of-growth-tessellation-models-based-on-limited-microstructure-data.pdf">pdf</a>]   
+[01] <ins>N. Venkovic</ins>, L. Graham-Brady and K. Teferra (June 18, 2015) __Stochastic morphological simulation based on partial statistical description of polycrystals__. EMI 2015, ASCE Engineering Mechanics Institute Conference, Stanford University, Palo Alto, CA, USA. [<a href="Talks/Venkovic2015_Stochastic-morphological-simulation-based-on-partial-statistical-description-of-polycrystals.pdf">pdf</a>]  
 
 <ins>Speaker</ins>
 
