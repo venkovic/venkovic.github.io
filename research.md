@@ -28,7 +28,7 @@ Journal Papers (J): 2, Preprints (P): 1, Conference Papers (C): 1, Reports (R): 
 
 ### *Talks* 
 
-[08] <ins>N. Venkovic</ins> and H. Anzt (October 23-24, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Slides_Global-iterative-methods-for-approximate-matrix-inverses-and-factorizations_handout.pdf">pdf</a>]
+[08] <ins>N. Venkovic</ins> and H. Anzt (October 23, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Slides_Global-iterative-methods-for-approximate-matrix-inverses-and-factorizations_handout.pdf">pdf</a>]
 
 [07] <ins>N. Venkovic</ins> and H. Anzt (October 17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Slides_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations_handout.pdf">pdf</a>]
 
