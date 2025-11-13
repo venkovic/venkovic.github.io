@@ -10,7 +10,7 @@
 
 <p>&nbsp;</p>
 
-Online profiles: [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125).
+Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125).
 
 
 <!--### *Future position*
