@@ -6,7 +6,7 @@
 
 ### *Skills and interests*
 
-Numerical Linear Algebra, Iterative Methods, Numerical Analysis.
+Iterative Methods, Numerical Analysis, Numerical Linear Algebra.
 
 ### *Publications*
 
