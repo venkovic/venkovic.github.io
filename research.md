@@ -6,7 +6,7 @@
 
 ### *Skills and interests*
 
-Numerical Linear Algebra, Iterative Methods, Computational PDEs/IEs, Algorithms.
+Numerical Linear Algebra, Iterative Methods, Numerical Analysis.
 
 ### *Publications*
 
