@@ -4,6 +4,8 @@
 
 [Home](https://venkovic.github.io), [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software) 
 
+Follow me on [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125).
+
 <!--*Online classes*-->
 
 <!--Creator of [__Iterative Methods for Singular and Eigenvalue Problems__](https://venkovic.github.io/.html)<br />Creator of [__Iterative Methods for Multilinear Algebra__](https://venkovic.github.io/.html)-->
