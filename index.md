@@ -10,7 +10,7 @@
 
 <p>&nbsp;</p>
 
-Follow me on [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125), [LinkedIn](https://www.linkedin.com/in/nicolas-venkovic-97195b42/).
+Follow me on [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125).
 
 
 <!--### *Future position*
