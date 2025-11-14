@@ -14,7 +14,7 @@ Iterative Methods, Numerical Analysis, Numerical (Multi-)Linear Algebra.
 
 Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 2.
 
-[P2] N. Venkovic and H. Anzt (2025) __Global iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. arXiv preprint.
+[P2] N. Venkovic and H. Anzt (2025) __Global iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. arXiv preprint, arXiv:2511.09753.
 
 [P1] N. Venkovic and H. Anzt (2025) __Permutation-avoiding FFT-based convolution__. arXiv preprint, arXiv:2506.12718.
 
