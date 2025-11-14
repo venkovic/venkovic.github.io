@@ -10,11 +10,11 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 [16] <ins>__c-permutation-avoiding-convolution__</ins> (C) [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permutation-avoiding convolution kernels.
 
-[15] <ins>__cpp-green__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-green)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dynamic programming algorithms for high order derivatives of anisotropic Green's functions. 
+[15] <ins>__cpp-green__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-green)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dynamic programming algorithms for high-order derivatives of anisotropic Green's functions. 
 
-[14] <ins>__cpp-hashin-shtrikman__</ins> (C++, Python) [[GitHub](https://github.com/venkovic/cpp-hashin-shtrikman)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A piecewise polynomial approximation scheme based on the Hashin­-Shtrikman variational principle of polycrystals. 
+[14] <ins>__cpp-hashin-shtrikman__</ins> (C++, Python) [[GitHub](https://github.com/venkovic/cpp-hashin-shtrikman)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Piecewise polynomial approximation scheme based on the Hashin­-Shtrikman variational principle of polycrystals. 
 
-[13] <ins>__cpp-minkowski__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-minkowski)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Semi analytical boundary solve of non-convex tessellation and computation of high order Minkowski tensors.
+[13] <ins>__cpp-minkowski__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-minkowski)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Semi-analytical boundary solve of non-convex tessellation and computation of high-order Minkowski tensors.
 
 [12] <ins>__cpp-n-pcf__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-n-pcf)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Algorithms for the computation of n-points correlation functions. 
 
@@ -40,4 +40,4 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 [01] <ins>__py-lobpcg__</ins> (Python) [[GitHub](https://github.com/venkovic/py-lobpcg)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stable implementations of LOBPCG.
 
-<ins>Principal Investigator</ins>
+<ins>Main Contributor</ins>
