@@ -8,7 +8,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Skills and interests*
 
-Iterative Methods, Numerical Analysis, Numerical (Multi-)Linear Algebra.
+Iterative Methods, Numerical Algorithms, (Multi-)Linear Algebra, Scientific Computing.
 
 ### *Publications*
 
