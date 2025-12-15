@@ -7,7 +7,7 @@
 
 
 
-The course is organized into 18 lectures. All lectures consist of a theoretical presentation followed by homework problems [[pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Problems.pdf)]. Most lectures are also followed by Julia coding assignments.
+The course is organized into 17 lectures. All lectures consist of a theoretical presentation followed by homework problems [[pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Problems.pdf)]. Most lectures are also followed by Julia coding assignments.
 
 <p>00. 
 <strong>Introduction</strong><br />
@@ -111,12 +111,6 @@ notebook [<a href="NLA-for-CS-and-IE/PracticeSession16.ipynb">ipynb</a>, <a href
 &nbsp;&nbsp;&nbsp;
 slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture17.pdf">pdf</a>], 
 notebook [<a href="NLA-for-CS-and-IE/PracticeSession17.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession17.pdf">pdf</a>]</p>
-
-<p>18. 
-<strong>Matrix function evaluation</strong><br />
-&nbsp;&nbsp;&nbsp;
-slides [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture18.pdf">pdf</a>], 
-notebook [<a href="NLA-for-CS-and-IE/PracticeSession18.ipynb">ipynb</a>, <a href="NLA-for-CS-and-IE/PracticeSession18.pdf">pdf</a>]</p>
 
 Extra notes [[pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Extra-notes.pdf)]
 
