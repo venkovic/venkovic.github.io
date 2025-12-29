@@ -65,10 +65,6 @@ The course is organized into lectures selected from the following list of topics
 [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture15.pdf">pdf</a>]
 
 <p>
-<strong>Elements of randomized numerical linear algebra</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture16.pdf">pdf</a>]
-
-<p>
 <strong>Introduction to communication-avoiding algorithms</strong>
 [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture17.pdf">pdf</a>]
 
