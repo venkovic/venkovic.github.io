@@ -68,4 +68,6 @@ The course is organized into lectures selected from the following list of topics
 <strong>Introduction to communication-avoiding algorithms</strong>
 [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Lecture17.pdf">pdf</a>]
 
-Final exams: Summer 2025 [[pdf](NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final.pdf)]
+<p>
+Final exams: Summer 2025 
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final.pdf">pdf</a>]
