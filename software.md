@@ -6,29 +6,35 @@
 
 Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125).
 
-### *Contributed repositories*
+### *Contributed open source repositories*
 
-[16] <ins>__c-permutation-avoiding-convolution__</ins> (C) [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permutation-avoiding convolution kernels.
+In alphabetical order:
 
-[15] <ins>__cpp-green__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-green)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dynamic programming algorithms for high-order derivatives of anisotropic Green's functions. 
+[18] <ins>__c-permutation-avoiding-convolution-kernels__</ins> (C) [[GitHub](https://github.com/venkovic/c-permutation-avoiding-convolution)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permutation-avoiding discrete convolution kernels.
 
-[14] <ins>__cpp-hashin-shtrikman__</ins> (C++, Python) [[GitHub](https://github.com/venkovic/cpp-hashin-shtrikman)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Piecewise polynomial approximation scheme based on the Hashin­-Shtrikman variational principle of polycrystals. 
+[17] <ins>__cpp-dynamic-programming-for-greens-function-derivatives__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-green)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dynamic programming algorithms for high-order derivatives of anisotropic Green's functions. 
 
-[13] <ins>__cpp-minkowski__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-minkowski)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Semi-analytical boundary solve of non-convex tessellation and computation of high-order Minkowski tensors.
+[16] <ins>__cpp-hashin-shtrikman-variational-approximation-in-voronoi-diagrams__</ins> (C++, Python) [[GitHub](https://github.com/venkovic/cpp-hashin-shtrikman)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Piecewise polynomial approximation scheme based on the Hashin­-Shtrikman variational principle over anisotropic Voronoi diagrams. 
 
-[12] <ins>__cpp-n-pcf__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-n-pcf)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Algorithms for the computation of n-points correlation functions. 
+[15] <ins>__cpp-minkowski-tensors-of-star-convex-voronoi-cells__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-minkowski)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Semi-analytical computation of high-order Minkowski tensors of star-convex Voronoi cells.
 
-[11] <ins>__fortran-get-vol-omp__</ins> (Fortran) [[GitHub](https://github.com/venkovic/fortran-get-vol-omp)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multithreaded subroutines to solve non-convex tessellations and associated statistics.
+[14] <ins>__cpp-n-pcf__</ins> (C++) [[GitHub](https://github.com/venkovic/cpp-n-pcf)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Algorithms for the computation of n-points correlation functions. 
 
-[10] __Ginkgo__ (C++) [[GitHub](https://github.com/ginkgo-project/ginkgo/pull/1930)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized Gram-Schmidt orthogonalization for GMRES. 
+[13] <ins>__fortran-anisotropic-voronoi-stats__</ins> (Fortran) [[GitHub](https://github.com/venkovic/fortran-get-vol-omp)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multithreaded digitized solve of anisotropic Voronoi diagrams and integral geometry statistics.
 
-[09] <ins>__julia-global-spd-spai__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-global-spd-spai)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Global iterative methods for the computation of sparse approximate inverses of symmetric positive-definite matrices.
+[12] __Ginkgo__ (C++) [[GitHub](https://github.com/ginkgo-project/ginkgo/pull/1930)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized Gram-Schmidt orthogonalization for GMRES. 
 
-[08] <ins>__julia-gp-circulant-embedding__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-gp-circulant-embedding)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Circulant embedding method to simulate Gaussian processes. 
+[11] <ins>__julia-gp-circulant-embedding__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-gp-circulant-embedding)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Circulant embedding method to simulate Gaussian processes. 
 
-[07] <ins>__julia-iterative-low-rank__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-iterative-low-rank)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized short-recurrence iterative methods for approximate low-rank matrix factorizations. 
+[10] <ins>__julia-iterative-general-spai__</ins> (Julia) [[GitHub](https://github.com/venkovic/)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iterative methods for the computation of sparse approximate inverses of general matrices.
 
-[06] <ins>__julia-jacobi-davidson__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-jacobi-davidson)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Jacobi-)Davidson methods with different orthogonalization procedures and their randomized variants.
+[09] <ins>__julia-iterative-low-rank-canonical-polyadic-tensor-approximation__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-iterative-low-rank)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized short-recurrence iterative methods for low-rank matrix approximation. 
+
+[08] <ins>__julia-iterative-low-rank-matrix-approximation__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-iterative-low-rank)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized short-recurrence iterative methods for low-rank matrix approximation. 
+
+[07] <ins>__julia-iterative-spd-spai__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-global-spd-spai)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iterative methods for the computation of sparse approximate inverses of symmetric positive-definite matrices.
+
+[06] <ins>__julia-jacobi-davidson__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-jacobi-davidson)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Randomized (Jacobi-)Davidson methods with different orthogonalization procedures.
 
 [05] <ins>__julia-lobpcg__</ins> (Julia) [[GitHub](https://github.com/venkovic/julia-lobpcg)]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stable implementations of LOBPCG. 
 

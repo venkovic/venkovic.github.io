@@ -6,7 +6,7 @@
 
 <p>&nbsp;</p>
 
-<center> <img src="2024-Venkovic-studio-filter-headshot.jpeg" alt="Nicolas Venkovic" title="Nicolas Venkovic" width="25%"/></center>
+<center> <img src="2024-Venkovic-studio-filter-headshot.jpeg" alt="Nicolas Venkovic" title="Nicolas Venkovic" width="12%"/></center>
 
 <p>&nbsp;</p>
 
