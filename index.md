@@ -19,7 +19,7 @@ Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en
 
 ### *Education*
 
-**PhD** Applied Mathematics & Scientific Computing @ [Université de Bordeaux](https://www.u-bordeaux.fr/en) (09/2023)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/) (05/2018)
+**PhD** Applied Mathematics & Scientific Computing @ [University of Bordeaux](https://www.u-bordeaux.fr/en) - [Cerfacs](), [Parallel Algorithms Team]()<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/)
 
 <!--### *Positions held*
 
