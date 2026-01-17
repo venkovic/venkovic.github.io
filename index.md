@@ -15,11 +15,11 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Position*
 
-Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en/), [Chair of Computational Mathematics](https://coma.cit.tum.de/) <!--(since 07/2024)--><br />
+Scientific Staff Member @ [Chair of Computational Mathematics](https://coma.cit.tum.de/), [Technical University of Munich](https://www.tum.de/en/) <!--(since 07/2024)--><br />
 
 ### *Education*
 
-**PhD** Applied Mathematics & Scientific Computing @ [Cerfacs](https://cerfacs.fr/en/home/), [Algo Team](https://cerfacs.fr/en/parallel-algorithms-algo/) & [University of Bordeaux](https://www.u-bordeaux.fr/en)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/)
+**PhD** Applied Mathematics & Scientific Computing @  [Algo Team](https://cerfacs.fr/en/parallel-algorithms-algo/), [Cerfacs](https://cerfacs.fr/en/home/) & [University of Bordeaux](https://www.u-bordeaux.fr/en)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/)
 
 <!--### *Positions held*
 
