@@ -10,6 +10,12 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 Iterative Methods, (Multi-)Linear Algebra, Numerical Analysis, Scientific Computing.
 
+### *Working papers*
+
+N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for low-rank matrix approximation__.
+
+N. Venkovic and H. Anzt (in progress) __Locally optimal block coordinate descent for low-rank matrix approximation__.
+
 ### *Publications*
 
 Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 2.
@@ -29,14 +35,6 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 [C1] N. Venkovic, M. Lebeau and J.-M. Konrad (2013) __Geostatistical assessment of the hydraulic conductivity of an embankment dam__. GeoMontreal 2013 66th Canadian Geotechnical Conference, 8 pp.
 
 [J1] N. Venkovic, L. Sorelli, B. Sudret, T. Yalamas and R. Gagné (2013) __Uncertainty propagation of a multiscale poromechanics-hydration model for poroelastic properties of cement paste at early-age__. Probabilistic Engineering Mechanics 32, 5-20.-->
-
-
-### *Working papers*
-
-N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for low-rank matrix approximation__.
-
-N. Venkovic and H. Anzt (in progress) __Locally optimal block coordinate descent for low-rank matrix approximation__.
-
 
 ### *Talks* 
 
