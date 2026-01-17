@@ -8,8 +8,6 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Contributed open source repositories*
 
-In alphabetical order:
-
 <ins>__ApproximateMatrixInverses.jl__</ins> (Julia) [[GitHub]()]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State-of-the-art and researched iterative methods for the computation of approximate matrix inverses.
 
 <ins>__LowRankMatrices.jl__</ins> (Julia) [[GitHub]()]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State-of-the-art and researched iterative methods for the computation of low-rank matrix approximations and their applications.
