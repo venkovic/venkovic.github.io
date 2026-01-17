@@ -15,7 +15,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Position*
 
-Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en/), [Chair of Computational Mathematics](https://www.cs.cit.tum.de/coma/) <!--(since 07/2024)--><br />
+Scientific Staff Member @ [Technical University of Munich](https://www.tum.de/en/), [Chair of Computational Mathematics](https://coma.cit.tum.de/) <!--(since 07/2024)--><br />
 
 ### *Education*
 
