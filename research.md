@@ -16,7 +16,7 @@ N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerki
 
 N. Venkovic and H. Anzt (in progress) __Locally optimal block coordinate descent for low-rank matrix approximation__.
 
-N. Venkovic, L. Graham-Brady and H. Anzt (in progress) __Minkowski tensors of anisotropic Voronoi diagrams__.
+N. Venkovic, L. Graham-Brady and H. Anzt (in progress) __Minkowski tensors of planar anisotropic Voronoi diagrams__.
 
 ### *Publications*
 
