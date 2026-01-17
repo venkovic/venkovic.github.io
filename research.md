@@ -30,6 +30,14 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 [J1] N. Venkovic, L. Sorelli, B. Sudret, T. Yalamas and R. Gagné (2013) __Uncertainty propagation of a multiscale poromechanics-hydration model for poroelastic properties of cement paste at early-age__. Probabilistic Engineering Mechanics 32, 5-20.-->
 
+
+### *Working papers*
+
+N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for low-rank matrix approximation__.
+
+N. Venkovic and H. Anzt (in progress) __Locally optimal block coordinate descent for low-rank matrix approximation__.
+
+
 ### *Talks* 
 
 [08] <ins>N. Venkovic</ins>, A. Bouslama, A. Jeendgar and H. Anzt (March 5, 2026) __Parallel locally optimal iterative methods__. SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP26), Zuse Institute & Free University of Berlin, Berlin, Germany.
