@@ -19,7 +19,7 @@ Scientific Staff Member @ [Chair of Computational Mathematics](https://coma.cit.
 
 ### *Education*
 
-**PhD** Applied Mathematics & Scientific Computing @  [Algo Team](https://cerfacs.fr/en/parallel-algorithms-algo/), [Cerfacs](https://cerfacs.fr/en/home/) & [University of Bordeaux](https://www.u-bordeaux.fr/en)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/)
+**PhD** Applied Mathematics & Scientific Computing @  [Algo Team](https://cerfacs.fr/en/parallel-algorithms-algo/), [Cerfacs](https://cerfacs.fr/en/home/) & [University of Bordeaux](https://www.u-bordeaux.fr/en)<br />**MSE** Applied Mathematics & Statistics @ [Department of Applied Mathematics & Statistics](https://engineering.jhu.edu/ams/), [Johns Hopkins University](https://www.jhu.edu/)
 
 <!--### *Positions held*
 
