@@ -12,7 +12,12 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Course taught*
 
-[__Numerical Linear Algebra for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Summer 2025, Winter 2025-26)
+
+__Numerical Programming__\* @ [Technical University of Munich](https://www.tum.de/en/) (Summer 2026)
+<br />
+[__Numerical Linear Algebra for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Winter 2025-26)
+<br />[__Numerical Linear Algebra for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Summer 2025)
+
 
 \*: developed and taught.
 
