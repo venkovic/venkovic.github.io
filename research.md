@@ -12,7 +12,7 @@ Iterative Methods, (Multi-)Linear Algebra, Numerical Analysis, Scientific Comput
 
 ### *Working papers*
 
-N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for sparse low-rank matrix approximation__.
+N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for structured low-rank matrix approximation__.
 
 N. Venkovic and H. Anzt (in progress) __Locally optimal block coordinate descent for sparse low-rank matrix approximation__.
 
@@ -39,6 +39,11 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 [J1] N. Venkovic, L. Sorelli, B. Sudret, T. Yalamas and R. Gagné (2013) __Uncertainty propagation of a multiscale poromechanics-hydration model for poroelastic properties of cement paste at early-age__. Probabilistic Engineering Mechanics 32, 5-20.-->
 
 ### *Talks* 
+
+
+[10] <ins>N. Venkovic</ins> and Hartwig Anzt (August 10-15, 2026) __Iterative structured matrix approximation in Julia__. JuliaCon 2026, Johannes Gutenberg University, Mainz, Germany.
+
+[09] <ins>N. Venkovic</ins> and Hartwig Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom.
 
 [08] <ins>N. Venkovic</ins>, A. Bouslama, A. Jeendgar and H. Anzt (March 5, 2026) __Parallel locally optimal iterative methods__. SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP26), Zuse Institute & Free University of Berlin, Berlin, Germany.
 
@@ -72,3 +77,12 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 <ins>Presenter</ins>
 
+### *Supervised theses and seminars*
+
+Bachelor Theses (BTh): 2, Bachelor Seminars (BSe): 1.
+
+[BTh2] Author TBD (currently seeking a candidate). __Mixed-precision iterative methods for the approximation of matrix inverses__. Bachelor thesis, TU Munich.
+
+[BSe1] H. Dausy  (in progress). __Parallel locally optimal approximation of matrix inverses__. Bachelor research seminar, TU Munich.
+
+[BTh1] A. Fung (in progress). __Iterative methods for low-rank canonical polyadic tensor approximation__. Bachelor thesis, TU Munich.
