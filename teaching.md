@@ -15,14 +15,14 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 __Numerical Programming__\* @ [Technical University of Munich](https://www.tum.de/en/) (Summer 2026)
 <br />
-[__Numerical Linear Algebra for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Winter 2025-26)
-<br />[__Numerical Linear Algebra for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Summer 2025)
+[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Winter 2025-26)
+<br />[__Numerical Linear Algebra for Computational Science and Information and Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [Technical University of Munich](https://www.tum.de/en/) (Summer 2025)
 
 
 \*: developed and taught.
 
 ### *Assistantship*
 
-TA of __Applied Mathematics for Engineers__ @ [Johns Hopkins University](https://www.jhu.edu/)  (2018)<br /><!--TA of __Dynamics__ @ [Johns Hopkins University](https://www.jhu.edu/) (2016, 2017)<br />-->TA of __Probability & Statistics__ @ [Johns Hopkins University](https://www.jhu.edu/) (2016)<br />TA of __Solid Mechanics__ @ [Johns Hopkins University](https://www.jhu.edu/) (2015)<br />TA of __Computer Science for Engineers__  @ [Université Laval](https://www.ulaval.ca/en/) (2013)<br /><!--Tutor of High School __Mathematics__ (2009, 2010)-->
+TA of __Applied Mathematics for Engineers__ @ [Johns Hopkins University](https://www.jhu.edu/)  (2018)<br />TA of __Dynamics__ @ [Johns Hopkins University](https://www.jhu.edu/) (2016, 2017)<br />TA of __Probability & Statistics__ @ [Johns Hopkins University](https://www.jhu.edu/) (2016)<br />TA of __Solid Mechanics__ @ [Johns Hopkins University](https://www.jhu.edu/) (2015)<br />TA of __Computer Science for Engineers__  @ [Université Laval](https://www.ulaval.ca/en/) (2013)<br /><!--Tutor of High School __Mathematics__ (2009, 2010)-->
 
 TA : Teaching Assistant.
