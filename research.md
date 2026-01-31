@@ -41,7 +41,7 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 ### *Talks* 
 
 
-[10] <ins>N. Venkovic</ins> and Hartwig Anzt (August 10-15, 2026) __Iterative structured matrix approximation in Julia__. JuliaCon 2026, Johannes Gutenberg University, Mainz, Germany.
+[10] <ins>N. Venkovic</ins> and Hartwig Anzt (August 10-15, 2026) __Structured iterative approximations in numerical (multi-)linear algebra__. JuliaCon 2026, Johannes Gutenberg University, Mainz, Germany.
 
 [09] <ins>N. Venkovic</ins> and Hartwig Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom.
 
