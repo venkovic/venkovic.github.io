@@ -10,6 +10,11 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 Approximation Theory, Iterative Methods, Multi-Linear Algebra, Numerical Analysis, Scientific Computing.
 
+Shorter
+ 
+Analysis, Approximation, Computing, Iteration, Multi-Linear Algebra, Numerics.
+
+
 ### *Working papers*
 
 N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for structured low-rank matrix approximation__.
