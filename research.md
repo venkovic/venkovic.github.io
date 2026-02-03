@@ -8,7 +8,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Skills and interests*
 
-Analysis, Approximation, Computing, Iteration, Multi-Linear Algebra, Numerics.
+Analysis, Approximation, Computing, Geometry, Iteration, Multi-Linear Algebra, Numerics.
 
 ### *Working papers*
 
