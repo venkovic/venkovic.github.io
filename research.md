@@ -8,7 +8,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Skills and interests*
 
-Iterative Methods, (Multi-)Linear Algebra, Numerical Analysis, Scientific Computing.
+Approximation Theory, Iterative Methods, Multi-Linear Algebra, Numerical Analysis, Scientific Computing.
 
 ### *Working papers*
 
@@ -83,6 +83,6 @@ Bachelor Theses (BTh): 2, Bachelor Seminars (BSe): 1.
 
 [BTh2] Author TBD (currently seeking a candidate). __Mixed-precision iterative methods for the approximation of matrix inverses__. Bachelor thesis, TU Munich.
 
-[BSe1] H. Dausy  (in progress). __Parallel locally optimal approximation of matrix inverses__. Bachelor research seminar, TU Munich.
+[BSe1] H. Dausy  (in progress). __Parallel locally optimal approximation of matrix inverses__. Bachelor seminar, TU Munich.
 
 [BTh1] A. Fung (in progress). __Iterative methods for low-rank canonical polyadic tensor approximation__. Bachelor thesis, TU Munich.
