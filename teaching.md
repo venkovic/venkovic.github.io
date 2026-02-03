@@ -10,16 +10,12 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 <!--Creator of [__Iterative Methods for Singular and Eigenvalue Problems__](https://venkovic.github.io/.html)<br />Creator of [__Iterative Methods for Multilinear Algebra__](https://venkovic.github.io/.html)-->
 
-### *Course taught*
+### *Courses taught*
 
-
-__Numerical Programming__\* @ [TU Munich](https://www.tum.de/en/) (S26)
+__Numerical Programming__ @ [TU Munich](https://www.tum.de/en/) (S26)
 <br />
-[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [TU Munich](https://www.tum.de/en/) (W25-26)
-<br />[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE)\* @ [TU Munich](https://www.tum.de/en/) (S25)
-
-
-\*: developed and taught.
+[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (W25-26)
+<br />[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (S25)
 
 ### *Assistantship*
 
