@@ -8,7 +8,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Courses taught*
 
-[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (S25, W25-26)<br />
+[__Numerical Linear Algebra for CS and IE__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (S25, W25-26)<br />
 __Numerical Programming__ @ [TU Munich](https://www.tum.de/en/) (S26)
 
 ### *Assistantship*
