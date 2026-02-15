@@ -6,16 +6,10 @@
 
 Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [ORCID](https://orcid.org/0009-0003-5063-8125).
 
-<!--*Online classes*-->
-
-<!--Creator of [__Iterative Methods for Singular and Eigenvalue Problems__](https://venkovic.github.io/.html)<br />Creator of [__Iterative Methods for Multilinear Algebra__](https://venkovic.github.io/.html)-->
-
 ### *Courses taught*
 
+[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (S25, W25-26)<br />
 __Numerical Programming__ @ [TU Munich](https://www.tum.de/en/) (S26)
-<br />
-[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (W25-26)
-<br />[__Numerical Linear Algebra for Computational Science and Information Engineering__](https://venkovic.github.io/NLA-for-CS-and-IE) @ [TU Munich](https://www.tum.de/en/) (S25)
 
 ### *Assistantship*
 
