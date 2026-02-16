@@ -66,4 +66,5 @@ The course is organized into lectures selected from the following list of topics
 
 <p>
 Final exams: Summer 2025 
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final_Summer2025.pdf">pdf</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final_Summer2025.pdf">pdf</a>], Winter 2025-26 
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final_Winter2025-26.pdf">pdf</a>]
