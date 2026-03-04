@@ -12,14 +12,6 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 Approximation Theory, Iterative Methods, Multi-Linear Algebra, Numerical Anlysis.
 
 
-### *Working papers*
-
-N. Venkovic, A. Jeendgar, A. Bouslama and H. Anzt (in progress) __Petrov-Galerkin gradient descents for structured low-rank matrix approximation__.
-
-N. Venkovic and H. Anzt (in progress) __Locally optimal block coordinate descent for sparse low-rank matrix approximation__.
-
-N. Venkovic, L. Graham-Brady and H. Anzt (in progress) __Minkowski tensors of planar anisotropic Voronoi diagrams__.
-
 ### *Publications*
 
 Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 2.
@@ -81,9 +73,7 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 ### *Supervised theses and seminars*
 
-Bachelor Theses (BTh): 2, Bachelor Seminars (BSe): 1.
-
-[BTh2] Author TBD (currently seeking a candidate). __Mixed-precision iterative methods for the approximation of matrix inverses__. Bachelor thesis, TU Munich.
+Bachelor Theses (BTh): 1, Bachelor Seminars (BSe): 1.
 
 [BSe1] H. Dausy  (in progress). __Parallel locally optimal approximation of matrix inverses__. Bachelor seminar, TU Munich.
 
