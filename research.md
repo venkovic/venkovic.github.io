@@ -39,9 +39,11 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 [09] <ins>N. Venkovic</ins> and H. Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom.
 
-[08] <ins>N. Venkovic</ins>, A. Bouslama, A. Jeendgar and H. Anzt (March 5, 2026) __Parallel locally optimal iterative methods__. SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP26), Zuse Institute & Free University of Berlin, Berlin, Germany.
+[08] <ins>N. Venkovic</ins>, A. Bouslama, A. Jeendgar and H. Anzt (March 5, 2026) __Parallel locally optimal iterative methods__. SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP26), Zuse Institute & Free University of Berlin, Berlin, Germany. [<a href="Talks/Venkovic2026_Slides_Parallel-locally-optimal-iterative-methods.pdf.pdf
+">pdf</a>]
 
-[07] <ins>N. Venkovic</ins> and H. Anzt (October 23, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Slides_Iterative-methods-for-sparse-approximate-inverses-of-symmetric-positive-definite-matrices_handout.pdf">pdf</a>]
+[07] <ins>N. Venkovic</ins> and H. Anzt (October 23, 2025) __Iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. GAMM Workshop on Applied and Numerical Linear Algebra (ANLA 2025), University of Bologna, Bologna, Italy. [<a href="Talks/Venkovic2025_Slides_Global-iterative-methods-for-approximate-matrix-inverses-and-factorizations_handout.pdf
+">pdf</a>]
 
 [06] <ins>N. Venkovic</ins> and H. Anzt (October 17, 2025) __Randomized short-recurrence iterative methods for approximate low-rank factorizations__. GAMM Workshop on Computational and Mathematical Methods in Data Sciences (COMinDS 2025), Technical University of Chemnitz, Chemnitz, Germany. [<a href="Talks/Venkovic2025_Slides_Randomized-short-recurrence-iterative-methods-for-approximate-low-rank-factorizations_handout.pdf">pdf</a>]
 
