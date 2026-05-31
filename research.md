@@ -35,9 +35,9 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 ### *Talks* 
 
 
-[10] <ins>N. Venkovic</ins> and H. Anzt (August 10-15, 2026) __Structured iterative approximations in numerical (multi-)linear algebra__. JuliaCon 2026, Johannes Gutenberg University, Mainz, Germany.
+[10] <ins>N. Venkovic</ins> and H. Anzt (August 13, 2026) __Structured iterative approximations in numerical (multi-)linear algebra__. JuliaCon 2026, Johannes Gutenberg University, Mainz, Germany.
 
-[09] <ins>N. Venkovic</ins> and H. Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom.
+[09] <ins>N. Venkovic</ins>, A. Jeendgar and H. Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom.
 
 [08] <ins>N. Venkovic</ins>, A. Bouslama, A. Jeendgar and H. Anzt (March 5, 2026) __Parallel locally optimal iterative methods__. SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP26), Zuse Institute & Free University of Berlin, Berlin, Germany. [<a href="Talks/Venkovic2026_Slides_Parallel-locally-optimal-iterative-methods_handout.pdf
 ">pdf</a>]
@@ -73,10 +73,12 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 <ins>Presenter</ins>
 
-### *Supervised theses and seminars*
+### *Supervised theses*
 
-Bachelor Theses (BTh): 1, Bachelor Seminars (BSe): 1.
+Bachelor Theses (B): 2, Master Theses(M): 1.
 
-[BSe1] H. Dausy  (in progress). __Parallel locally optimal approximation of matrix inverses__. Bachelor seminar, TU Munich.
+[M1] I. Vasenkov (in progress). __Parallel locally optimal approximate sparse matrix inverses__. Master thesis, TU Munich.
 
-[BTh1] A. Fung (in progress). __Iterative methods for low-rank canonical polyadic tensor approximation__. Bachelor thesis, TU Munich.
+[B2] L. Chowdhury  (in progress). __Computing approximate matrix inverses with low and mixed precision__. Bachelor thesis, TU Munich.
+
+[B1] A. Fung (2026). __Iterative methods for low-rank canonical polyadic tensor approximation__. Bachelor thesis, TU Munich.
