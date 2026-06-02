@@ -37,7 +37,7 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 [10] <ins>N. Venkovic</ins> and H. Anzt (August 13, 2026) __Structured iterative approximations in numerical (multi-)linear algebra__. JuliaCon 2026, Johannes Gutenberg University, Mainz, Germany.
 
-[09] <ins>N. Venkovic</ins>, A. Jeendgar and H. Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom.
+[09] <ins>N. Venkovic</ins>, A. Jeendgar and H. Anzt (June 2, 2026) __Petrov-Galerkin approximations in (multi)-linear algebra from the lens of optimization__. SIAM Conference on Optimization (SIAM OP26), University of Edinburgh, Edinburgh, United-Kingdom. [<a href="Talks/Venkovic2026_Slides_Petrov-Galerkin-approximations-in-multi-linear-algebra-from-the-lens-of-optimization_handout.pdf">pdf</a>]
 
 [08] <ins>N. Venkovic</ins>, A. Bouslama, A. Jeendgar and H. Anzt (March 5, 2026) __Parallel locally optimal iterative methods__. SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP26), Zuse Institute & Free University of Berlin, Berlin, Germany. [<a href="Talks/Venkovic2026_Slides_Parallel-locally-optimal-iterative-methods_handout.pdf
 ">pdf</a>]
