@@ -8,7 +8,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 
 ### *Contributed open source repositories*
 
-<ins>__ApproximateMatrixInverses.jl__</ins> [[GitHub](https://github.com/venkovic/julia-global-spd-spai)]<br />Iterative methods for the computation of approximate matrix inverses.
+<ins>__SparseApproximateInverses.jl__</ins> [[GitHub](https://github.com/venkovic/SparseApproximateInverses.jl)]<br />Iterative methods to learn and compute sparse approximate matrix inverses (SPAIs).
 
 <ins>__StucturedLowRankMatrices.jl__</ins> [[GitHub](https://github.com/venkovic/StructuredLowRankMatrices.jl)]<br />Iterative methods for the computation of structured low-rank matrix approximation. 
 
