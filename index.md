@@ -19,7 +19,7 @@ Scientific Staff Member @ [Chair of Computational Mathematics](https://coma.cit.
 
 ### *Education*
 
-**PhD** Applied Mathematics & Scientific Computing @  [Algo Team](https://cerfacs.fr/en/parallel-algorithms-algo/), [Cerfacs](https://cerfacs.fr/en/home/) & [University of Bordeaux](https://www.u-bordeaux.fr/en)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/)<br />**MSE** Mechanical Engineering @ [Johns Hopkins University](https://www.jhu.edu/)<br />**MSc** Civil Engineering @ [Laval University](https://www.ulaval.ca/en)<br />**BEng** Civil Engineering @ [Laval University](https://www.ulaval.ca/en)
+**PhD** Applied Mathematics & Scientific Computing @  [Algo Team](https://cerfacs.fr/en/parallel-algorithms-algo/), [Cerfacs](https://cerfacs.fr/en/home/) & [University of Bordeaux](https://www.u-bordeaux.fr/en)<br />**MSE** Applied Mathematics & Statistics @ [Johns Hopkins University](https://www.jhu.edu/)<!--<br />**MSE** Mechanical Engineering @ [Johns Hopkins University](https://www.jhu.edu/)<br />**MSc** Civil Engineering @ [Laval University](https://www.ulaval.ca/en)<br />**BEng** Civil Engineering @ [Laval University](https://www.ulaval.ca/en)-->
 
 <!--### *Positions held*
 
