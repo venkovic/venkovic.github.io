@@ -23,8 +23,12 @@ Postdoctoral Researcher @ [Chair of Computational Mathematics](https://coma.cit.
 
 ### *Previous positions*
 
+in chronological order
+
 Software Developer @ [NXP Semiconductors](https://www.nxp.com/) <!--(09/2022 - 04/2024)--><br />Doctoral Researcher @ [Algo Team](https://cerfacs.fr/en/parallel-algorithms/), [Cerfacs](https://cerfacs.fr/en/) <!--(10/2018 - 10/2021)--><br />Research Assistant @ [Johns Hopkins University](https://www.jhu.edu/) <!--(09/2013 - 09/2018)--><br /><!--Research Assistant @ [Université Laval](https://www.ulaval.ca/en/) (05/2011 - 08/2013)<br />-->Graduate Visiting Student @ [MIT](http://www.mit.edu/) <!--(09/2011 - 02/2012)--><br />Research Intern @ [Phimeca](http://phimeca.com/en/) <!--(05/2011 - 08/2011)--><br />Research Assistant @ [Université Laval](https://www.ulaval.ca/en/) <!--(05/2008 - 12/2010)--><br />
 
 ### *Awards and distinctions*
+
+in chronological order
 
 Bravo Award, [NXP Semiconductors](https://www.nxp.com/) <!--(2023)--><br />USNCCM14 Travel Award, [US Association of Computational Mechanics](https://www.usacm.org/) <!--(2017)--><br />HEMI Travel Grant, [Hopkins Extreme Materials Institute](https://hemi.jhu.edu/) <!--(2016)--><br />Meyerhoff Fellowship, [Johns Hopkins University](https://www.jhu.edu/) <!--(2013)--><br />CEE Department Fellowship (unclaimed), [MIT](http://www.mit.edu/) <!--(2013)--><br />Canadian National Scholarship, [Canadian National Railway Company](https://www.cn.ca/en/) <!--(2013)--><br />Excellence Award, [Université Laval](https://www.ulaval.ca/en/) <!--(2013)--><br />Michael Smith Foreign Study Supplement, [NSERC](http://www.nserc-crsng.gc.ca/index_eng.asp) <!--(2011)--><br />Alexander Graham Bell Scholarship, [NSERC](http://www.nserc-crsng.gc.ca/index_eng.asp) <!--(2011)--><br />Inter-University Scholarship, [CRIB](https://lecrib.ca/en/index.php) <!--(2011)--><br />Master's Scholarship, 2nd-best candidature in Province of Quebec, [FQRNT](http://www.frqnt.gouv.qc.ca/en/accueil) <!--(2011)--><br />Undergraduate Student Research Award, [NSERC](http://www.nserc-crsng.gc.ca/index_eng.asp) <!--(2010)--><br />Merit Scholarship (unclaimed), [CROUS](http://www.crous-paris.fr/) <!--(2006)-->
