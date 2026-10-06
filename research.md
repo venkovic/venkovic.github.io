@@ -14,7 +14,9 @@ Approximation Theory, Iterative Methods, Linear Algebra, Numerical Analysis.
 
 ### *Publications*
 
-Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 2.
+Journal Papers (J): 2, Preprints (P): 3, Conference Papers (C): 1, Reports (R): 2.
+
+[P3] N. Venkovic and H. Anzt (2026) __Minkowski tensors of anisotropic Voronoi diagrams__. arXiv preprint, arXiv:2610.xxxxx. [<a href="https://arxiv.org/pdf/2610.xxxxx">pdf</a>]
 
 [P2] N. Venkovic and H. Anzt (2025) __Global iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. arXiv preprint, arXiv:2511.09753. [<a href="https://arxiv.org/pdf/2511.09753">pdf</a>]
 
@@ -75,10 +77,10 @@ Journal Papers (J): 2, Preprints (P): 2, Conference Papers (C): 1, Reports (R): 
 
 ### *Supervised theses*
 
-Bachelor Theses (B): 2, Master Theses(M): 1.
+Bachelor Theses (B): 2, Master Theses (M): 1.
 
 [M1] I. Vasenkov (in progress). __Parallel locally optimal approximate sparse matrix inverses__. Master thesis, TU Munich.
 
-[B2] L. Chowdhury  (in progress). __Computing approximate matrix inverses with low and mixed precision__. Bachelor thesis, TU Munich.
+[B2] L. Chowdhury  (2026). __Computing approximate matrix inverses with low and mixed precision__. Bachelor thesis, TU Munich.
 
 [B1] A. Fung (2026). __Iterative methods for low-rank canonical polyadic tensor approximation__. Bachelor thesis, TU Munich.
