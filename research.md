@@ -16,7 +16,7 @@ Approximation Theory, Iterative Methods, Linear Algebra, Numerical Analysis.
 
 Journal Papers (J): 2, Preprints (P): 3, Conference Papers (C): 1, Reports (R): 2.
 
-[P3] N. Venkovic and H. Anzt (2026) __Minkowski tensors of anisotropic Voronoi diagrams__. arXiv preprint, arXiv:2610.xxxxx. [<a href="https://arxiv.org/pdf/2610.xxxxx">pdf</a>]
+[P3] N. Venkovic and H. Anzt (2026) __Minkowski tensors of anisotropic Voronoi diagrams__. arXiv preprint, arXiv:2610.08656. [<a href="https://arxiv.org/pdf/2610.08656">pdf</a>]
 
 [P2] N. Venkovic and H. Anzt (2025) __Global iterative methods for sparse approximate inverses of symmetric positive-definite matrices__. arXiv preprint, arXiv:2511.09753. [<a href="https://arxiv.org/pdf/2511.09753">pdf</a>]
 
