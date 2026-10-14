@@ -10,7 +10,7 @@ The course consists of the following lectures:
 
 <p>
 L00. <strong>Introduction</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L01_Essentials-of-linear-algebra_handout.pdf">slides</a>]</p>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L00_Introduction_handout.pdf">slides</a>]</p>
 
 <p>
 L01. <strong>Essentials of linear algebra</strong>
