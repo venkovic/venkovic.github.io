@@ -68,8 +68,3 @@ L12.
 L13. 
 <strong>Preconditioned iterative methods for linear systems</strong>
 [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L14_Preconditioned-iterative-methods-for-linear-systems.pdf">slides</a>]
-
-<p>
-Final exams: Summer 2025 
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final_Summer2025.pdf">pdf</a>], Winter 2025-26 
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_Final_Winter2025-26.pdf">pdf</a>]
