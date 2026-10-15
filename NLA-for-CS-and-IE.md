@@ -18,7 +18,7 @@ L01. <strong>Essentials of linear algebra</strong>
 
 <p>
 L02. <strong>Floating-point arithmetic and error analysis</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L03_Floating-point-arithmetic-and-error-analysis.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L02_Floating-point-arithmetic-and-error-analysis_handout.pdf">slides</a>]
 
 <p>
 L03. <strong>Direct methods for dense linear systems</strong>
