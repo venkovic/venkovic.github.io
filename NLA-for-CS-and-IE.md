@@ -22,11 +22,11 @@ L02. <strong>Floating-point arithmetic and error analysis</strong>
 
 <p>
 L03. <strong>Direct methods for dense linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L04_Direct-methods-for-dense-linear-systems.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L03_Direct-methods-for-dense-linear-systems_handout.pdf">slides</a>]
 
 <p>
 L04. <strong>Sparse data structures and basic linear algebra subprograms</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L05_Sparse-data-structures-and-basic-linear-algebra-subroutines.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L04_Sparse-data-structures-and-basic-linear-algebra-subroutines_handout.pdf">slides</a>]
 
 <p>
 L05. <strong>Introduction to direct methods for sparse linear systems</strong>
