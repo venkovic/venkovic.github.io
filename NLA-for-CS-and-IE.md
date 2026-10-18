@@ -30,11 +30,11 @@ L04. <strong>Sparse data structures and basic linear algebra subprograms</strong
 
 <p>
 L05. <strong>Introduction to direct methods for sparse linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L06_Introduction-to-direct-methods-for-sparse-linear-systems.pdf">slides</a>]</p>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L05_Introduction-to-direct-methods-for-sparse-linear-systems_handout.pdf">slides</a>]</p>
 
 <p>
 L06. <strong>Orthogonalization and least-squares problems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L07_Orthogonalization-and-least-squares-problems.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L06_Orthogonalization-and-least-squares-problems_handout.pdf">slides</a>]
 
 <p>
 L07. <strong>Basic iterative methods for linear systems</strong>
