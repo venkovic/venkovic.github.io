@@ -42,7 +42,7 @@ L07. <strong>Basic iterative methods for linear systems</strong>
 
 <p>
 L08. <strong>Basic iterative methods for eigenvalue problems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L09_Basic-iterative-methods-for-eigenvalue-problems.pdf">slides</a>]</p>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L08_Basic-iterative-methods-for-eigenvalue-problems_handout.pdf">slides</a>]</p>
 
 <p>
 L09. 
