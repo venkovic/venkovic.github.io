@@ -38,7 +38,7 @@ L06. <strong>Orthogonalization and least-squares problems</strong>
 
 <p>
 L07. <strong>Basic iterative methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L08_Basic-iterative-methods-for-linear-systems.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L07_Basic-iterative-methods-for-linear-systems_handout.pdf">slides</a>]
 
 <p>
 L08. <strong>Basic iterative methods for eigenvalue problems</strong>
