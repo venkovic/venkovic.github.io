@@ -57,7 +57,7 @@ L10.
 <p>
 L11. 
 <strong>Jacobi-Davidson methods</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L12_Jacobi-Davidson-methods.pdf">slides</a>, <a href="NLA-for-CS-and-IE/L12_Jacobi-Davidson-methods.pdf">notebook</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L12_Jacobi-Davidson-methods.pdf">slides</a>]
 
 <p>
 L12. 
