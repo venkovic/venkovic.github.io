@@ -47,7 +47,7 @@ L08. <strong>Basic iterative methods for eigenvalue problems</strong>
 <p>
 L09. 
 <strong>Locally optimal block preconditioned conjugate gradient</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L09_Locally-optimal-block-preconditioned-gradient_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L09_Locally-optimal-block-preconditioned-conjugate-gradient_handout.pdf">slides</a>]
 
 <p>
 L10. 
