@@ -52,7 +52,7 @@ L09.
 <p>
 L10. 
 <strong>Arnoldi and Lanczos procedures</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L11_Arnoldi-and-Lanczos-procedures.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L10_Arnoldi-and-Lanczos-procedures_handout.pdf">slides</a>]
 
 <p>
 L11. 
