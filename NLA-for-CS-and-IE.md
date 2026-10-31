@@ -33,8 +33,8 @@ L05. <strong>Introduction to direct methods for sparse linear systems</strong>
 [<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L05_Introduction-to-direct-methods-for-sparse-linear-systems_handout.pdf">slides</a>]</p>
 
 <p>
-L06. <strong>Orthogonalization and least-squares problems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L06_Orthogonalization-and-least-squares-problems_handout.pdf">slides</a>]
+L06. <strong>Orthogonalization</strong>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L06_Orthogonalization_handout.pdf">slides</a>]
 
 <p>
 L07. <strong>Basic iterative methods for linear systems</strong>
@@ -56,15 +56,19 @@ L10.
 
 <p>
 L11. 
-<strong>Jacobi-Davidson methods</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L12_Jacobi-Davidson-methods.pdf">slides</a>]
+<strong>Krylov subspace methods for linear systems</strong>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L11_Krylov-subspace-methods-for-linear-systems.pdf">slides</a>]
 
 <p>
 L12. 
-<strong>Krylov subspace methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L13_Krylov-subspace-methods-for-linear-systems.pdf">slides</a>]
+<strong>Preconditioned iterative methods for linear systems</strong>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L12_Preconditioned-iterative-methods-for-linear-systems.pdf">slides</a>]
 
 <p>
 L13. 
-<strong>Preconditioned iterative methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L14_Preconditioned-iterative-methods-for-linear-systems.pdf">slides</a>]
+<strong>Jacobi-Davidson methods</strong>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L13_Jacobi-Davidson-methods_handout.pdf">slides</a>]
+
+<p>
+L14. <strong>Least-squares problems</strong>
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L14_Least-squares-problems_handout.pdf">slides</a>]
