@@ -52,7 +52,7 @@ L09.
 <p>
 L10. 
 <strong>Krylov subspace methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L10_Krylov-subspace-methods-for-linear-systems.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L10_Krylov-subspace-methods-for-linear-systems_handout.pdf">slides</a>]
 
 <p>
 L11. 
