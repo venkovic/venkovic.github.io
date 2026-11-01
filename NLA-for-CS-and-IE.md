@@ -57,7 +57,7 @@ L10.
 <p>
 L11. 
 <strong>Preconditioned iterative methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L11_Preconditioned-iterative-methods-for-linear-systems.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L11_Preconditioned-iterative-methods-for-linear-systems_handout.pdf">slides</a>]
 
 <p>
 L12. 
