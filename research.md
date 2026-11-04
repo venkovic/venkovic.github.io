@@ -75,11 +75,13 @@ Journal Papers (J): 2, Preprints (P): 3, Conference Papers (C): 1, Reports (R): 
 
 <ins>Presenter</ins>
 
-### *Supervised theses*
+### *Supervised students*
 
-Bachelor Theses (B): 2, Master Theses (M): 1.
+Bachelor colloquium (C): 1, Bachelor Theses (B): 2, Master Theses (M): 1.
 
 [M1] I. Vasenkov (in progress). __Parallel locally optimal approximate sparse matrix inverses__. Master thesis, TU Munich.
+
+[C1] H. Dausy (2026). __Comparative testing of Newton and Chebyshev-type iterative methods on sparse approximate inverse problems__. Bachelor colloquium, TU Munich.
 
 [B2] L. Chowdhury  (2026). __Computing approximate matrix inverses with low and mixed precision__. Bachelor thesis, TU Munich.
 
