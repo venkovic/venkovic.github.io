@@ -18,15 +18,15 @@ L01. <strong>Essentials of linear algebra</strong>
 
 <p>
 L02. <strong>Floating-point arithmetic and error analysis</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L02_Floating-point-arithmetic-and-error-analysis_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L02_Floating-point-arithmetic-and-error-analysis_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L02_Floating-point-arithmetic-and-error-analysis.pdf">tutorial</a>]
 
 <p>
 L03. <strong>Direct methods for dense linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L03_Direct-methods-for-dense-linear-systems_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L03_Direct-methods-for-dense-linear-systems_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L03_Direct-methods-for-dense-linear-systems.pdf">tutorial</a>]
 
 <p>
 L04. <strong>Sparse data structures and basic linear algebra subprograms</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L04_Sparse-data-structures-and-basic-linear-algebra-subroutines_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L04_Sparse-data-structures-and-basic-linear-algebra-subprograms_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L04_Sparse-data-structures-and-basic-linear-algebra-subprograms.pdf">tutorial</a>]
 
 <p>
 L05. <strong>Introduction to direct methods for sparse linear systems</strong>
@@ -34,7 +34,7 @@ L05. <strong>Introduction to direct methods for sparse linear systems</strong>
 
 <p>
 L06. <strong>Basic iterative methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L06_Basic-iterative-methods-for-linear-systems_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L06_Basic-iterative-methods-for-linear-systems_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L06_Basic-iterative-methods-for-linear-systems.pdf">tutorial</a>]
 
 <p>
 L07. <strong>Basic iterative methods for eigenvalue problems</strong>
@@ -42,33 +42,34 @@ L07. <strong>Basic iterative methods for eigenvalue problems</strong>
 
 <p>
 L08. <strong>Orthogonalization</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L08_Orthogonalization_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L08_Orthogonalization_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L08_Orthogonalization.pdf">tutorial</a>]
 
 <p>
 L09. 
 <strong>Arnoldi and Lanczos procedures</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L09_Arnoldi-and-Lanczos-procedures_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L09_Arnoldi-and-Lanczos-procedures_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L09_Arnoldi-and-Lanczos-procedures.pdf">tutorial</a>]
 
 <p>
 L10. 
 <strong>Krylov subspace methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L10_Krylov-subspace-methods-for-linear-systems_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L10_Krylov-subspace-methods-for-linear-systems_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L10_Krylov-subspace-methods-for-linear-systems.pdf">tutorial</a>]
 
 <p>
 L11. 
 <strong>Preconditioned iterative methods for linear systems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L11_Preconditioned-iterative-methods-for-linear-systems_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L11_Preconditioned-iterative-methods-for-linear-systems_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L11_Preconditioned-iterative-methods-for-linear-systems.pdf">tutorial</a>]
 
 <p>
 L12. 
 <strong>Locally optimal block preconditioned conjugate gradient</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L12_Locally-optimal-block-preconditioned-conjugate-gradient_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L12_Locally-optimal-block-preconditioned-conjugate-gradient_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L12_Locally-optimal-block-preconditioned-conjugate-gradient.pdf">tutorial</a>]
 
 <p>
 L13. 
 <strong>Jacobi-Davidson methods</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L13_Jacobi-Davidson-methods_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L13_Jacobi-Davidson-methods_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L13_Jacobi-Davidson-methods.pdf">tutorial</a>]
 
 <p>
 L14. <strong>Least-squares problems</strong>
-[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L14_Least-squares-problems_handout.pdf">slides</a>]
+[<a href="NLA-for-CS-and-IE/TUM_NLA-for-CS-and-IE_L14_Least-squares-problems_handout.pdf">slides</a>, <a href="NLA-for-CS-and-IE/Tutorials/L14_Least-squares-problems.pdf">tutorial</a>]
+
