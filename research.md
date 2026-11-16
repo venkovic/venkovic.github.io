@@ -28,11 +28,11 @@ Journal Papers (J): 2, Preprints (P): 3, Conference Papers (C): 1, Reports (R): 
 
 [R1] N. Venkovic, P. Mycek, L. Giraud and O.P. Le Maître (2020) __Comparative study of harmonic and Rayleigh-Ritz procedures with application to deflated conjugate gradients__. Cerfacs Technical Report, TR-PA-20-3. [<a href="https://hal.science/hal-02434043/document	">pdf</a>]
 
-<!--[J2] N. Venkovic, L. Sorelli and F. Martirena (2014) __Nanoindentation study of calcium silicate hydrates in concrete produced with effective microorganisms-based bioplasticizer__. Cement and Concrete Composites 49, 127-139.
+[J2] N. Venkovic, L. Sorelli and F. Martirena (2014) __Nanoindentation study of calcium silicate hydrates in concrete produced with effective microorganisms-based bioplasticizer__. Cement and Concrete Composites 49, 127-139.
 
 [C1] N. Venkovic, M. Lebeau and J.-M. Konrad (2013) __Geostatistical assessment of the hydraulic conductivity of an embankment dam__. GeoMontreal 2013 66th Canadian Geotechnical Conference, 8 pp.
 
-[J1] N. Venkovic, L. Sorelli, B. Sudret, T. Yalamas and R. Gagné (2013) __Uncertainty propagation of a multiscale poromechanics-hydration model for poroelastic properties of cement paste at early-age__. Probabilistic Engineering Mechanics 32, 5-20.-->
+[J1] N. Venkovic, L. Sorelli, B. Sudret, T. Yalamas and R. Gagné (2013) __Uncertainty propagation of a multiscale poromechanics-hydration model for poroelastic properties of cement paste at early-age__. Probabilistic Engineering Mechanics 32, 5-20.
 
 ### *Talks* 
 
