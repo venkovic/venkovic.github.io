@@ -30,7 +30,7 @@ L05. <strong>Perturbation theory and error analysis</strong>
 
 <p>
 L06. <strong>Direct methods for linear systems</strong>
-[<a href="NumProg/NumProg_Lecture-notes.pdf#page=85">notes</a>, <a href="NumProg/Tutorials/L06_Direct methods-for-linear-systems.pdf">tutorial</a>]</p>
+[<a href="NumProg/NumProg_Lecture-notes.pdf#page=85">notes</a>, <a href="NumProg/Tutorials/L06_Direct-methods-for-linear-systems.pdf">tutorial</a>]</p>
 
 <p>
 L07. <strong>Stationary and first-order iterative methods for linear systems</strong>
