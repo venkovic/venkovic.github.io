@@ -14,7 +14,7 @@ L01. <strong>Elements of linear algebra</strong>
 
 <p>
 L02. <strong>Elements of calculus</strong>
-[<a href="NumProg/NumProg_Lecture-notes.pdf#page=41">notes</a>]</p>
+[<a href="NumProg/NumProg_Lecture-notes.pdf#page=27">notes</a>]</p>
 
 <p>
 L03. <strong>Elements of approximation theory</strong>
