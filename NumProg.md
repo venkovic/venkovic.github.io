@@ -10,19 +10,19 @@ The course consists of the following lectures:
 
 <p>
 L01. <strong>Elements of linear algebra</strong>
-[<a href="NumProg/NumProg-of-linear-algebra.pdf">notes</a>, <a href="NumProg/Tutorials/L01_Elements-of-linear-algebra.pdf">tutorial</a>]</p>
+[<a href="NumProg/NumProg_Lecture-notes.pdf#page=5">notes</a>]</p>
 
 <p>
 L02. <strong>Elements of calculus</strong>
-[<a href="NumProg/NumProg_L02_Elements-of-calculus.pdf">notes</a>, <a href="NumProg/Tutorials/L02_Elements-of-calculus.pdf">tutorial</a>]</p>
+[<a href="NumProg/NumProg_L02_Elements-of-calculus.pdf">notes</a>]</p>
 
 <p>
 L03. <strong>Elements of approximation theory</strong>
-[<a href="NumProg/NumProg_L03_Elements-of-approximation-theory.pdf">notes</a>, <a href="NumProg/Tutorials/L03_Elements-of-approximation-theory.pdf">tutorial</a>]</p>
+[<a href="NumProg/NumProg_L03_Elements-of-approximation-theory.pdf">notes</a>]</p>
 
 <p>
 L04. <strong>Elements of optimization</strong>
-[<a href="NumProg/NumProg_L04_Elements-of-optimization.pdf">notes</a>, <a href="NumProg/Tutorials/L04_Elements-of-optimization.pdf">tutorial</a>]</p>
+[<a href="NumProg/NumProg_L04_Elements-of-optimization.pdf">notes</a>]</p>
 
 <p>
 L05. <strong>Perturbation theory and error analysis</strong>
