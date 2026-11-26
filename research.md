@@ -9,7 +9,7 @@ Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=
 ### *Skills and interests*
 
 
-Algorithms, Approximation Theory, Iterative Methods, Numerical Linear Algebra, Scientific Computing.
+Algorithms, Approximation Theory, Iterative Methods, Numerical Analysis, Numerical Linear Algebra, Scientific Computing.
 
 
 ### *Publications*
