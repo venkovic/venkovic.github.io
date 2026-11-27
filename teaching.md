@@ -2,7 +2,7 @@
 
 ## Teaching
 
-[Home](https://venkovic.github.io), <a href="https://venkovic.github.io/AcademicResumeNV_En.pdf?v=2026-11-27">Curriculum vitae</a>, [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software) 
+[Home](https://venkovic.github.io), <a href="https://venkovic.github.io/AcademicResumeNV_En.pdf?v=2026-11-28">Curriculum vitae</a>, [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software) 
 
 Online profiles @ [ArXiv](https://arxiv.org/search/math?searchtype=author&query=Venkovic,+N), [GitHub](https://github.com/venkovic/), [Google Scholar](https://scholar.google.com/citations?user=BqB0tioAAAAJ&hl=en), [LinkedIn](https://www.linkedin.com/in/nicolas-venkovic-97195b42/?isSelfProfile=true), [ORCID](https://orcid.org/0009-0003-5063-8125).
 

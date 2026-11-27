@@ -3,7 +3,7 @@
 ## Numerical Programming (CITHN1008)
 
 
-[Home](https://venkovic.github.io), <a href="https://venkovic.github.io/AcademicResumeNV_En.pdf?v=2026-11-27">Curriculum vitae</a>, [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software) 
+[Home](https://venkovic.github.io), <a href="https://venkovic.github.io/AcademicResumeNV_En.pdf?v=2026-11-28">Curriculum vitae</a>, [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software) 
 
 
 The course consists of the following lectures:
