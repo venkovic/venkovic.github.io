@@ -77,9 +77,12 @@ Journal Papers (J): 2, Preprints (P): 3, Conference Papers (C): 1, Reports (R): 
 
 ### *Supervised students*
 
-Bachelor colloquium (C): 1, Bachelor Theses (B): 2, Master Theses (M): 1.
+Bachelor colloquium (C): 1, Bachelor theses (B): 3, Master theses (M): 1.
 
-[M1] I. Vasenkov (in progress). __Parallel locally optimal approximate sparse matrix inverses__. Master thesis, TU Munich.
+
+[B3] H. Langar (2026). __Hybrid wavelet learning for gunshot detection: complementarity, fusion and its limits__. Bachelor thesis, TU Munich.
+
+[M1] I. Vasenkov (2026). __Parallel locally optimal approximate sparse matrix inverses__. Master thesis, TU Munich.
 
 [C1] H. Dausy (2026). __Comparative testing of Newton and Chebyshev-type iterative methods on sparse approximate inverse problems__. Bachelor colloquium, TU Munich.
 
