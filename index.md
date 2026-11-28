@@ -2,7 +2,7 @@
 
 ## Nicolas Venkovic<br />
 
-[Home](https://venkovic.github.io), <a href="https://venkovic.github.io/AcademicResumeNV_En.pdf?v=2026-11-28">Curriculum vitae</a>, [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software),
+[Home](https://venkovic.github.io), <a href="https://venkovic.github.io/AcademicResumeNV_En.pdf?v={{site.cv_tag}}">Curriculum vitae</a>, [Research](https://venkovic.github.io/research), [Teaching](https://venkovic.github.io/teaching), [Software](https://venkovic.github.io/software),
 
 <p>&nbsp;</p>
 
